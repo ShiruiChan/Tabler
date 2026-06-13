@@ -73,7 +73,7 @@ const updateSiteSettingsSchema = z.object({
  * Server action: update the site design settings for the authenticated
  * restaurant_owner's tenant.
  *
- * Staff members are rejected — only the owner may change site design.
+ * Staff members are rejected - only the owner may change site design.
  * Zod validates all fields before writing to the database.
  * RLS on site_settings additionally enforces the owner-only UPDATE policy.
  *

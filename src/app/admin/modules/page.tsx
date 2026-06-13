@@ -1,5 +1,7 @@
 import { listModules } from "@/lib/admin-queries";
 import ModuleControls from "./module-controls";
+import { PageHeader, Badge, EmptyState } from "@/components/ui";
+import { IconModules } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -12,71 +14,69 @@ export default async function ModulesPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Modules</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Platform module catalog — {modules.length} module{modules.length !== 1 ? "s" : ""}
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Каталог"
+        title="Модули"
+        description={`Каталог модулей платформы - ${modules.length} ${
+          modules.length === 1 ? "модуль" : "модулей"
+        }.`}
+      />
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              {["ID", "Name", "Billing period", "Base price", "Active", "Edit base price"].map(
-                (h) => (
-                  <th
-                    key={h}
-                    className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    {h}
-                  </th>
-                )
-              )}
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-100">
-            {modules.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-4 py-6 text-center text-sm text-gray-400">
-                  No modules yet.
-                </td>
-              </tr>
-            )}
-            {modules.map((mod) => (
-              <tr key={mod.id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 font-mono text-sm text-gray-900">
-                  {mod.id}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-900">{mod.name}</td>
-                <td className="px-4 py-3 text-sm text-gray-500">
-                  {mod.billing_period}
-                </td>
-                <td className="px-4 py-3 text-sm text-gray-900">
-                  {centsToDisplay(mod.base_price_cents)}
-                </td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      mod.is_active
-                        ? "bg-green-100 text-green-800"
-                        : "bg-gray-100 text-gray-600"
-                    }`}
-                  >
-                    {mod.is_active ? "active" : "inactive"}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <ModuleControls
-                    moduleId={mod.id}
-                    currentBasePriceCents={mod.base_price_cents}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {modules.length === 0 ? (
+        <EmptyState
+          icon={<IconModules />}
+          title="Модулей пока нет"
+          description="В каталоге платформы ещё не настроено ни одного модуля."
+        />
+      ) : (
+        <div className="glass overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-white/5">
+              <thead>
+                <tr className="border-b border-white/10">
+                  {["ID", "Название", "Период оплаты", "Базовая цена", "Активен", "Изменить цену"].map(
+                    (h) => (
+                      <th
+                        key={h}
+                        className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-400"
+                      >
+                        {h}
+                      </th>
+                    )
+                  )}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {modules.map((mod) => (
+                  <tr key={mod.id} className="hover:bg-white/5">
+                    <td className="px-4 py-3 font-mono text-sm text-slate-200">
+                      {mod.id}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-200">{mod.name}</td>
+                    <td className="px-4 py-3 text-sm text-slate-400">
+                      {mod.billing_period}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-200">
+                      {centsToDisplay(mod.base_price_cents)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Badge tone={mod.is_active ? "emerald" : "slate"}>
+                        {mod.is_active ? "активен" : "неактивен"}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <ModuleControls
+                        moduleId={mod.id}
+                        currentBasePriceCents={mod.base_price_cents}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

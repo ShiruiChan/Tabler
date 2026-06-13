@@ -17,7 +17,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 
 function formatEventDatetime(isoUtc: string): string {
   const d = new Date(isoUtc);
-  const date = d.toLocaleDateString("en-US", {
+  const date = d.toLocaleDateString("ru-RU", {
     weekday: "short",
     year: "numeric",
     month: "short",
@@ -26,20 +26,20 @@ function formatEventDatetime(isoUtc: string): string {
   });
   const hh = String(d.getUTCHours()).padStart(2, "0");
   const mm = String(d.getUTCMinutes()).padStart(2, "0");
-  return `${date} at ${hh}:${mm} UTC`;
+  return `${date} в ${hh}:${mm} UTC`;
 }
 
 function formatTicketTotal(priceCents: number, currency: string, qty: number): string {
-  if (priceCents === 0) return "Free";
+  if (priceCents === 0) return "Бесплатно";
   const sym = CURRENCY_SYMBOLS[currency] ?? currency.toUpperCase() + " ";
   return `${sym}${((priceCents * qty) / 100).toFixed(2)}`;
 }
 
 const STATUS_LABELS: Record<string, string> = {
-  reserved: "Reserved",
-  paid: "Paid",
-  cancelled: "Cancelled",
-  refunded: "Refunded",
+  reserved: "Забронирован",
+  paid: "Оплачен",
+  cancelled: "Отменён",
+  refunded: "Возврат",
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -65,7 +65,7 @@ interface MyTicketsProps {
 }
 
 // ---------------------------------------------------------------------------
-// CancelButton — per-row pending state (TASK-021 pattern)
+// CancelButton - per-row pending state (TASK-021 pattern)
 // ---------------------------------------------------------------------------
 
 function CancelButton({ ticketId }: { ticketId: string }) {
@@ -79,13 +79,13 @@ function CancelButton({ ticketId }: { ticketId: string }) {
         className="text-xs"
         style={{ color: "var(--color-primary)", opacity: 0.5 }}
       >
-        Cancelled
+        Отменён
       </span>
     );
   }
 
   function handleCancel() {
-    if (!confirm("Cancel this ticket? This cannot be undone.")) return;
+    if (!confirm("Отменить билет? Это действие нельзя отменить.")) return;
     startTransition(async () => {
       const res = await cancelMyTicket(ticketId);
       if (res === null) {
@@ -109,7 +109,7 @@ function CancelButton({ ticketId }: { ticketId: string }) {
           color: "rgb(220,38,38)",
         }}
       >
-        {isPending ? "Cancelling…" : "Cancel"}
+        {isPending ? "Отмена…" : "Отменить"}
       </button>
       {error && (
         <span
@@ -125,7 +125,7 @@ function CancelButton({ ticketId }: { ticketId: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// MyTickets — server-passed list, cancel interactions are client-side
+// MyTickets - server-passed list, cancel interactions are client-side
 // ---------------------------------------------------------------------------
 
 export function MyTickets({ tickets }: MyTicketsProps) {
@@ -135,7 +135,7 @@ export function MyTickets({ tickets }: MyTicketsProps) {
         className="text-sm"
         style={{ color: "var(--color-primary)", opacity: 0.6 }}
       >
-        You have no tickets yet.
+        У вас пока нет билетов.
       </p>
     );
   }
@@ -156,8 +156,8 @@ export function MyTickets({ tickets }: MyTicketsProps) {
         return (
           <li
             key={ticket.id}
-            className="flex items-start justify-between gap-4 rounded-lg p-4"
-            style={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+            className="flex items-start justify-between gap-4 rounded-2xl border bg-white/60 p-4 shadow-sm"
+            style={{ borderColor: "rgba(0,0,0,0.07)" }}
           >
             <div className="flex-1 min-w-0">
               <p
@@ -176,7 +176,7 @@ export function MyTickets({ tickets }: MyTicketsProps) {
                 className="text-xs mt-1"
                 style={{ color: "var(--color-primary)", opacity: 0.75 }}
               >
-                {ticket.quantity} ticket{ticket.quantity !== 1 ? "s" : ""} · {total}
+                Билетов: {ticket.quantity} · {total}
               </p>
             </div>
 
@@ -192,7 +192,7 @@ export function MyTickets({ tickets }: MyTicketsProps) {
                 {statusLabel}
               </span>
 
-              {/* Cancel button — only for reserved tickets */}
+              {/* Cancel button - only for reserved tickets */}
               {canCancel && <CancelButton ticketId={ticket.id} />}
             </div>
           </li>

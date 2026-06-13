@@ -23,17 +23,17 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
   rub: "₽",
 };
 
-/** Cents → formatted price string, "Free" when zero. */
+/** Cents → formatted price string, "Бесплатно" when zero. */
 function formatPrice(cents: number, currency: string): string {
-  if (cents === 0) return "Free";
+  if (cents === 0) return "Бесплатно";
   const sym = CURRENCY_SYMBOLS[currency] ?? currency.toUpperCase() + " ";
   return `${sym}${(cents / 100).toFixed(2)}`;
 }
 
-/** ISO UTC string → "Weekday, Month D, YYYY at HH:MM UTC" */
+/** ISO UTC string → "Weekday, D Month YYYY в HH:MM UTC" */
 function formatEventDate(isoUtc: string): string {
   const d = new Date(isoUtc);
-  const datePart = d.toLocaleDateString("en-US", {
+  const datePart = d.toLocaleDateString("ru-RU", {
     weekday: "long",
     year: "numeric",
     month: "long",
@@ -42,7 +42,7 @@ function formatEventDate(isoUtc: string): string {
   });
   const hh = String(d.getUTCHours()).padStart(2, "0");
   const mm = String(d.getUTCMinutes()).padStart(2, "0");
-  return `${datePart} at ${hh}:${mm} UTC`;
+  return `${datePart} в ${hh}:${mm} UTC`;
 }
 
 // ---------------------------------------------------------------------------
@@ -76,41 +76,45 @@ export default async function EventsPage({ params }: EventsPageProps) {
       className="font-body min-h-screen"
       style={{ backgroundColor: "var(--color-secondary)" }}
     >
-      <div className="mx-auto max-w-3xl px-6 py-12">
+      <div className="mx-auto max-w-3xl px-6 py-16">
         {/* ── Page heading ──────────────────────────────────────────────── */}
-        <h1
-          className="font-heading text-3xl font-bold mb-2"
-          style={{ color: "var(--color-primary)" }}
-        >
-          Events
-        </h1>
-        <p
-          className="text-sm mb-10"
-          style={{ color: "var(--color-primary)", opacity: 0.6 }}
-        >
-          {tenant.name}
-        </p>
+        <header className="animate-fade-up mb-10">
+          <span
+            className="text-xs font-semibold uppercase tracking-[0.2em]"
+            style={{ color: "var(--color-accent)" }}
+          >
+            {tenant.name}
+          </span>
+          <h1
+            className="font-heading mt-2 text-4xl font-bold tracking-tight md:text-5xl"
+            style={{ color: "var(--color-primary)" }}
+          >
+            События
+          </h1>
+        </header>
 
         {/* ── Event cards ───────────────────────────────────────────────── */}
         {events.length === 0 ? (
-          <p
-            className="text-base"
-            style={{ color: "var(--color-primary)", opacity: 0.7 }}
+          <div
+            className="rounded-2xl border border-dashed py-16 text-center"
+            style={{ borderColor: "rgba(0,0,0,0.12)" }}
           >
-            No upcoming events at this time. Check back soon!
-          </p>
+            <p
+              className="text-base"
+              style={{ color: "var(--color-primary)", opacity: 0.65 }}
+            >
+              Сейчас нет предстоящих событий. Загляните позже!
+            </p>
+          </div>
         ) : (
-          <section aria-label="Upcoming events" className="space-y-8 mb-16">
+          <section aria-label="Предстоящие события" className="space-y-8 mb-16">
             {events.map((event) => {
               const isSoldOut = event.remaining === 0;
               return (
                 <article
                   key={event.id}
-                  className="rounded-xl border overflow-hidden"
-                  style={{
-                    borderColor: "rgba(0,0,0,0.10)",
-                    backgroundColor: "rgba(0,0,0,0.03)",
-                  }}
+                  className="rounded-2xl border bg-white/60 overflow-hidden shadow-sm transition hover:shadow-md"
+                  style={{ borderColor: "rgba(0,0,0,0.08)" }}
                 >
                   {/* Cover image */}
                   {event.image_url && (
@@ -118,7 +122,7 @@ export default async function EventsPage({ params }: EventsPageProps) {
                     <img
                       src={event.image_url}
                       alt={event.title}
-                      className="w-full h-48 object-cover"
+                      className="w-full h-52 object-cover"
                     />
                   )}
 
@@ -164,8 +168,8 @@ export default async function EventsPage({ params }: EventsPageProps) {
                       }}
                     >
                       {isSoldOut
-                        ? "Sold out"
-                        : `${event.remaining} ticket${event.remaining !== 1 ? "s" : ""} remaining`}
+                        ? "Билеты распроданы"
+                        : `Осталось билетов: ${event.remaining}`}
                     </p>
 
                     {/* Description */}
@@ -189,18 +193,18 @@ export default async function EventsPage({ params }: EventsPageProps) {
 
         {/* ── My tickets (authenticated visitors only) ───────────────────── */}
         {isAuthenticated && (
-          <section aria-label="My tickets">
+          <section aria-label="Мои билеты">
             <h2
               className="font-heading text-2xl font-bold mb-2"
               style={{ color: "var(--color-primary)" }}
             >
-              My Tickets
+              Мои билеты
             </h2>
             <p
               className="text-sm mb-6"
               style={{ color: "var(--color-primary)", opacity: 0.6 }}
             >
-              Your ticket history for {tenant.name}
+              История билетов в {tenant.name}
             </p>
             <MyTickets tickets={myTickets} />
           </section>

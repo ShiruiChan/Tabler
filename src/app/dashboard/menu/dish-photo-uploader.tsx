@@ -42,7 +42,7 @@ export default function DishPhotoUploader({
 
     // Client-side size guard.
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      setError("File is too large. Maximum size is 5 MB.");
+      setError("Файл слишком большой. Максимальный размер - 5 МБ.");
       if (inputRef.current) inputRef.current.value = "";
       return;
     }
@@ -61,7 +61,7 @@ export default function DishPhotoUploader({
         .upload(path, file, { upsert: true });
 
       if (storageError) {
-        setError(`Upload failed: ${storageError.message}`);
+        setError(`Ошибка загрузки: ${storageError.message}`);
         if (inputRef.current) inputRef.current.value = "";
         return;
       }
@@ -69,7 +69,7 @@ export default function DishPhotoUploader({
       // Build the public CDN URL.
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       if (!supabaseUrl) {
-        setError("Configuration error: NEXT_PUBLIC_SUPABASE_URL is not set.");
+        setError("Ошибка конфигурации: переменная NEXT_PUBLIC_SUPABASE_URL не задана.");
         return;
       }
 
@@ -92,18 +92,18 @@ export default function DishPhotoUploader({
     <div className="space-y-2">
       {/* Thumbnail */}
       {previewUrl ? (
-        <div className="relative overflow-hidden rounded border border-gray-200 bg-gray-50">
+        <div className="relative overflow-hidden rounded-lg border border-white/10 bg-white/5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={previewUrl}
-            alt="Dish photo"
+            alt="Фото блюда"
             className="h-16 w-16 object-cover"
           />
         </div>
       ) : (
-        <div className="flex h-16 w-16 items-center justify-center rounded border border-dashed border-gray-300 bg-gray-50">
-          <span className="text-[10px] text-gray-400 text-center px-1">
-            No photo
+        <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-dashed border-white/15 bg-white/5">
+          <span className="px-1 text-center text-[10px] text-slate-500">
+            Нет фото
           </span>
         </div>
       )}
@@ -111,11 +111,11 @@ export default function DishPhotoUploader({
       {/* Upload control */}
       <label
         className={[
-          "cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 inline-block",
+          "inline-flex cursor-pointer items-center rounded-lg border border-white/15 bg-white/5 px-2 py-1 text-xs font-medium text-slate-200 transition-colors hover:bg-white/10 focus-within:outline-none focus-within:ring-2 focus-within:ring-amber-400",
           isPending ? "pointer-events-none opacity-50" : "",
         ].join(" ")}
       >
-        {isPending ? "Uploading…" : "Upload photo"}
+        {isPending ? "Загрузка…" : "Загрузить фото"}
         <input
           ref={inputRef}
           type="file"
@@ -127,7 +127,7 @@ export default function DishPhotoUploader({
       </label>
 
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="text-xs text-rose-300">
           {error}
         </p>
       )}

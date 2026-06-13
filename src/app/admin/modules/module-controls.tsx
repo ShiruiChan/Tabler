@@ -24,7 +24,7 @@ export default function ModuleControls({
     setSaved(false);
     const parsed = parseFloat(input.trim());
     if (isNaN(parsed) || parsed < 0) {
-      setError("Enter a valid dollar amount (e.g. 9.99).");
+      setError("Введите корректную сумму (например, 9.99).");
       return;
     }
     const cents = Math.round(parsed * 100);
@@ -42,7 +42,7 @@ export default function ModuleControls({
   return (
     <div className="flex flex-col gap-1">
       <div className="flex items-center gap-2">
-        <span className="text-sm text-gray-500">$</span>
+        <span className="text-sm text-slate-500">$</span>
         <input
           type="text"
           value={input}
@@ -51,20 +51,20 @@ export default function ModuleControls({
             setSaved(false);
           }}
           disabled={isPending}
-          className="w-24 rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-gray-900 focus:outline-none disabled:opacity-50"
+          className="input-dark w-24 px-2 py-1 text-sm disabled:opacity-50"
         />
         <button
           onClick={handleSave}
           disabled={isPending}
-          className="rounded-md border border-gray-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+          className="btn-secondary px-2 py-1 text-xs disabled:opacity-50"
         >
-          {isPending ? "…" : "Save"}
+          {isPending ? "…" : "Сохранить"}
         </button>
         {saved && !isPending && (
-          <span className="text-xs text-green-600">Saved</span>
+          <span className="text-xs text-emerald-400">Сохранено</span>
         )}
       </div>
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-rose-400">{error}</p>}
     </div>
   );
 }

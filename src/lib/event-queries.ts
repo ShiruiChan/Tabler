@@ -76,7 +76,7 @@ export interface EventAvailability {
  * or super_admin; returns null otherwise.
  *
  * super_admin is allowed here because dashboard queries do not double-scope
- * writes to profile.tenant_id — they are read-only and RLS handles visibility.
+ * writes to profile.tenant_id - they are read-only and RLS handles visibility.
  */
 async function requireStaffOrAdmin() {
   const profile = await getProfile();
@@ -113,7 +113,7 @@ async function requireStaffOrAdmin() {
  * SECURITY NOTE: Direct-DB visitor inserts that bypass this API can squat
  * capacity with an attacker-chosen unit_price_cents, but since those rows
  * will never have a payment_ref set, this sweep will cancel them within
- * HOLD_MINUTES — effectively neutralising the capacity-squatting attack
+ * HOLD_MINUTES - effectively neutralising the capacity-squatting attack
  * within the hold window.
  *
  * @param eventId Optional UUID to scope the sweep to a single event (faster
@@ -137,7 +137,7 @@ export async function expireStaleReservedTickets(eventId?: string): Promise<void
     query = query.eq("event_id", eventId);
   }
 
-  // Errors are intentionally swallowed here — expiry is best-effort and
+  // Errors are intentionally swallowed here - expiry is best-effort and
   // should not block the caller (purchase flow, availability check).
   await query;
 }
@@ -158,7 +158,7 @@ export async function expireStaleReservedTickets(eventId?: string): Promise<void
  *   - RLS hides event_tickets rows from anonymous/visitor callers (no anon
  *     SELECT policy; visitors may only see their own rows).  We therefore use
  *     the admin (service-role) client to sum only (event_id, quantity, status)
- *     — no PII columns — across reserved+paid tickets for the events in the
+ *     - no PII columns - across reserved+paid tickets for the events in the
  *     result set, then aggregate in JS.  This mirrors the pattern used in
  *     TASK-019's getAvailabilitySlots where admin client reads booking
  *     occupancy to prevent phantom-free slots.
@@ -187,7 +187,7 @@ export async function getPublicEvents(
 
   // Fetch occupancy via admin client (PII-free columns only).
   // Admin client is required because RLS hides other visitors' tickets from
-  // anon/visitor session clients — see JSDoc above.
+  // anon/visitor session clients - see JSDoc above.
   const adminClient = createAdminClient();
 
   const { data: ticketData } = await adminClient
@@ -262,7 +262,7 @@ export async function getEventsForDashboard(
   const events = eventData as RestaurantEvent[];
   const eventIds = events.map((e) => e.id);
 
-  // Load ticket occupancy — staff RLS sees all tenant tickets.
+  // Load ticket occupancy - staff RLS sees all tenant tickets.
   const { data: ticketData } = await supabase
     .from("event_tickets")
     .select("event_id, quantity, status, unit_price_cents")
@@ -396,7 +396,7 @@ export async function getMyTickets(): Promise<EventTicketWithEvent[]> {
  *   - Anon callers have no SELECT policy on event_tickets (PII table).
  *   - Even authenticated visitors can only see their own rows, so the sum
  *     would be wrong for any other visitor's holds.
- *   Only (event_id, quantity, status) columns are read — no PII.
+ *   Only (event_id, quantity, status) columns are read - no PII.
  *
  * @param eventId UUID of the event.
  */

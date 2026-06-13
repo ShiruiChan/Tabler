@@ -13,7 +13,7 @@ import type { Module, Tenant, TenantModulePricing } from "@/lib/types/database";
  *
  * Rationale: the public SELECT policy on `tenants` restricts plain authenticated
  * callers to `status = 'active'` rows only.  However, the super_admin ALL
- * policy (`using (public.is_super_admin())`) covers SELECT as well — Postgres
+ * policy (`using (public.is_super_admin())`) covers SELECT as well - Postgres
  * evaluates all matching policies for the operation with OR logic, so a
  * super_admin session satisfies the ALL policy and sees all rows including
  * suspended and pending ones.  No special view or RPC is required; a plain
@@ -38,7 +38,7 @@ export async function listTenants(): Promise<Tenant[]> {
 }
 
 // ---------------------------------------------------------------------------
-// TenantWithModules — composite return type
+// TenantWithModules - composite return type
 // ---------------------------------------------------------------------------
 
 export interface TenantWithModules {
@@ -61,7 +61,7 @@ export interface TenantWithModules {
  * Module list: calls the security-definer RPC `get_tenant_module_pricing(t)`
  * which authorises super_admin callers (via `has_tenant_role`) and returns
  * one row per active module including price_override_cents.  This is the only
- * safe way to read price_override_cents — direct SELECT is denied by the
+ * safe way to read price_override_cents - direct SELECT is denied by the
  * column grant on tenant_modules for all authenticated roles including
  * super_admin (see 0002_modules_pricing.sql section 8).
  *

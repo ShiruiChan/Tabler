@@ -32,7 +32,7 @@ const PLATFORM_LABELS: Record<KnownPlatform, string> = {
   facebook: "Facebook",
   x: "X (Twitter)",
   tiktok: "TikTok",
-  website: "Website",
+  website: "Сайт",
 };
 
 // ---------------------------------------------------------------------------
@@ -72,32 +72,52 @@ export default async function TenantHome({ params }: TenantHomeProps) {
     }
   }
 
+  // Navigation tiles for the enabled modules - rendered as a refined grid below
+  // the hero so guests can discover every section at a glance.
+  const navTiles: { href: string; label: string; description: string }[] = [];
+  if (menuEnabled)
+    navTiles.push({ href: "./menu", label: "Меню", description: "Наши блюда и напитки" });
+  if (reservationsEnabled)
+    navTiles.push({ href: "./reserve", label: "Бронирование", description: "Забронируйте столик" });
+  if (floorEnabled)
+    navTiles.push({ href: "./floor", label: "Зал", description: "Выберите место в зале" });
+  if (orderingEnabled)
+    navTiles.push({ href: "./order", label: "Заказ", description: "Закажите онлайн" });
+  if (eventsEnabled)
+    navTiles.push({ href: "./events", label: "События", description: "Афиша и билеты" });
+
+  const hasHeroImage = !!settings?.hero_image_url;
+
   return (
     <div className="font-body">
       {/* ── Hero ─────────────────────────────────────────────────────── */}
       <section
-        className="relative flex min-h-[60vh] flex-col items-center justify-center px-6 py-24 text-center"
+        className="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-6 py-28 text-center"
         style={
-          settings?.hero_image_url
+          hasHeroImage
             ? {
-                backgroundImage: `url(${settings.hero_image_url})`,
+                backgroundImage: `url(${settings!.hero_image_url})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
               }
             : { backgroundColor: "var(--color-secondary)" }
         }
       >
-        {/* Semi-transparent overlay when a hero image is present */}
-        {settings?.hero_image_url && (
-          <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+        {/* Gradient overlay when a hero image is present for legible text */}
+        {hasHeroImage && (
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60"
+            aria-hidden="true"
+          />
         )}
 
-        <div className="relative z-10">
+        <div className="animate-fade-up relative z-10 flex flex-col items-center">
           <h1
             className={[
-              "font-heading text-4xl font-bold tracking-tight md:text-6xl",
-              settings?.hero_image_url ? "text-white" : "text-primary",
+              "font-heading text-5xl font-bold tracking-tight md:text-7xl",
+              hasHeroImage ? "text-white drop-shadow-sm" : "",
             ].join(" ")}
+            style={hasHeroImage ? undefined : { color: "var(--color-primary)" }}
           >
             {tenant.name}
           </h1>
@@ -105,77 +125,122 @@ export default async function TenantHome({ params }: TenantHomeProps) {
           {settings?.tagline && (
             <p
               className={[
-                "mt-4 max-w-xl text-lg md:text-xl",
-                settings.hero_image_url ? "text-white/90" : "text-primary/80",
+                "mt-5 max-w-2xl text-lg leading-relaxed md:text-2xl",
+                hasHeroImage ? "text-white/90" : "",
               ].join(" ")}
+              style={hasHeroImage ? undefined : { color: "var(--color-primary)", opacity: 0.7 }}
             >
               {settings.tagline}
             </p>
           )}
 
-          {/* Accent CTA buttons */}
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <a
-              href="#about"
-              className="inline-block rounded-lg bg-accent px-6 py-3 font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-            >
-              Learn more
-            </a>
-            {menuEnabled && (
-              <a
-                href="./menu"
-                className="inline-block rounded-lg bg-accent px-6 py-3 font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-              >
-                View menu
-              </a>
-            )}
-            {floorEnabled && (
-              <a
-                href="./floor"
-                className="inline-block rounded-lg bg-accent px-6 py-3 font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-              >
-                View floor plan
-              </a>
-            )}
+          {/* Primary CTAs: first action solid accent, learn-more outlined */}
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
             {reservationsEnabled && (
               <a
                 href="./reserve"
-                className="inline-block rounded-lg bg-accent px-6 py-3 font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                className="inline-flex items-center rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ backgroundColor: "var(--color-accent)" }}
               >
-                Reserve a table
+                Забронировать столик
               </a>
             )}
-            {eventsEnabled && (
+            {menuEnabled && (
               <a
-                href="./events"
-                className="inline-block rounded-lg bg-accent px-6 py-3 font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                href="./menu"
+                className="inline-flex items-center rounded-full px-7 py-3.5 text-sm font-semibold transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={
+                  hasHeroImage
+                    ? {
+                        backgroundColor: "rgba(255,255,255,0.12)",
+                        color: "#fff",
+                        border: "1px solid rgba(255,255,255,0.5)",
+                        backdropFilter: "blur(4px)",
+                      }
+                    : {
+                        backgroundColor: "transparent",
+                        color: "var(--color-primary)",
+                        border: "1px solid color-mix(in srgb, var(--color-primary) 30%, transparent)",
+                      }
+                }
               >
-                Events
+                Смотреть меню
               </a>
             )}
-            {orderingEnabled && (
+            {settings?.about && (
               <a
-                href="./order"
-                className="inline-block rounded-lg bg-accent px-6 py-3 font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                href="#about"
+                className={[
+                  "inline-flex items-center rounded-full px-7 py-3.5 text-sm font-semibold transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2",
+                  hasHeroImage ? "text-white/90 hover:text-white" : "",
+                ].join(" ")}
+                style={hasHeroImage ? undefined : { color: "var(--color-primary)", opacity: 0.7 }}
               >
-                Order
+                Подробнее
               </a>
             )}
           </div>
         </div>
       </section>
 
+      {/* ── Explore (module navigation tiles) ───────────────────────── */}
+      {navTiles.length > 0 && (
+        <section className="mx-auto max-w-5xl px-6 py-16">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {navTiles.map((tile) => (
+              <a
+                key={tile.href}
+                href={tile.href}
+                className="group flex flex-col rounded-2xl border bg-white/60 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+                style={{ borderColor: "rgba(0,0,0,0.08)" }}
+              >
+                <span
+                  className="font-heading text-xl font-semibold"
+                  style={{ color: "var(--color-primary)" }}
+                >
+                  {tile.label}
+                </span>
+                <span
+                  className="mt-1.5 text-sm leading-relaxed"
+                  style={{ color: "var(--color-primary)", opacity: 0.6 }}
+                >
+                  {tile.description}
+                </span>
+                <span
+                  className="mt-4 inline-flex items-center text-sm font-medium transition group-hover:translate-x-0.5"
+                  style={{ color: "var(--color-accent)" }}
+                  aria-hidden="true"
+                >
+                  Перейти →
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ── About ────────────────────────────────────────────────────── */}
       {settings?.about && (
         <section
           id="about"
-          className="mx-auto max-w-3xl px-6 py-16"
-          style={{ color: "var(--color-primary)" }}
+          className="mx-auto max-w-3xl scroll-mt-24 px-6 py-16"
         >
-          <h2 className="font-heading mb-6 text-3xl font-semibold text-primary">
-            About Us
+          <span
+            className="text-xs font-semibold uppercase tracking-[0.2em]"
+            style={{ color: "var(--color-accent)" }}
+          >
+            О нас
+          </span>
+          <h2
+            className="font-heading mb-6 mt-2 text-3xl font-semibold md:text-4xl"
+            style={{ color: "var(--color-primary)" }}
+          >
+            Добро пожаловать
           </h2>
-          <p className="font-body whitespace-pre-line text-base leading-relaxed">
+          <p
+            className="font-body whitespace-pre-line text-base leading-relaxed md:text-lg"
+            style={{ color: "var(--color-primary)", opacity: 0.8 }}
+          >
             {settings.about}
           </p>
         </section>
@@ -184,24 +249,27 @@ export default async function TenantHome({ params }: TenantHomeProps) {
       {/* ── Social links ─────────────────────────────────────────────── */}
       {socialEntries.length > 0 && (
         <section
-          className="py-12"
+          className="mt-8 py-14"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
-          <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-4 px-6">
-            <span className="font-heading text-sm font-semibold uppercase tracking-widest text-white/60">
-              Find us online
+          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-6 text-center">
+            <span className="font-heading text-sm font-semibold uppercase tracking-[0.2em] text-white/60">
+              Мы в сети
             </span>
-            {socialEntries.map(({ platform, url }) => (
-              <a
-                key={platform}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-accent px-5 py-2 text-sm font-medium text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-              >
-                {PLATFORM_LABELS[platform]}
-              </a>
-            ))}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {socialEntries.map(({ platform, url }) => (
+                <a
+                  key={platform}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                  style={{ backgroundColor: "var(--color-accent)" }}
+                >
+                  {PLATFORM_LABELS[platform]}
+                </a>
+              ))}
+            </div>
           </div>
         </section>
       )}

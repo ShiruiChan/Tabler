@@ -20,12 +20,12 @@ export interface FloorPlanWithTables extends FloorPlan {
 /**
  * Returns the public-facing floor plans for a given tenant: only active plans
  * (whose owning tenant is active) together with ALL their tables (regardless
- * of is_bookable — non-bookable tables render as unavailable zones).
+ * of is_bookable - non-bookable tables render as unavailable zones).
  *
  * This function issues two queries then groups tables into plans in JS to
  * avoid a nested Supabase query and keep type inference straightforward.
  *
- * Authorization: none — RLS public-read policies on floor_plans and
+ * Authorization: none - RLS public-read policies on floor_plans and
  * floor_tables enforce the is_active / tenant-active constraints.
  *
  * Returns an empty array when the tenant has no visible floor plan content.
@@ -81,8 +81,8 @@ export async function getPublicFloorPlans(
 // ---------------------------------------------------------------------------
 
 /**
- * Returns the full set of floor plans for a given tenant — including inactive
- * plans and non-bookable tables — intended for the dashboard floor-plan editor.
+ * Returns the full set of floor plans for a given tenant - including inactive
+ * plans and non-bookable tables - intended for the dashboard floor-plan editor.
  *
  * Authorization:
  *   - The caller must be signed in.

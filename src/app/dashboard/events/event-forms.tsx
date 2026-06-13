@@ -55,8 +55,8 @@ function EventFields({ id, defaults }: EventFieldsProps) {
 
       {/* Title */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Title
+        <label className="label-dark">
+          Название
         </label>
         <input
           name="title"
@@ -64,52 +64,52 @@ function EventFields({ id, defaults }: EventFieldsProps) {
           required
           maxLength={160}
           defaultValue={defaults?.title ?? ""}
-          placeholder="e.g. Jazz Night"
-          className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+          placeholder="Например, Джазовый вечер"
+          className="input-dark"
         />
       </div>
 
       {/* Description */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Description{" "}
-          <span className="text-gray-400">(optional)</span>
+        <label className="label-dark">
+          Описание{" "}
+          <span className="text-slate-500">(необязательно)</span>
         </label>
         <textarea
           name="description"
           rows={3}
           maxLength={4000}
           defaultValue={defaults?.description ?? ""}
-          placeholder="Describe the event…"
-          className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+          placeholder="Опишите событие…"
+          className="input-dark"
         />
       </div>
 
       {/* Row: starts_at, ends_at */}
       <div className="flex flex-wrap gap-3">
         <div className="flex-1 min-w-[200px]">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Starts at{" "}
-            <span className="text-gray-400">(UTC)</span>
+          <label className="label-dark">
+            Начало{" "}
+            <span className="text-slate-500">(UTC)</span>
           </label>
           <input
             name="starts_at"
             type="datetime-local"
             required
             defaultValue={isoToDatetimeLocal(defaults?.starts_at)}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark [color-scheme:dark]"
           />
         </div>
         <div className="flex-1 min-w-[200px]">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Ends at{" "}
-            <span className="text-gray-400">(UTC, optional)</span>
+          <label className="label-dark">
+            Окончание{" "}
+            <span className="text-slate-500">(UTC, необязательно)</span>
           </label>
           <input
             name="ends_at"
             type="datetime-local"
             defaultValue={isoToDatetimeLocal(defaults?.ends_at)}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark [color-scheme:dark]"
           />
         </div>
       </div>
@@ -117,8 +117,8 @@ function EventFields({ id, defaults }: EventFieldsProps) {
       {/* Row: capacity, price, currency */}
       <div className="flex flex-wrap gap-3">
         <div className="w-32">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Capacity
+          <label className="label-dark">
+            Вместимость
           </label>
           <input
             name="capacity"
@@ -127,12 +127,12 @@ function EventFields({ id, defaults }: EventFieldsProps) {
             min={1}
             max={10000}
             defaultValue={defaults?.capacity ?? 100}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
         <div className="w-32">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Price ($)
+          <label className="label-dark">
+            Цена ($)
           </label>
           <input
             name="price_cents"
@@ -142,17 +142,17 @@ function EventFields({ id, defaults }: EventFieldsProps) {
             step={0.01}
             defaultValue={priceMajor}
             placeholder="0.00"
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
         <div className="w-28">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Currency
+          <label className="label-dark">
+            Валюта
           </label>
           <select
             name="currency"
             defaultValue={defaults?.currency ?? "usd"}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="select-dark"
           >
             <option value="usd">USD</option>
             <option value="eur">EUR</option>
@@ -162,7 +162,7 @@ function EventFields({ id, defaults }: EventFieldsProps) {
         </div>
       </div>
 
-      {/* is_published checkbox — hidden-field pattern (TASK-013/014) */}
+      {/* is_published checkbox - hidden-field pattern (TASK-013/014) */}
       <div className="flex items-center gap-2">
         <input
           id={`is-published-${id ?? "new"}`}
@@ -171,7 +171,7 @@ function EventFields({ id, defaults }: EventFieldsProps) {
           value="true"
           checked={isPublished}
           onChange={(e) => setIsPublished(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded border-white/20 bg-white/5 accent-amber-500"
         />
         {/* Fallback hidden field so unchecked state sends "false" */}
         <input
@@ -182,9 +182,9 @@ function EventFields({ id, defaults }: EventFieldsProps) {
         />
         <label
           htmlFor={`is-published-${id ?? "new"}`}
-          className="text-xs font-medium text-gray-600"
+          className="text-xs font-medium text-slate-300"
         >
-          Published
+          Опубликовано
         </label>
       </div>
     </div>
@@ -239,14 +239,14 @@ export function CreateEventForm() {
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="space-y-3 rounded-md border border-dashed border-gray-300 p-4"
+      className="space-y-3 rounded-md border border-dashed border-white/15 p-4"
     >
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-        Create event
+      <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+        Создать событие
       </p>
 
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {error}
         </p>
       )}
@@ -254,12 +254,8 @@ export function CreateEventForm() {
       <EventFields />
 
       <div>
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-        >
-          {isPending ? "Creating…" : "Create event"}
+        <button type="submit" disabled={isPending} className="btn-primary">
+          {isPending ? "Создание…" : "Создать событие"}
         </button>
       </div>
     </form>
@@ -312,7 +308,7 @@ export function EditEventForm({ event }: EditEventFormProps) {
   }
 
   function handleDelete() {
-    if (!confirm(`Delete event "${event.title}"? All tickets will also be deleted. This cannot be undone.`)) {
+    if (!confirm(`Удалить событие «${event.title}»? Все билеты также будут удалены. Это действие необратимо.`)) {
       return;
     }
     startDeleteTransition(async () => {
@@ -329,12 +325,12 @@ export function EditEventForm({ event }: EditEventFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {error}
         </p>
       )}
       {deleteError && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {deleteError}
         </p>
       )}
@@ -345,17 +341,17 @@ export function EditEventForm({ event }: EditEventFormProps) {
         <button
           type="submit"
           disabled={isPending || isDeleting}
-          className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
+          className="btn-primary"
         >
-          {isPending ? "Saving…" : "Save event"}
+          {isPending ? "Сохранение…" : "Сохранить событие"}
         </button>
         <button
           type="button"
           onClick={handleDelete}
           disabled={isPending || isDeleting}
-          className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+          className="btn-danger"
         >
-          {isDeleting ? "Deleting…" : "Delete"}
+          {isDeleting ? "Удаление…" : "Удалить"}
         </button>
       </div>
     </form>

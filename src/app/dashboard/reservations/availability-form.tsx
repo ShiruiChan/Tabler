@@ -9,13 +9,13 @@ import type { AvailabilityRule } from "@/lib/types/database";
 // ---------------------------------------------------------------------------
 
 const WEEKDAY_LABELS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+  "Воскресенье",
+  "Понедельник",
+  "Вторник",
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
 ] as const;
 
 // Ordered Mon–Sun for display (indices into WEEKDAY_LABELS).
@@ -77,69 +77,69 @@ function WeekdayRow({ weekday, rule }: WeekdayRowProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-y-2 rounded-md border border-gray-200 bg-white px-4 py-3">
+    <div className="grid grid-cols-1 gap-y-2 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3">
       {/* Row header */}
       <div className="flex items-center gap-3 flex-wrap">
-        <span className="w-24 shrink-0 text-sm font-medium text-gray-900">
+        <span className="w-28 shrink-0 text-sm font-medium text-slate-100">
           {WEEKDAY_LABELS[weekday]}
         </span>
 
         {/* Closed toggle */}
-        <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer select-none">
+        <label className="flex items-center gap-1.5 text-sm text-slate-300 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={isClosed}
             onChange={(e) => setIsClosed(e.target.checked)}
-            className="h-3.5 w-3.5 rounded border-gray-300 text-gray-700"
+            className="h-3.5 w-3.5 rounded border-white/20 bg-white/5 accent-amber-500"
           />
-          Closed
+          Закрыто
         </label>
 
-        {/* Time inputs — dimmed when closed */}
+        {/* Time inputs - dimmed when closed */}
         <div className={`flex items-center gap-2 flex-wrap ${isClosed ? "opacity-40 pointer-events-none" : ""}`}>
-          <label className="flex items-center gap-1 text-xs text-gray-500">
-            Opens (UTC)
+          <label className="flex items-center gap-1 text-xs text-slate-500">
+            Открытие (UTC)
             <input
               type="time"
               value={opensAt}
               step={900}
               onChange={(e) => setOpensAt(e.target.value)}
-              className="ml-1 rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="ml-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-400/50 [color-scheme:dark]"
             />
           </label>
-          <label className="flex items-center gap-1 text-xs text-gray-500">
-            Closes (UTC)
+          <label className="flex items-center gap-1 text-xs text-slate-500">
+            Закрытие (UTC)
             <input
               type="time"
               value={closesAt}
               step={900}
               onChange={(e) => setClosesAt(e.target.value)}
-              className="ml-1 rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="ml-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-400/50 [color-scheme:dark]"
             />
           </label>
-          <label className="flex items-center gap-1 text-xs text-gray-500">
-            Slot
+          <label className="flex items-center gap-1 text-xs text-slate-500">
+            Слот
             <select
               value={slotMinutes}
               onChange={(e) => setSlotMinutes(e.target.value)}
-              className="ml-1 rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="ml-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-400/50 [color-scheme:dark]"
             >
-              <option value="15">15 min</option>
-              <option value="30">30 min</option>
-              <option value="60">60 min</option>
+              <option value="15">15 мин</option>
+              <option value="30">30 мин</option>
+              <option value="60">60 мин</option>
             </select>
           </label>
-          <label className="flex items-center gap-1 text-xs text-gray-500">
-            Last seating
+          <label className="flex items-center gap-1 text-xs text-slate-500">
+            Последняя посадка
             <input
               type="number"
               min={0}
               max={480}
               value={lastSeating}
               onChange={(e) => setLastSeating(e.target.value)}
-              className="ml-1 w-16 rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400"
+              className="ml-1 w-16 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-400/50"
             />
-            <span className="text-gray-400">min before close</span>
+            <span className="text-slate-600">мин до закрытия</span>
           </label>
         </div>
 
@@ -148,21 +148,21 @@ function WeekdayRow({ weekday, rule }: WeekdayRowProps) {
           type="button"
           disabled={isPending}
           onClick={handleSave}
-          className="ml-auto rounded bg-gray-900 px-3 py-1 text-xs font-medium text-white hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="btn-primary ml-auto"
         >
-          {isPending ? "Saving…" : saved ? "Saved!" : "Save"}
+          {isPending ? "Сохранение…" : saved ? "Сохранено!" : "Сохранить"}
         </button>
       </div>
 
       {error && (
-        <p className="text-xs text-red-600" role="alert">{error}</p>
+        <p className="alert-error" role="alert">{error}</p>
       )}
     </div>
   );
 }
 
 // ---------------------------------------------------------------------------
-// AvailabilityForm — the 7-row weekday editor
+// AvailabilityForm - the 7-row weekday editor
 // ---------------------------------------------------------------------------
 
 export interface AvailabilityFormProps {
@@ -181,8 +181,8 @@ export function AvailabilityForm({ rules }: AvailabilityFormProps) {
           rule={ruleByWeekday.get(weekday)}
         />
       ))}
-      <p className="text-xs text-gray-400 pt-1">
-        All times are UTC. Changes take effect immediately for new bookings.
+      <p className="field-hint pt-1">
+        Всё время в UTC. Изменения сразу применяются к новым броням.
       </p>
     </div>
   );

@@ -4,16 +4,15 @@ import { useFormState, useFormStatus } from "react-dom";
 import Link from "next/link";
 import { signIn } from "@/lib/auth-actions";
 import type { AuthActionState } from "@/lib/auth-actions";
+import { AuroraBg } from "@/components/aurora-bg";
+import { TablerGlyph, IconArrowRight } from "@/components/icons";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-    >
-      {pending ? "Signing in…" : "Sign in"}
+    <button type="submit" disabled={pending} className="btn-primary w-full">
+      {pending ? "Входим…" : "Войти"}
+      {!pending && <IconArrowRight className="h-4 w-4" />}
     </button>
   );
 }
@@ -24,63 +23,48 @@ export default function LoginPage() {
   const [state, formAction] = useFormState(signIn, initialState);
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-white">
-      <div className="w-full max-w-sm space-y-6 px-4">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-          Sign in
-        </h1>
+    <main className="console relative flex min-h-screen items-center justify-center px-4 py-12">
+      <AuroraBg />
 
-        <form action={formAction} className="space-y-4">
-          {state?.error && (
-            <p
-              role="alert"
-              className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700"
-            >
-              {state.error}
-            </p>
-          )}
+      <div className="relative z-10 w-full max-w-md">
+        {/* Brand */}
+        <Link href="/" className="mb-8 flex items-center justify-center gap-2.5">
+          <TablerGlyph />
+          <span className="text-lg font-semibold tracking-tight text-slate-100">Tabler</span>
+        </Link>
 
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
-            />
+        <div className="glass animate-fade-up p-8">
+          <div className="mb-6 text-center">
+            <p className="eyebrow mb-2">Кабинет ресторана</p>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-50">С возвращением</h1>
+            <p className="mt-1.5 text-sm text-slate-400">Войдите, чтобы управлять вашим рестораном.</p>
           </div>
 
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
-            />
-          </div>
+          <form action={formAction} className="space-y-4">
+            {state?.error && (
+              <p role="alert" className="alert-error">
+                {state.error}
+              </p>
+            )}
 
-          <SubmitButton />
-        </form>
+            <div>
+              <label htmlFor="email" className="label-dark">Email</label>
+              <input id="email" name="email" type="email" autoComplete="email" required placeholder="you@restaurant.ru" className="input-dark" />
+            </div>
 
-        <p className="text-center text-sm text-gray-500">
-          Don&apos;t have an account?{" "}
-          <Link href="/signup" className="font-medium text-gray-900 underline">
-            Sign up
+            <div>
+              <label htmlFor="password" className="label-dark">Пароль</label>
+              <input id="password" name="password" type="password" autoComplete="current-password" required placeholder="••••••••" className="input-dark" />
+            </div>
+
+            <SubmitButton />
+          </form>
+        </div>
+
+        <p className="mt-6 text-center text-sm text-slate-400">
+          Нет аккаунта?{" "}
+          <Link href="/signup" className="font-semibold text-amber-400 hover:text-amber-300">
+            Создать ресторан
           </Link>
         </p>
       </div>

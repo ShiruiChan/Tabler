@@ -106,13 +106,13 @@ function mapDbError(err: { code?: string; message?: string }, context: "tenant" 
 /**
  * Server action: create a new tenant.
  *
- * Note: slug is immutable post-creation by policy — once a tenant is created,
+ * Note: slug is immutable post-creation by policy - once a tenant is created,
  * its slug cannot be changed (it serves as the subdomain identifier and may be
  * referenced in DNS / external systems).  Use `updateTenant` to edit name and
  * custom_domain only.
  *
  * On success: revalidates /admin/tenants and returns null.
- * On failure: returns { error: string } — never leaks raw Postgres details.
+ * On failure: returns { error: string } - never leaks raw Postgres details.
  */
 export async function createTenant(
   _prev: AdminActionState,
@@ -162,7 +162,7 @@ export async function createTenant(
  * Server action: update the lifecycle status of a tenant.
  *
  * The DB trigger `guard_tenant_status_change` additionally enforces that only
- * super_admin sessions may change status — providing defence-in-depth beyond
+ * super_admin sessions may change status - providing defence-in-depth beyond
  * the requireRole check here.
  *
  * On success: revalidates /admin/tenants and returns null.
@@ -205,7 +205,7 @@ export async function updateTenantStatus(
 /**
  * Server action: update mutable tenant fields (name, custom_domain).
  *
- * Slug is intentionally not editable here — it is immutable post-creation
+ * Slug is intentionally not editable here - it is immutable post-creation
  * because it forms the subdomain identifier and may be referenced in external
  * DNS records and bookmarked URLs.  Changing it would break live tenant sites.
  *

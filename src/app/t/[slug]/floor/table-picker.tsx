@@ -11,7 +11,7 @@ import type { FloorPlanWithTables } from "@/lib/floor-queries";
 /**
  * The value exposed by the picker's onSelect callback and selection state.
  * Phase 5 (TASK-018+) should pass onSelect to wire the picker into the
- * reservation flow — the picker is fully uncontrolled when onSelect is omitted.
+ * reservation flow - the picker is fully uncontrolled when onSelect is omitted.
  */
 export interface SelectedTable {
   id: string;
@@ -86,7 +86,7 @@ function HatchPattern({ id }: { id: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// TableShape — single interactive or static shape
+// TableShape - single interactive or static shape
 // ---------------------------------------------------------------------------
 
 interface TableShapeProps {
@@ -140,7 +140,7 @@ function TableShape({ table, isSelected, isFocused, hatchId, onActivate, onFocus
 
   // Text halo: SVG presentation attributes applied directly to <text> so the
   // stroke is painted below the fill (paintOrder), keeping labels legible over
-  // any background — photo, grid, selected fill, or hatch pattern.
+  // any background - photo, grid, selected fill, or hatch pattern.
   // These are SVG attributes, not CSS, so they are set as JSX props below.
   const textFill = bookable
     ? (isSelected ? "#ffffff" : "var(--color-accent)")
@@ -168,7 +168,7 @@ function TableShape({ table, isSelected, isFocused, hatchId, onActivate, onFocus
         role: "button" as const,
         tabIndex: 0,
         "aria-pressed": isSelected,
-        "aria-label": `Table ${table.label}, seats ${table.capacity}`,
+        "aria-label": `Столик ${table.label}, мест: ${table.capacity}`,
         onClick: handleClick,
         onKeyDown: handleKeyDown,
         onFocus: () => onFocus(table.id),
@@ -191,7 +191,7 @@ function TableShape({ table, isSelected, isFocused, hatchId, onActivate, onFocus
           style={sharedShapeStyle}
           {...a11yProps}
         />
-        {/* Keyboard focus ring — rendered only when this shape has focus */}
+        {/* Keyboard focus ring - rendered only when this shape has focus */}
         {isFocused && (
           <rect
             x={zone.x - 3}
@@ -232,7 +232,7 @@ function TableShape({ table, isSelected, isFocused, hatchId, onActivate, onFocus
         style={sharedShapeStyle}
         {...a11yProps}
       />
-      {/* Keyboard focus ring — rendered only when this shape has focus */}
+      {/* Keyboard focus ring - rendered only when this shape has focus */}
       {isFocused && (
         <circle
           cx={zone.cx}
@@ -261,7 +261,7 @@ function TableShape({ table, isSelected, isFocused, hatchId, onActivate, onFocus
 }
 
 // ---------------------------------------------------------------------------
-// FloorPlanPicker — main export
+// FloorPlanPicker - main export
 // ---------------------------------------------------------------------------
 
 export function FloorPlanPicker({
@@ -273,7 +273,7 @@ export function FloorPlanPicker({
   // Internal selection state (used when the component is uncontrolled).
   const [internalSelectedId, setInternalSelectedId] = useState<string | null>(null);
 
-  // Keyboard focus tracking — used to render a visible focus ring on shapes.
+  // Keyboard focus tracking - used to render a visible focus ring on shapes.
   const [focusedTableId, setFocusedTableId] = useState<string | null>(null);
 
   // Derive the effective selected id.
@@ -325,7 +325,7 @@ export function FloorPlanPicker({
             aria-hidden="true"
           />
           <span style={{ color: "var(--color-primary)", opacity: 0.75 }}>
-            Available
+            Свободно
           </span>
         </span>
         <span className="flex items-center gap-1.5">
@@ -339,7 +339,7 @@ export function FloorPlanPicker({
             aria-hidden="true"
           />
           <span style={{ color: "var(--color-primary)", opacity: 0.55 }}>
-            Not available
+            Недоступно
           </span>
         </span>
         {bookableCount > 0 && (
@@ -347,17 +347,17 @@ export function FloorPlanPicker({
             className="ml-auto text-xs"
             style={{ color: "var(--color-primary)", opacity: 0.55 }}
           >
-            {bookableCount} table{bookableCount !== 1 ? "s" : ""} available
+            Свободно столиков: {bookableCount}
           </span>
         )}
       </div>
 
       {/* SVG canvas */}
       <div
-        className="overflow-auto rounded-lg border"
-        style={{ borderColor: "rgba(0,0,0,0.12)" }}
+        className="overflow-auto rounded-xl border"
+        style={{ borderColor: "rgba(0,0,0,0.10)" }}
         role="region"
-        aria-label={`Floor plan: ${plan.name}`}
+        aria-label={`План зала: ${plan.name}`}
       >
         <svg
           viewBox={`0 0 ${plan.width} ${plan.height}`}
@@ -368,7 +368,7 @@ export function FloorPlanPicker({
             display: "block",
             userSelect: "none",
           }}
-          aria-label={`Interactive floor map for ${plan.name}`}
+          aria-label={`Интерактивная карта зала: ${plan.name}`}
         >
           <HatchPattern id={hatchId} />
 
@@ -432,14 +432,14 @@ export function FloorPlanPicker({
       {/* Selection summary panel */}
       {selectedTable ? (
         <div
-          className="rounded-lg px-5 py-4 border"
+          className="animate-fade-up rounded-xl px-5 py-4 border shadow-sm"
           style={{
-            backgroundColor: "rgba(0,0,0,0.03)",
-            borderColor: "var(--color-accent)",
+            backgroundColor: "color-mix(in srgb, var(--color-accent) 6%, transparent)",
+            borderColor: "color-mix(in srgb, var(--color-accent) 40%, transparent)",
           }}
           role="status"
           aria-live="polite"
-          aria-label="Selected table details"
+          aria-label="Сведения о выбранном столике"
         >
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div>
@@ -447,28 +447,27 @@ export function FloorPlanPicker({
                 className="text-base font-semibold"
                 style={{ color: "var(--color-primary)" }}
               >
-                Table {selectedTable.label}
+                Столик {selectedTable.label}
               </p>
               <p
                 className="text-sm mt-0.5"
                 style={{ color: "var(--color-primary)", opacity: 0.65 }}
               >
-                Seats {selectedTable.capacity}{" "}
-                {selectedTable.capacity === 1 ? "guest" : "guests"}
+                Мест: {selectedTable.capacity}
               </p>
             </div>
             <div className="flex items-center gap-2 flex-wrap">
               {reserveHref ? (
-                /* Live booking CTA — links to the reserve page with this table pre-selected */
+                /* Live booking CTA - links to the reserve page with this table pre-selected */
                 <a
                   href={`${reserveHref}?table=${selectedTable.id}`}
-                  className="inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium transition-opacity hover:opacity-90 focus:outline-none focus:ring-2"
+                  className="inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold shadow-sm transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2"
                   style={{
                     backgroundColor: "var(--color-accent)",
                     color: "#ffffff",
                   }}
                 >
-                  Book this table
+                  Забронировать
                 </a>
               ) : (
                 /* Placeholder CTA when no booking route is configured */
@@ -476,28 +475,27 @@ export function FloorPlanPicker({
                   type="button"
                   disabled
                   aria-disabled="true"
-                  className="inline-flex items-center rounded-lg px-4 py-2 text-sm font-medium opacity-50 cursor-not-allowed"
+                  className="inline-flex items-center rounded-full px-5 py-2 text-sm font-semibold opacity-50 cursor-not-allowed"
                   style={{
                     backgroundColor: "var(--color-accent)",
                     color: "#ffffff",
                   }}
-                  title="Online booking coming soon"
+                  title="Онлайн-бронирование скоро будет доступно"
                 >
-                  Book this table
+                  Забронировать
                 </button>
               )}
               <button
                 type="button"
-                className="inline-flex items-center rounded-lg border px-4 py-2 text-sm font-medium transition-opacity hover:opacity-70 focus:outline-none focus:ring-2"
+                className="inline-flex items-center rounded-full border px-5 py-2 text-sm font-medium transition hover:opacity-70 focus:outline-none focus:ring-2"
                 style={{
-                  borderColor: "var(--color-primary)",
+                  borderColor: "color-mix(in srgb, var(--color-primary) 25%, transparent)",
                   color: "var(--color-primary)",
-                  opacity: 0.7,
                 }}
                 onClick={() => handleActivate(selectedTable)}
-                aria-label="Clear table selection"
+                aria-label="Сбросить выбор столика"
               >
-                Clear
+                Сбросить
               </button>
             </div>
           </div>
@@ -506,7 +504,7 @@ export function FloorPlanPicker({
               className="text-xs mt-3 italic"
               style={{ color: "var(--color-primary)", opacity: 0.45 }}
             >
-              Online booking coming soon. Please call us to reserve this table.
+              Онлайн-бронирование скоро будет доступно. Позвоните нам, чтобы забронировать этот столик.
             </p>
           )}
         </div>
@@ -517,7 +515,7 @@ export function FloorPlanPicker({
             style={{ color: "var(--color-primary)", opacity: 0.55 }}
             aria-live="polite"
           >
-            Select a table on the map to see details.
+            Выберите столик на карте, чтобы увидеть детали.
           </p>
         )
       )}

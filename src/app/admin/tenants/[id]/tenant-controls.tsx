@@ -8,6 +8,7 @@ import {
   setModulePriceOverride,
 } from "@/lib/admin-actions";
 import type { TenantStatus, TenantModulePricing } from "@/lib/types/database";
+import { PanelCard } from "@/components/ui";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -51,14 +52,14 @@ function StatusControl({
         defaultValue={currentStatus}
         onChange={handleChange}
         disabled={isPending}
-        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none disabled:opacity-50"
+        className="select-dark w-auto disabled:opacity-50"
       >
-        <option value="active">active</option>
-        <option value="suspended">suspended</option>
-        <option value="pending">pending</option>
+        <option value="active">активен</option>
+        <option value="suspended">приостановлен</option>
+        <option value="pending">ожидает</option>
       </select>
-      {isPending && <span className="text-sm text-gray-400">Saving…</span>}
-      {error && <span className="text-sm text-red-600">{error}</span>}
+      {isPending && <span className="text-sm text-slate-400">Сохранение…</span>}
+      {error && <span className="text-sm text-rose-400">{error}</span>}
     </div>
   );
 }
@@ -111,7 +112,7 @@ function ModuleRow({
     } else {
       const parsed = parseFloat(trimmed);
       if (isNaN(parsed) || parsed < 0) {
-        setPriceError("Enter a valid dollar amount (e.g. 9.99) or leave empty to use base price.");
+        setPriceError("Введите корректную сумму (например, 9.99) или оставьте поле пустым для базовой цены.");
         return;
       }
       priceCents = Math.round(parsed * 100);
@@ -132,10 +133,10 @@ function ModuleRow({
   }
 
   return (
-    <tr className="border-t border-gray-100">
-      <td className="px-4 py-3 text-sm font-medium text-gray-900">
+    <tr className="border-t border-white/5 hover:bg-white/5">
+      <td className="px-4 py-3 text-sm font-medium text-slate-200">
         {moduleName}
-        <span className="ml-1 font-mono text-xs text-gray-400">
+        <span className="ml-1 font-mono text-xs text-slate-500">
           ({module.module_id})
         </span>
       </td>
@@ -146,17 +147,17 @@ function ModuleRow({
             defaultChecked={module.enabled}
             onChange={handleToggle}
             disabled={isPending}
-            className="h-4 w-4 rounded border-gray-300 text-gray-900 disabled:opacity-50"
+            className="h-4 w-4 rounded border-white/20 bg-white/5 text-amber-500 accent-amber-500 disabled:opacity-50"
           />
-          <span className="text-sm text-gray-600">
-            {module.enabled ? "Enabled" : "Disabled"}
+          <span className="text-sm text-slate-400">
+            {module.enabled ? "Включён" : "Отключён"}
           </span>
         </label>
         {toggleError && (
-          <p className="mt-1 text-xs text-red-600">{toggleError}</p>
+          <p className="mt-1 text-xs text-rose-400">{toggleError}</p>
         )}
       </td>
-      <td className="px-4 py-3 text-sm text-gray-500">
+      <td className="px-4 py-3 text-sm text-slate-400">
         {centsToDisplay(module.base_price_cents)}
       </td>
       <td className="px-4 py-3">
@@ -165,26 +166,26 @@ function ModuleRow({
             type="text"
             value={overrideInput}
             onChange={(e) => setOverrideInput(e.target.value)}
-            placeholder="—"
+            placeholder="-"
             disabled={isPending}
-            className="w-24 rounded-md border border-gray-300 px-2 py-1 text-sm focus:border-gray-900 focus:outline-none disabled:opacity-50"
+            className="input-dark w-24 px-2 py-1 text-sm disabled:opacity-50"
           />
           <button
             onClick={handlePriceSave}
             disabled={isPending}
-            className="rounded-md border border-gray-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            className="btn-secondary px-2 py-1 text-xs disabled:opacity-50"
           >
-            {isPending ? "…" : "Save"}
+            {isPending ? "…" : "Сохранить"}
           </button>
         </div>
         {priceError && (
-          <p className="mt-1 text-xs text-red-600">{priceError}</p>
+          <p className="mt-1 text-xs text-rose-400">{priceError}</p>
         )}
-        <p className="mt-0.5 text-xs text-gray-400">
-          Leave empty to use base price
+        <p className="field-hint">
+          Оставьте пустым для базовой цены
         </p>
       </td>
-      <td className="px-4 py-3 text-sm font-medium text-gray-900">
+      <td className="px-4 py-3 text-sm font-medium text-slate-200">
         {centsToDisplay(module.effective_price_cents)}
       </td>
     </tr>
@@ -207,28 +208,26 @@ export default function TenantControls({
   moduleNameMap: Record<string, string>;
 }) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Status */}
-      <section>
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">Status</h2>
+      <PanelCard title="Статус" description="Управляйте статусом ресторана.">
         <StatusControl tenantId={tenantId} currentStatus={currentStatus} />
-      </section>
+      </PanelCard>
 
       {/* Modules */}
-      <section>
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">Modules</h2>
+      <PanelCard title="Модули" description="Подключение модулей и индивидуальные цены." className="overflow-hidden">
         {modules.length === 0 ? (
-          <p className="text-sm text-gray-400">No modules in the platform catalog.</p>
+          <p className="text-sm text-slate-400">В каталоге платформы нет модулей.</p>
         ) : (
-          <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
+          <div className="-mx-6 -mb-6 overflow-x-auto border-t border-white/10">
             <table className="min-w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  {["Module", "Enabled", "Base price", "Override ($/—)", "Effective price"].map(
+              <thead>
+                <tr className="border-b border-white/10">
+                  {["Модуль", "Включён", "Базовая цена", "Переопределение ($/-)", "Итоговая цена"].map(
                     (h) => (
                       <th
                         key={h}
-                        className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
+                        className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-slate-400"
                       >
                         {h}
                       </th>
@@ -249,7 +248,7 @@ export default function TenantControls({
             </table>
           </div>
         )}
-      </section>
+      </PanelCard>
     </div>
   );
 }

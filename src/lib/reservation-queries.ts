@@ -48,7 +48,7 @@ function parseTime(timeStr: string): { hours: number; minutes: number } {
  * Builds a UTC Date from a YYYY-MM-DD date string and a "HH:MM:SS" time string.
  *
  * Availability rule times are treated as UTC.  Per-tenant timezone support is a
- * future concern — reservation_settings does not yet carry a timezone column.
+ * future concern - reservation_settings does not yet carry a timezone column.
  * When it does, callers should convert dateISO + time to the tenant's local
  * midnight before applying opens_at/closes_at.
  */
@@ -80,7 +80,7 @@ function utcDateFromParts(dateISO: string, timeStr: string): Date {
  * 5. Filter slots that violate min_advance_minutes or max_advance_days
  *    relative to `now`.
  * 6. Load all overlapping active (pending/confirmed) reservations for every
- *    candidate table in ONE query — covers the entire date window.
+ *    candidate table in ONE query - covers the entire date window.
  *    Compute per-slot per-table overlap in JS (no N+1 queries).
  * 7. Return the filtered slot list with availability metadata.
  *
@@ -92,7 +92,7 @@ function utcDateFromParts(dateISO: string, timeStr: string): Date {
  * should offset `dateISO` to the tenant's local date before calling this
  * function.
  *
- * Authorization: none — RLS public-read policies on availability_rules,
+ * Authorization: none - RLS public-read policies on availability_rules,
  * reservation_settings, and floor_tables enforce the active-tenant constraint.
  *
  * @param tenantId  UUID of the tenant whose slots to compute.
@@ -197,7 +197,7 @@ export async function getAvailabilitySlots(
   //    The `reservations` table has NO anon SELECT policy and authenticated
   //    visitors may only see their own rows (user_id = auth.uid()).  If this
   //    query ran through the session/anon client, every other party's bookings
-  //    would be invisible — all slots would appear free regardless of actual
+  //    would be invisible - all slots would appear free regardless of actual
   //    occupancy, silently enabling double-booking even though the DB exclusion
   //    constraint only guards assigned-table rows.  The admin (service-role)
   //    client bypasses RLS so we see all pending/confirmed bookings.  Only the
@@ -452,7 +452,7 @@ export async function getTablesForTenant(
  * descending (most recent first).
  *
  * Authorization: requires an authenticated session.  RLS enforces that only
- * rows where user_id = auth.uid() are returned — this function adds no
+ * rows where user_id = auth.uid() are returned - this function adds no
  * additional application-layer filter beyond requiring sign-in.
  *
  * Returns an empty array when the caller is unauthenticated or has no

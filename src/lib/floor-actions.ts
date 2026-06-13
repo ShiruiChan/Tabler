@@ -14,7 +14,7 @@ import type { Profile } from "@/lib/types/database";
 export type FloorActionState = { error: string } | null;
 
 // ---------------------------------------------------------------------------
-// requireTenantStaff (local copy — menu-actions keeps its own private copy)
+// requireTenantStaff (local copy - menu-actions keeps its own private copy)
 // ---------------------------------------------------------------------------
 
 /**
@@ -115,7 +115,7 @@ const floorPlanUpdateSchema = z.object({
 });
 
 // ---------------------------------------------------------------------------
-// TableZone zod schema — strict discriminated union with numeric bounds.
+// TableZone zod schema - strict discriminated union with numeric bounds.
 // Rejects extra keys by using z.object (strict is not needed because the
 // shape is discriminated and only the matching branch is checked; unknown
 // keys on a non-strict z.object are stripped by default in Zod v4).
@@ -278,7 +278,7 @@ export async function updateFloorPlan(
 /**
  * Server action: delete a floor plan.
  *
- * CAUTION: cascades — all floor_tables belonging to this plan are also deleted
+ * CAUTION: cascades - all floor_tables belonging to this plan are also deleted
  * (defined by the ON DELETE CASCADE constraint on floor_tables.floor_plan_id).
  * The write is double-scoped: tenant_id eq + RLS.
  */
@@ -403,7 +403,7 @@ export async function saveFloorPlanImage(
  * otherwise a new row is inserted (INSERT).
  *
  * FormData fields:
- *   id?            (UUID — present for update)
+ *   id?            (UUID - present for update)
  *   floor_plan_id  (UUID)
  *   label          (1–20 characters)
  *   capacity       (integer 1–50)
@@ -514,7 +514,7 @@ export async function upsertTable(
   };
 
   if (result.data.id) {
-    // UPDATE — double-scoped: id + tenant_id + RLS
+    // UPDATE - double-scoped: id + tenant_id + RLS
     const { error: dbError } = await supabase
       .from("floor_tables")
       .update(payload)

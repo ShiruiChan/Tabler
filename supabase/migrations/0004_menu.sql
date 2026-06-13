@@ -62,7 +62,7 @@ create index menu_categories_tenant_sort_idx
 create table public.dishes (
   id           uuid        primary key default gen_random_uuid(),
 
-  -- Denormalized for RLS speed — enforced to match category's tenant_id
+  -- Denormalized for RLS speed - enforced to match category's tenant_id
   -- by the check_dish_category_tenant trigger below.
   tenant_id    uuid        not null
                  references public.tenants(id) on delete cascade,
@@ -155,7 +155,7 @@ alter table public.menu_categories enable row level security;
 alter table public.dishes          enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 5. RLS policies — menu_categories
+-- 5. RLS policies - menu_categories
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | is_active=true AND tenant active
@@ -219,7 +219,7 @@ create policy "menu_categories: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 6. RLS policies — dishes
+-- 6. RLS policies - dishes
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | is_available=true AND tenant active

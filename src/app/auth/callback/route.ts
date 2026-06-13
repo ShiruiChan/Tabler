@@ -29,6 +29,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Exchange failed or no code provided — redirect to login with an error hint.
+  // Exchange failed or no code provided - redirect to login with an error hint.
   return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
 }

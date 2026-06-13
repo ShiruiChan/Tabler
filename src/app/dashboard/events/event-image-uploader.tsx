@@ -41,7 +41,7 @@ export function EventImageUploader({
     setError(null);
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      setError("File is too large. Maximum size is 5 MB.");
+      setError("Файл слишком большой. Максимальный размер - 5 МБ.");
       if (inputRef.current) inputRef.current.value = "";
       return;
     }
@@ -57,14 +57,14 @@ export function EventImageUploader({
         .upload(path, file, { upsert: true });
 
       if (storageError) {
-        setError(`Upload failed: ${storageError.message}`);
+        setError(`Ошибка загрузки: ${storageError.message}`);
         if (inputRef.current) inputRef.current.value = "";
         return;
       }
 
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       if (!supabaseUrl) {
-        setError("Configuration error: NEXT_PUBLIC_SUPABASE_URL is not set.");
+        setError("Ошибка конфигурации: переменная NEXT_PUBLIC_SUPABASE_URL не задана.");
         return;
       }
 
@@ -85,18 +85,18 @@ export function EventImageUploader({
     <div className="space-y-2">
       {/* Thumbnail */}
       {previewUrl ? (
-        <div className="relative overflow-hidden rounded border border-gray-200 bg-gray-50">
+        <div className="relative overflow-hidden rounded border border-white/10 bg-white/5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={previewUrl}
-            alt="Event image"
+            alt="Изображение события"
             className="h-24 w-full object-cover"
           />
         </div>
       ) : (
-        <div className="flex h-24 items-center justify-center rounded border border-dashed border-gray-300 bg-gray-50">
-          <span className="text-xs text-gray-400 text-center px-2">
-            No image uploaded
+        <div className="flex h-24 items-center justify-center rounded border border-dashed border-white/15 bg-white/5">
+          <span className="text-xs text-slate-500 text-center px-2">
+            Изображение не загружено
           </span>
         </div>
       )}
@@ -104,11 +104,11 @@ export function EventImageUploader({
       {/* Upload control */}
       <label
         className={[
-          "cursor-pointer rounded border border-gray-300 px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 inline-block",
+          "btn-secondary cursor-pointer inline-flex",
           isPending ? "pointer-events-none opacity-50" : "",
         ].join(" ")}
       >
-        {isPending ? "Uploading…" : previewUrl ? "Replace image" : "Upload image"}
+        {isPending ? "Загрузка…" : previewUrl ? "Заменить изображение" : "Загрузить изображение"}
         <input
           ref={inputRef}
           type="file"
@@ -120,7 +120,7 @@ export function EventImageUploader({
       </label>
 
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {error}
         </p>
       )}

@@ -3,7 +3,7 @@ import "server-only";
 import { SITE_FONTS, type SiteFont, type SiteSettings } from "@/lib/types/database";
 
 // ---------------------------------------------------------------------------
-// Defaults — mirrors the DB column defaults from 0003_site_settings.sql.
+// Defaults - mirrors the DB column defaults from 0003_site_settings.sql.
 // Used when a tenant row exists but has no site_settings row yet.
 // ---------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ const HEX_RE = /^#[0-9a-fA-F]{6}$/;
  * Falls back to the provided default on any mismatch.
  * This guards against DB drift and, critically, prevents url()/expression()
  * payloads in style objects even though React already escapes attribute
- * strings — belt and suspenders.
+ * strings - belt and suspenders.
  */
 function safeColor(value: string, fallback: string): string {
   return HEX_RE.test(value) ? value : fallback;
@@ -73,9 +73,9 @@ export type ThemeStyle = Record<string, string>;
  * Build a CSS custom-property style object from a SiteSettings row.
  *
  * All values are sanitised:
- *   - Colours are validated against `#rrggbb` — bad values fall back to
+ *   - Colours are validated against `#rrggbb` - bad values fall back to
  *     DEFAULT_THEME equivalents.
- *   - Fonts are validated against SITE_FONTS — bad values fall back to Inter.
+ *   - Fonts are validated against SITE_FONTS - bad values fall back to Inter.
  *
  * @param settings - A SiteSettings row, or null (no row yet for this tenant).
  * @returns         An object suitable for `<div style={...}>`.

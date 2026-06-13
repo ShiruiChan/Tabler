@@ -21,19 +21,19 @@ function allowedTransitions(current: ReservationStatus): ReservationStatus[] {
 }
 
 const TRANSITION_LABELS: Record<ReservationStatus, string> = {
-  confirmed: "Confirm",
-  cancelled: "Cancel",
-  completed: "Complete",
-  no_show:   "No-show",
-  pending:   "Pending",
+  confirmed: "Подтвердить",
+  cancelled: "Отменить",
+  completed: "Завершить",
+  no_show:   "Не пришли",
+  pending:   "Ожидает",
 };
 
 const TRANSITION_CLASSES: Record<ReservationStatus, string> = {
-  confirmed: "bg-green-600 hover:bg-green-700 text-white",
-  cancelled: "bg-gray-500 hover:bg-gray-600 text-white",
-  completed: "bg-blue-600 hover:bg-blue-700 text-white",
-  no_show:   "bg-red-600 hover:bg-red-700 text-white",
-  pending:   "bg-amber-500 hover:bg-amber-600 text-white",
+  confirmed: "bg-emerald-500/15 text-emerald-300 ring-1 ring-inset ring-emerald-500/30 hover:bg-emerald-500/25",
+  cancelled: "bg-slate-500/15 text-slate-300 ring-1 ring-inset ring-slate-500/30 hover:bg-slate-500/25",
+  completed: "bg-sky-500/15 text-sky-300 ring-1 ring-inset ring-sky-500/30 hover:bg-sky-500/25",
+  no_show:   "bg-rose-500/15 text-rose-300 ring-1 ring-inset ring-rose-500/30 hover:bg-rose-500/25",
+  pending:   "bg-amber-500/15 text-amber-300 ring-1 ring-inset ring-amber-500/30 hover:bg-amber-500/25",
 };
 
 // ---------------------------------------------------------------------------
@@ -46,7 +46,7 @@ interface StatusActionsProps {
 }
 
 // ---------------------------------------------------------------------------
-// StatusActions — per-row client island
+// StatusActions - per-row client island
 // ---------------------------------------------------------------------------
 
 export function StatusActions({ reservationId, currentStatus }: StatusActionsProps) {
@@ -57,7 +57,7 @@ export function StatusActions({ reservationId, currentStatus }: StatusActionsPro
 
   if (transitions.length === 0) {
     return (
-      <span className="text-xs text-gray-400 italic">No actions</span>
+      <span className="text-xs text-slate-500 italic">Нет действий</span>
     );
   }
 
@@ -90,7 +90,7 @@ export function StatusActions({ reservationId, currentStatus }: StatusActionsPro
         ))}
       </div>
       {error && (
-        <p className="text-xs text-red-600 mt-0.5" role="alert">{error}</p>
+        <p className="text-xs text-rose-400 mt-0.5" role="alert">{error}</p>
       )}
     </div>
   );

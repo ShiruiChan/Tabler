@@ -1,6 +1,17 @@
 import { getProfile } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
+import { PageHeader, PanelCard, Badge } from "@/components/ui";
+import {
+  IconPalette,
+  IconMenu,
+  IconFloor,
+  IconCalendar,
+  IconTicket,
+  IconDelivery,
+  IconArrowRight,
+  IconExternal,
+} from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -34,76 +45,141 @@ export default async function DashboardPage() {
     ? `https://${tenantSlug}.${rootDomain}`
     : null;
 
+  const modules = [
+    {
+      href: "/dashboard/design",
+      label: "Дизайн сайта",
+      desc: "Логотип, палитра, шрифты и описание ресторана.",
+      icon: <IconPalette className="h-5 w-5" />,
+    },
+    {
+      href: "/dashboard/menu",
+      label: "Меню",
+      desc: "Категории, блюда, фото и аллергены.",
+      icon: <IconMenu className="h-5 w-5" />,
+    },
+    {
+      href: "/dashboard/floor",
+      label: "Схема зала",
+      desc: "Расстановка столов и зон обслуживания.",
+      icon: <IconFloor className="h-5 w-5" />,
+    },
+    {
+      href: "/dashboard/reservations",
+      label: "Бронирование",
+      desc: "Онлайн-брони и управление загрузкой.",
+      icon: <IconCalendar className="h-5 w-5" />,
+    },
+    {
+      href: "/dashboard/events",
+      label: "События",
+      desc: "Афиша событий и продажа билетов.",
+      icon: <IconTicket className="h-5 w-5" />,
+    },
+    {
+      href: "/dashboard/delivery",
+      label: "Доставка",
+      desc: "Зоны, расписание и заказы на доставку.",
+      icon: <IconDelivery className="h-5 w-5" />,
+    },
+  ];
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          {tenantName ?? "Restaurant Dashboard"}
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Welcome{profile?.full_name ? `, ${profile.full_name}` : ""}. Manage
-          your restaurant&apos;s online presence from here.
-        </p>
-      </div>
+    <div>
+      <PageHeader
+        eyebrow="Обзор"
+        title={tenantName ?? "Дашборд ресторана"}
+        description={`Добро пожаловать${
+          profile?.full_name ? `, ${profile.full_name}` : ""
+        }. Управляйте цифровым присутствием вашего ресторана из одного места.`}
+        actions={
+          publicSiteUrl && (
+            <a
+              href={publicSiteUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-secondary"
+            >
+              <IconExternal className="h-4 w-4" />
+              Открыть сайт гостя
+            </a>
+          )
+        }
+      />
 
-      <div className="overflow-hidden rounded-lg border border-gray-200 bg-white">
-        <div className="px-6 py-5">
-          <h2 className="text-base font-semibold text-gray-900">
-            Restaurant overview
-          </h2>
+      <div className="space-y-8">
+        {/* Restaurant info */}
+        <PanelCard title="О ресторане">
+          <dl className="space-y-4">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+              <dt className="w-32 shrink-0 text-sm font-medium text-slate-500">
+                Название
+              </dt>
+              <dd className="text-sm text-slate-100">{tenantName ?? "-"}</dd>
+            </div>
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+              <dt className="w-32 shrink-0 text-sm font-medium text-slate-500">
+                Статус
+              </dt>
+              <dd className="text-sm text-slate-100">
+                {tenantStatus ? (
+                  <Badge tone={tenantStatus === "active" ? "emerald" : "amber"}>
+                    {tenantStatus === "active" ? "Активен" : tenantStatus}
+                  </Badge>
+                ) : (
+                  "-"
+                )}
+              </dd>
+            </div>
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
+              <dt className="w-32 shrink-0 text-sm font-medium text-slate-500">
+                Адрес сайта
+              </dt>
+              <dd className="min-w-0 text-sm text-slate-100">
+                {publicSiteUrl ? (
+                  <a
+                    href={publicSiteUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-amber-400 transition-colors hover:text-amber-300"
+                  >
+                    <span className="truncate">{publicSiteUrl}</span>
+                    <IconExternal className="h-3.5 w-3.5 shrink-0" />
+                  </a>
+                ) : (
+                  "-"
+                )}
+              </dd>
+            </div>
+          </dl>
+        </PanelCard>
+
+        {/* Quick links to modules */}
+        <div>
+          <p className="eyebrow mb-4">Модули</p>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {modules.map((m) => (
+              <Link
+                key={m.href}
+                href={m.href}
+                className="glass glass-hover group flex flex-col gap-2 p-5"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400">
+                    {m.icon}
+                  </span>
+                  <IconArrowRight className="h-4 w-4 text-slate-600 transition-colors group-hover:text-amber-400" />
+                </div>
+                <p className="mt-1 text-sm font-semibold text-slate-100">
+                  {m.label}
+                </p>
+                <p className="text-xs leading-relaxed text-slate-400">
+                  {m.desc}
+                </p>
+              </Link>
+            ))}
+          </div>
         </div>
-        <dl className="divide-y divide-gray-100">
-          <div className="grid grid-cols-3 gap-4 px-6 py-4">
-            <dt className="text-sm font-medium text-gray-500">Name</dt>
-            <dd className="col-span-2 text-sm text-gray-900">
-              {tenantName ?? "—"}
-            </dd>
-          </div>
-          <div className="grid grid-cols-3 gap-4 px-6 py-4">
-            <dt className="text-sm font-medium text-gray-500">Status</dt>
-            <dd className="col-span-2 text-sm text-gray-900">
-              {tenantStatus ? (
-                <span
-                  className={
-                    tenantStatus === "active"
-                      ? "inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700"
-                      : "inline-flex items-center rounded-full bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700"
-                  }
-                >
-                  {tenantStatus}
-                </span>
-              ) : (
-                "—"
-              )}
-            </dd>
-          </div>
-          <div className="grid grid-cols-3 gap-4 px-6 py-4">
-            <dt className="text-sm font-medium text-gray-500">Slug URL</dt>
-            <dd className="col-span-2 text-sm text-gray-900">
-              {publicSiteUrl ? (
-                <a
-                  href={publicSiteUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 underline hover:text-blue-800"
-                >
-                  {publicSiteUrl}
-                </a>
-              ) : (
-                "—"
-              )}
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      <div className="flex gap-3">
-        <Link
-          href="/dashboard/design"
-          className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700"
-        >
-          Edit site design
-        </Link>
       </div>
     </div>
   );

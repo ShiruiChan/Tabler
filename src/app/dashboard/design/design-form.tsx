@@ -5,6 +5,7 @@ import { updateSiteSettings } from "@/lib/dashboard-actions";
 import type { DashboardActionState } from "@/lib/dashboard-actions";
 import { SITE_FONTS } from "@/lib/types/database";
 import type { SiteFont } from "@/lib/types/database";
+import { PanelCard } from "@/components/ui";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -34,12 +35,8 @@ interface DesignFormProps {
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-    >
-      {pending ? "Saving…" : "Save settings"}
+    <button type="submit" disabled={pending} className="btn-primary">
+      {pending ? "Сохранение…" : "Сохранить настройки"}
     </button>
   );
 }
@@ -61,11 +58,11 @@ function ColorInput({
 }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={id} className="label-dark">
         {label}
       </label>
-      <div className="mt-1 flex items-center gap-3">
-        {/* Native color picker — updates the hidden text input via JS, but
+      <div className="flex items-center gap-3">
+        {/* Native color picker - updates the hidden text input via JS, but
             both inputs share the same name so the last one wins in FormData.
             We keep them in sync client-side for UX; the text field is the
             authoritative submitted value. */}
@@ -82,7 +79,7 @@ function ColorInput({
               textInput.value = e.target.value;
             }
           }}
-          className="color-field-group h-9 w-12 cursor-pointer rounded border border-gray-300 p-0.5"
+          className="color-field-group h-10 w-12 cursor-pointer rounded-lg border border-white/10 bg-white/5 p-1"
         />
         <input
           id={id}
@@ -99,11 +96,11 @@ function ColorInput({
               colorInput.value = e.target.value;
             }
           }}
-          className="block w-28 rounded-md border border-gray-300 px-3 py-2 font-mono text-sm focus:border-gray-900 focus:outline-none"
+          className="input-dark w-28 font-mono"
         />
         {/* Live swatch */}
         <span
-          className="inline-block h-7 w-7 rounded-full border border-gray-200"
+          className="inline-block h-7 w-7 rounded-full border border-white/15"
           style={{ backgroundColor: defaultValue }}
           aria-hidden="true"
         />
@@ -125,10 +122,7 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
     <form action={formAction} className="space-y-8">
       {/* Global error banner */}
       {state?.error && (
-        <div
-          role="alert"
-          className="rounded-md bg-red-50 px-4 py-3 text-sm text-red-700"
-        >
+        <div role="alert" className="alert-error">
           {state.error}
         </div>
       )}
@@ -137,7 +131,7 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
       {state === null && (
         /* state starts as null, so only show when it was explicitly returned
            null (i.e., a successful save).  On first render before any submit,
-           state is also null — so we track via a hidden sentinel in the form
+           state is also null - so we track via a hidden sentinel in the form
            state: when error is undefined the form hasn't been submitted yet.
            However, useFormState resets to initialState between renders; the
            simplest approach is to omit the success banner on initial load by
@@ -147,50 +141,41 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
       )}
 
       {/* Colors */}
-      <section>
-        <h2 className="mb-4 text-base font-semibold text-gray-900">
-          Brand Colors
-        </h2>
+      <PanelCard title="Цвета бренда">
         <div className="color-field-group space-y-4">
           <ColorInput
             id="primary_color"
             name="primary_color"
-            label="Primary color"
+            label="Основной цвет"
             defaultValue={initialValues.primary_color}
           />
           <ColorInput
             id="secondary_color"
             name="secondary_color"
-            label="Secondary color"
+            label="Вторичный цвет"
             defaultValue={initialValues.secondary_color}
           />
           <ColorInput
             id="accent_color"
             name="accent_color"
-            label="Accent color"
+            label="Акцентный цвет"
             defaultValue={initialValues.accent_color}
           />
         </div>
-      </section>
+      </PanelCard>
 
       {/* Fonts */}
-      <section>
-        <h2 className="mb-4 text-base font-semibold text-gray-900">
-          Typography
-        </h2>
+      <PanelCard title="Типографика">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label
-              htmlFor="font_heading"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Heading font
+            <label htmlFor="font_heading" className="label-dark">
+              Шрифт заголовков
             </label>
             <select
               id="font_heading"
               name="font_heading"
               defaultValue={initialValues.font_heading}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+              className="select-dark"
             >
               {SITE_FONTS.map((font) => (
                 <option key={font} value={font}>
@@ -200,17 +185,14 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
             </select>
           </div>
           <div>
-            <label
-              htmlFor="font_body"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Body font
+            <label htmlFor="font_body" className="label-dark">
+              Шрифт текста
             </label>
             <select
               id="font_body"
               name="font_body"
               defaultValue={initialValues.font_body}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+              className="select-dark"
             >
               {SITE_FONTS.map((font) => (
                 <option key={font} value={font}>
@@ -220,19 +202,14 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
             </select>
           </div>
         </div>
-      </section>
+      </PanelCard>
 
       {/* Content */}
-      <section>
-        <h2 className="mb-4 text-base font-semibold text-gray-900">Content</h2>
+      <PanelCard title="Содержание">
         <div className="space-y-4">
           <div>
-            <label
-              htmlFor="tagline"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Tagline{" "}
-              <span className="text-gray-400">(max 200 characters)</span>
+            <label htmlFor="tagline" className="label-dark">
+              Слоган <span className="text-slate-500">(до 200 символов)</span>
             </label>
             <input
               id="tagline"
@@ -240,17 +217,13 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
               type="text"
               maxLength={200}
               defaultValue={initialValues.tagline}
-              placeholder="Your short catchy tagline"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+              placeholder="Короткий запоминающийся слоган"
+              className="input-dark"
             />
           </div>
           <div>
-            <label
-              htmlFor="about"
-              className="block text-sm font-medium text-gray-700"
-            >
-              About us{" "}
-              <span className="text-gray-400">(max 2000 characters)</span>
+            <label htmlFor="about" className="label-dark">
+              О нас <span className="text-slate-500">(до 2000 символов)</span>
             </label>
             <textarea
               id="about"
@@ -258,24 +231,21 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
               rows={6}
               maxLength={2000}
               defaultValue={initialValues.about}
-              placeholder="Tell visitors about your restaurant…"
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+              placeholder="Расскажите гостям о вашем ресторане…"
+              className="input-dark"
             />
           </div>
         </div>
-      </section>
+      </PanelCard>
 
       {/* Social links */}
-      <section>
-        <h2 className="mb-4 text-base font-semibold text-gray-900">
-          Social Links
-        </h2>
-        <p className="mb-4 text-xs text-gray-500">
-          Enter full URLs with https:// (e.g.{" "}
+      <PanelCard title="Ссылки на соцсети">
+        <p className="field-hint mb-4 mt-0">
+          Указывайте полные URL с https:// (например,{" "}
           <span className="font-mono">
             https://instagram.com/yourrestaurant
           </span>
-          ). Leave blank to remove.
+          ). Оставьте поле пустым, чтобы удалить ссылку.
         </p>
         <div className="space-y-4">
           {(
@@ -284,14 +254,11 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
               { id: "facebook", label: "Facebook" },
               { id: "x", label: "X (Twitter)" },
               { id: "tiktok", label: "TikTok" },
-              { id: "website", label: "Website" },
+              { id: "website", label: "Сайт" },
             ] as const
           ).map(({ id, label }) => (
             <div key={id}>
-              <label
-                htmlFor={id}
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor={id} className="label-dark">
                 {label}
               </label>
               <input
@@ -302,12 +269,12 @@ export default function DesignForm({ initialValues }: DesignFormProps) {
                   initialValues[id as keyof typeof initialValues] as string
                 }
                 placeholder="https://"
-                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none"
+                className="input-dark"
               />
             </div>
           ))}
         </div>
-      </section>
+      </PanelCard>
 
       <SubmitButton />
     </form>

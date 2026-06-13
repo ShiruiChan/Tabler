@@ -12,8 +12,8 @@
 --    preventing cross-tenant data leakage at the DB layer.
 --
 -- 2. Public SELECT policies expose:
---      floor_plans  — only is_active=true plans whose owning tenant is active.
---      floor_tables — ALL tables of an active plan whose owning tenant is active,
+--      floor_plans  - only is_active=true plans whose owning tenant is active.
+--      floor_tables - ALL tables of an active plan whose owning tenant is active,
 --                     regardless of is_bookable.  Visitors need to render non-
 --                     bookable tables as "unavailable" zones; hiding them would
 --                     produce gaps in the rendered map.
@@ -73,7 +73,7 @@ create index floor_plans_tenant_sort_idx
 create table public.floor_tables (
   id            uuid        primary key default gen_random_uuid(),
 
-  -- Denormalized for RLS speed — enforced to match floor_plan's tenant_id
+  -- Denormalized for RLS speed - enforced to match floor_plan's tenant_id
   -- by the check_table_plan_tenant trigger below.
   tenant_id     uuid        not null
                   references public.tenants(id) on delete cascade,
@@ -161,7 +161,7 @@ alter table public.floor_plans  enable row level security;
 alter table public.floor_tables enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 5. RLS policies — floor_plans
+-- 5. RLS policies - floor_plans
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | is_active=true AND tenant active
@@ -225,12 +225,12 @@ create policy "floor_plans: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 6. RLS policies — floor_tables
+-- 6. RLS policies - floor_tables
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | parent plan is_active=true AND
 --                                  |        | tenant active (via floor_plans join);
---                                  |        | is_bookable ignored — all tables shown
+--                                  |        | is_bookable ignored - all tables shown
 --   restaurant_owner / staff       | SELECT | all own-tenant rows
 --   restaurant_owner / staff       | INSERT | own tenant (WITH CHECK)
 --   restaurant_owner / staff       | UPDATE | own tenant (WITH CHECK)
@@ -239,7 +239,7 @@ create policy "floor_plans: super_admin all"
 -- ---------------------------------------------------------------------------
 
 -- Public read: all tables whose parent floor plan is active and tenant is active.
--- is_bookable is intentionally NOT checked — non-bookable tables must render as
+-- is_bookable is intentionally NOT checked - non-bookable tables must render as
 -- "unavailable" zones on the public floor map.
 create policy "floor_tables: public read active plan"
   on public.floor_tables

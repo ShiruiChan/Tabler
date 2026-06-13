@@ -36,49 +36,57 @@ export default async function PublicMenuPage({ params }: PublicMenuPageProps) {
       className="font-body min-h-screen"
       style={{ backgroundColor: "var(--color-secondary)" }}
     >
-      <div className="mx-auto max-w-3xl px-6 py-12">
+      <div className="mx-auto max-w-3xl px-6 py-16">
         {/* Page heading */}
-        <h1
-          className="font-heading text-3xl font-bold mb-2"
-          style={{ color: "var(--color-primary)" }}
-        >
-          Our Menu
-        </h1>
-        <p
-          className="text-sm mb-10"
-          style={{ color: "var(--color-primary)", opacity: 0.6 }}
-        >
-          {tenant.name}
-        </p>
+        <header className="animate-fade-up mb-12 text-center">
+          <span
+            className="text-xs font-semibold uppercase tracking-[0.2em]"
+            style={{ color: "var(--color-accent)" }}
+          >
+            {tenant.name}
+          </span>
+          <h1
+            className="font-heading mt-2 text-4xl font-bold tracking-tight md:text-5xl"
+            style={{ color: "var(--color-primary)" }}
+          >
+            Меню
+          </h1>
+        </header>
 
         {/* Empty state */}
         {categories.length === 0 && (
-          <p
-            className="text-base"
-            style={{ color: "var(--color-primary)", opacity: 0.7 }}
+          <div
+            className="rounded-2xl border border-dashed py-16 text-center"
+            style={{ borderColor: "rgba(0,0,0,0.12)" }}
           >
-            Our menu is coming soon. Check back later!
-          </p>
+            <p
+              className="text-base"
+              style={{ color: "var(--color-primary)", opacity: 0.65 }}
+            >
+              Меню скоро появится. Загляните позже!
+            </p>
+          </div>
         )}
 
         {/* Category sections */}
         {categories.map((category) => (
-          <section key={category.id} className="mb-12">
+          <section key={category.id} className="mb-14">
             {/* Category heading */}
-            <h2
-              className="font-heading text-xl font-semibold mb-1 border-b pb-2"
-              style={{
-                color: "var(--color-primary)",
-                borderColor: "var(--color-primary)",
-                opacity: 1,
-              }}
+            <div
+              className="mb-6 flex items-baseline gap-3 border-b pb-3"
+              style={{ borderColor: "rgba(0,0,0,0.10)" }}
             >
-              {category.name}
-            </h2>
+              <h2
+                className="font-heading text-2xl font-semibold tracking-tight"
+                style={{ color: "var(--color-primary)" }}
+              >
+                {category.name}
+              </h2>
+            </div>
             {category.description && (
               <p
-                className="text-sm mb-4 mt-1"
-                style={{ color: "var(--color-primary)", opacity: 0.65 }}
+                className="-mt-3 mb-6 text-sm leading-relaxed"
+                style={{ color: "var(--color-primary)", opacity: 0.6 }}
               >
                 {category.description}
               </p>
@@ -87,18 +95,18 @@ export default async function PublicMenuPage({ params }: PublicMenuPageProps) {
             {/* Dishes */}
             {category.dishes.length === 0 ? (
               <p
-                className="text-sm italic mt-3"
+                className="text-sm italic"
                 style={{ color: "var(--color-primary)", opacity: 0.5 }}
               >
-                No items available in this category yet.
+                В этой категории пока нет блюд.
               </p>
             ) : (
-              <ul className="mt-4 space-y-4">
+              <ul className="space-y-4">
                 {category.dishes.map((dish) => (
                   <li
                     key={dish.id}
-                    className="flex gap-4 rounded-lg p-4"
-                    style={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                    className="flex gap-4 rounded-2xl border bg-white/60 p-4 shadow-sm transition hover:shadow-md sm:p-5"
+                    style={{ borderColor: "rgba(0,0,0,0.07)" }}
                   >
                     {/* Photo */}
                     {dish.photo_url && (
@@ -106,21 +114,21 @@ export default async function PublicMenuPage({ params }: PublicMenuPageProps) {
                       <img
                         src={dish.photo_url}
                         alt={dish.name}
-                        className="h-20 w-20 flex-shrink-0 rounded-md object-cover"
+                        className="h-24 w-24 flex-shrink-0 rounded-xl object-cover sm:h-28 sm:w-28"
                       />
                     )}
 
                     {/* Details */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline justify-between gap-2 flex-wrap">
+                      <div className="flex items-baseline justify-between gap-3 flex-wrap">
                         <span
-                          className="font-heading text-base font-semibold"
+                          className="font-heading text-base font-semibold sm:text-lg"
                           style={{ color: "var(--color-primary)" }}
                         >
                           {dish.name}
                         </span>
                         <span
-                          className="text-sm font-medium shrink-0"
+                          className="text-sm font-semibold shrink-0 sm:text-base"
                           style={{ color: "var(--color-accent)" }}
                         >
                           {formatPrice(dish.price_cents)}
@@ -129,8 +137,8 @@ export default async function PublicMenuPage({ params }: PublicMenuPageProps) {
 
                       {dish.description && (
                         <p
-                          className="text-sm mt-1 leading-relaxed"
-                          style={{ color: "var(--color-primary)", opacity: 0.7 }}
+                          className="text-sm mt-1.5 leading-relaxed"
+                          style={{ color: "var(--color-primary)", opacity: 0.65 }}
                         >
                           {dish.description}
                         </p>
@@ -138,15 +146,14 @@ export default async function PublicMenuPage({ params }: PublicMenuPageProps) {
 
                       {/* Allergen chips */}
                       {dish.allergens.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
+                        <div className="flex flex-wrap gap-1.5 mt-3">
                           {dish.allergens.map((allergen) => (
                             <span
                               key={allergen}
-                              className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium"
+                              className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium"
                               style={{
-                                backgroundColor: "var(--color-accent)",
-                                color: "#fff",
-                                opacity: 0.85,
+                                backgroundColor: "color-mix(in srgb, var(--color-accent) 12%, transparent)",
+                                color: "var(--color-accent)",
                               }}
                             >
                               {allergen}

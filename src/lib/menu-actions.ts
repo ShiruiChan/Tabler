@@ -100,7 +100,7 @@ const categoryUpdateSchema = categoryCreateSchema.extend({
 });
 
 // ---------------------------------------------------------------------------
-// Dish price helper — parses a dollar-amount string into integer cents.
+// Dish price helper - parses a dollar-amount string into integer cents.
 // Returns NaN on invalid input so the caller can reject.
 // ---------------------------------------------------------------------------
 function dollarsToCents(value: string | null | undefined): number {
@@ -243,7 +243,7 @@ export async function updateCategory(
 /**
  * Server action: delete a menu category.
  *
- * CAUTION: cascades — all dishes belonging to this category are also deleted
+ * CAUTION: cascades - all dishes belonging to this category are also deleted
  * (defined by the ON DELETE CASCADE constraint on dishes.category_id).
  * The write is double-scoped: tenant_id eq + RLS.
  */

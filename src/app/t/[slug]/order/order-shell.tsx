@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * OrderShell — main client island for the B2C ordering flow.
+ * OrderShell - main client island for the B2C ordering flow.
  *
  * Responsibilities:
  *   - Client-side cart state (NO server cart).
@@ -219,10 +219,10 @@ export function OrderShell({
     const shortId = confirmation.order_id.slice(0, 8).toUpperCase();
     return (
       <div
-        className="rounded-xl border p-8"
+        className="animate-fade-up rounded-2xl border p-8 shadow-sm"
         style={{
-          borderColor: "var(--color-accent)",
-          backgroundColor: "rgba(0,0,0,0.03)",
+          borderColor: "color-mix(in srgb, var(--color-accent) 40%, transparent)",
+          backgroundColor: "color-mix(in srgb, var(--color-accent) 6%, transparent)",
         }}
         role="status"
         aria-live="polite"
@@ -231,19 +231,19 @@ export function OrderShell({
           className="font-heading text-xl font-bold mb-2"
           style={{ color: "var(--color-primary)" }}
         >
-          Order placed!
+          Заказ оформлен!
         </h2>
         <p
           className="text-sm mb-1"
           style={{ color: "var(--color-primary)", opacity: 0.8 }}
         >
-          Reference: <strong>#{shortId}</strong>
+          Номер заказа: <strong>#{shortId}</strong>
         </p>
         <p
           className="text-sm mb-1"
           style={{ color: "var(--color-primary)", opacity: 0.8 }}
         >
-          Total:{" "}
+          Итого:{" "}
           <strong>
             {formatCents(confirmation.total_cents, confirmation.currency)}
           </strong>
@@ -253,24 +253,24 @@ export function OrderShell({
             className="text-sm mb-4"
             style={{ color: "var(--color-primary)", opacity: 0.8 }}
           >
-            Estimated delivery: ~{confirmation.estimated_minutes} min
+            Примерное время доставки: ~{confirmation.estimated_minutes} мин
           </p>
         )}
         <p
           className="text-sm mb-6"
           style={{ color: "var(--color-primary)", opacity: 0.6 }}
         >
-          Your order is pending confirmation from the restaurant.
+          Заказ ожидает подтверждения от ресторана.
           {orderType === "delivery" &&
-            " All times are shown in UTC."}
+            " Время указано по UTC."}
         </p>
         <button
           type="button"
           onClick={handleNewOrder}
-          className="inline-block rounded-lg px-5 py-2 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2"
+          className="inline-block rounded-full px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2"
           style={{ backgroundColor: "var(--color-accent)" }}
         >
-          Place another order
+          Сделать новый заказ
         </button>
       </div>
     );
@@ -279,23 +279,28 @@ export function OrderShell({
   // ── Empty menu ────────────────────────────────────────────────────────────
   if (menu.length === 0) {
     return (
-      <p
-        className="text-base"
-        style={{ color: "var(--color-primary)", opacity: 0.7 }}
+      <div
+        className="rounded-2xl border border-dashed py-16 text-center"
+        style={{ borderColor: "rgba(0,0,0,0.12)" }}
       >
-        Our menu is coming soon. Check back later!
-      </p>
+        <p
+          className="text-base"
+          style={{ color: "var(--color-primary)", opacity: 0.65 }}
+        >
+          Меню скоро появится. Загляните позже!
+        </p>
+      </div>
     );
   }
 
   return (
     <div className="space-y-10">
       {/* ── Menu & Cart ─────────────────────────────────────────────────── */}
-      <section aria-label="Menu">
+      <section aria-label="Меню">
         {menu.map((category) => (
           <div key={category.id} className="mb-10">
             <h2
-              className="font-heading text-lg font-semibold mb-3 border-b pb-2"
+              className="font-heading text-xl font-semibold mb-4 border-b pb-3"
               style={{
                 color: "var(--color-primary)",
                 borderColor: "rgba(0,0,0,0.10)",
@@ -305,8 +310,8 @@ export function OrderShell({
             </h2>
             {category.description && (
               <p
-                className="text-sm mb-3"
-                style={{ color: "var(--color-primary)", opacity: 0.65 }}
+                className="-mt-2 text-sm mb-4"
+                style={{ color: "var(--color-primary)", opacity: 0.6 }}
               >
                 {category.description}
               </p>
@@ -318,15 +323,15 @@ export function OrderShell({
                 return (
                   <li
                     key={dish.id}
-                    className="flex items-center gap-4 rounded-lg p-3"
-                    style={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+                    className="flex items-center gap-4 rounded-2xl border bg-white/60 p-3.5 shadow-sm transition hover:shadow-md"
+                    style={{ borderColor: "rgba(0,0,0,0.07)" }}
                   >
                     {dish.photo_url && (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={dish.photo_url}
                         alt={dish.name}
-                        className="h-16 w-16 flex-shrink-0 rounded-md object-cover"
+                        className="h-16 w-16 flex-shrink-0 rounded-xl object-cover"
                       />
                     )}
                     <div className="flex-1 min-w-0">
@@ -397,18 +402,15 @@ export function OrderShell({
       {/* ── Cart summary ────────────────────────────────────────────────── */}
       {cartLines.length > 0 && (
         <section
-          aria-label="Cart summary"
-          className="rounded-xl border p-5"
-          style={{
-            borderColor: "rgba(0,0,0,0.10)",
-            backgroundColor: "rgba(0,0,0,0.03)",
-          }}
+          aria-label="Корзина"
+          className="rounded-2xl border bg-white/70 p-5 shadow-sm"
+          style={{ borderColor: "rgba(0,0,0,0.08)" }}
         >
           <h2
             className="font-heading text-base font-semibold mb-3"
             style={{ color: "var(--color-primary)" }}
           >
-            Cart
+            Корзина
           </h2>
           <ul className="space-y-2 mb-3">
             {cartLines.map((line) => (
@@ -428,12 +430,12 @@ export function OrderShell({
                   </span>
                   <button
                     type="button"
-                    aria-label={`Remove ${line.dish.name}`}
+                    aria-label={`Убрать ${line.dish.name}`}
                     onClick={() => removeFromCart(line.dish.id)}
                     className="text-xs underline transition hover:opacity-70 focus:outline-none"
                     style={{ color: "rgb(220,38,38)" }}
                   >
-                    Remove
+                    Убрать
                   </button>
                 </div>
               </li>
@@ -442,7 +444,7 @@ export function OrderShell({
           <div className="border-t pt-2" style={{ borderColor: "rgba(0,0,0,0.08)" }}>
             <div className="flex justify-between text-sm font-medium">
               <span style={{ color: "var(--color-primary)", opacity: 0.7 }}>
-                Subtotal
+                Сумма
               </span>
               <span style={{ color: "var(--color-primary)" }}>
                 {formatCents(subtotal, currency)}
@@ -452,7 +454,7 @@ export function OrderShell({
               <>
                 <div className="flex justify-between text-sm mt-1">
                   <span style={{ color: "var(--color-primary)", opacity: 0.7 }}>
-                    Delivery fee
+                    Доставка
                   </span>
                   <span
                     style={{
@@ -460,12 +462,12 @@ export function OrderShell({
                     }}
                   >
                     {deliveryFee === 0
-                      ? "Free"
+                      ? "Бесплатно"
                       : formatCents(deliveryFee, currency)}
                   </span>
                 </div>
                 <div className="flex justify-between text-sm font-semibold mt-1">
-                  <span style={{ color: "var(--color-primary)" }}>Total</span>
+                  <span style={{ color: "var(--color-primary)" }}>Итого</span>
                   <span style={{ color: "var(--color-accent)" }}>
                     {formatCents(displayTotal, currency)}
                   </span>
@@ -501,13 +503,13 @@ export function OrderShell({
               className="text-sm font-medium mb-2"
               style={{ color: "var(--color-primary)" }}
             >
-              Order type
+              Тип заказа
             </p>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setOrderType("in_session")}
-                className="rounded-lg px-4 py-2 text-sm font-medium border transition focus:outline-none focus:ring-2"
+                className="rounded-full px-5 py-2 text-sm font-medium border transition focus:outline-none focus:ring-2"
                 style={{
                   backgroundColor:
                     orderType === "in_session"
@@ -523,13 +525,13 @@ export function OrderShell({
                       : "rgba(0,0,0,0.18)",
                 }}
               >
-                Dine-in
+                В заведении
               </button>
               {deliveryEnabled && (
                 <button
                   type="button"
                   onClick={() => setOrderType("delivery")}
-                  className="rounded-lg px-4 py-2 text-sm font-medium border transition focus:outline-none focus:ring-2"
+                  className="rounded-full px-5 py-2 text-sm font-medium border transition focus:outline-none focus:ring-2"
                   style={{
                     backgroundColor:
                       orderType === "delivery"
@@ -545,7 +547,7 @@ export function OrderShell({
                         : "rgba(0,0,0,0.18)",
                   }}
                 >
-                  Delivery
+                  Доставка
                 </button>
               )}
             </div>
@@ -559,14 +561,14 @@ export function OrderShell({
                 className="block text-sm font-medium mb-1"
                 style={{ color: "var(--color-primary)" }}
               >
-                Table <span aria-hidden="true">*</span>
+                Столик <span aria-hidden="true">*</span>
               </label>
               {allTables.length === 0 ? (
                 <p
                   className="text-sm"
                   style={{ color: "var(--color-primary)", opacity: 0.6 }}
                 >
-                  No tables are currently available for ordering.
+                  Сейчас нет столиков, доступных для заказа.
                 </p>
               ) : (
                 <select
@@ -581,14 +583,14 @@ export function OrderShell({
                     backgroundColor: "var(--color-secondary)",
                   }}
                 >
-                  <option value="">Select a table…</option>
+                  <option value="">Выберите столик…</option>
                   {floorPlans.map((plan) => (
                     <optgroup key={plan.id} label={plan.name}>
                       {plan.tables
                         .filter((t) => t.is_bookable)
                         .map((table) => (
                           <option key={table.id} value={table.id}>
-                            Table {table.label} (seats {table.capacity})
+                            Столик {table.label} (мест: {table.capacity})
                           </option>
                         ))}
                     </optgroup>
@@ -612,8 +614,7 @@ export function OrderShell({
                     color: "var(--color-primary)",
                   }}
                 >
-                  Delivery is currently closed. Orders placed outside delivery
-                  hours will be rejected. All schedule times are in UTC.
+                  Доставка сейчас закрыта. Заказы вне часов доставки будут отклонены. Время в расписании указано по UTC.
                 </div>
               )}
 
@@ -628,7 +629,7 @@ export function OrderShell({
                     color: "var(--color-primary)",
                   }}
                 >
-                  Delivery is not currently available at this restaurant.
+                  Доставка в этом ресторане сейчас недоступна.
                 </div>
               )}
 
@@ -640,7 +641,7 @@ export function OrderShell({
                     className="block text-sm font-medium mb-1"
                     style={{ color: "var(--color-primary)" }}
                   >
-                    Delivery zone <span aria-hidden="true">*</span>
+                    Зона доставки <span aria-hidden="true">*</span>
                   </label>
                   <select
                     id="zone-select"
@@ -654,12 +655,12 @@ export function OrderShell({
                       backgroundColor: "var(--color-secondary)",
                     }}
                   >
-                    <option value="">Select a zone…</option>
+                    <option value="">Выберите зону…</option>
                     {zones.map((zone) => (
                       <option key={zone.id} value={zone.id}>
                         {zone.name}
                         {zone.fee_override_cents != null
-                          ? ` — ${formatCents(zone.fee_override_cents, currency)} delivery`
+                          ? ` - доставка ${formatCents(zone.fee_override_cents, currency)}`
                           : ""}
                       </option>
                     ))}
@@ -678,19 +679,19 @@ export function OrderShell({
               >
                 {freeOver != null && subtotal >= freeOver ? (
                   <span style={{ color: "rgb(22,163,74)", fontWeight: 600 }}>
-                    Free delivery applied (subtotal ≥{" "}
+                    Бесплатная доставка (сумма ≥{" "}
                     {formatCents(freeOver, currency)})
                   </span>
                 ) : (
                   <>
-                    Delivery fee:{" "}
+                    Стоимость доставки:{" "}
                     <strong>{formatCents(baseFee, currency)}</strong>
                     {freeOver != null && (
                       <>
-                        {" "}· Free delivery over{" "}
+                        {" "}· Бесплатно от{" "}
                         <strong>{formatCents(freeOver, currency)}</strong>
                         {" ("}
-                        {formatCents(freeOver - subtotal, currency)} more needed
+                        не хватает {formatCents(freeOver - subtotal, currency)}
                         {")"}
                       </>
                     )}
@@ -698,14 +699,14 @@ export function OrderShell({
                 )}
                 {belowMinimum && (
                   <p className="mt-1" style={{ color: "rgb(220,38,38)" }}>
-                    Minimum order:{" "}
+                    Минимальный заказ:{" "}
                     {formatCents(minOrder, currency)} (
-                    {formatCents(minOrder - subtotal, currency)} more needed)
+                    не хватает {formatCents(minOrder - subtotal, currency)})
                   </p>
                 )}
                 {settings?.estimated_minutes != null && (
                   <p className="mt-1">
-                    Estimated delivery: ~{settings.estimated_minutes} min
+                    Примерное время доставки: ~{settings.estimated_minutes} мин
                   </p>
                 )}
               </div>
@@ -717,7 +718,7 @@ export function OrderShell({
                   className="block text-sm font-medium mb-1"
                   style={{ color: "var(--color-primary)" }}
                 >
-                  Delivery address <span aria-hidden="true">*</span>
+                  Адрес доставки <span aria-hidden="true">*</span>
                 </label>
                 <textarea
                   id="delivery-address"
@@ -726,7 +727,7 @@ export function OrderShell({
                   required
                   maxLength={500}
                   rows={2}
-                  placeholder="123 Main St, Apt 4B, City"
+                  placeholder="ул. Ленина, д. 10, кв. 5, город"
                   className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 resize-y"
                   style={{
                     borderColor: "rgba(0,0,0,0.18)",
@@ -745,7 +746,7 @@ export function OrderShell({
               className="block text-sm font-medium mb-1"
               style={{ color: "var(--color-primary)" }}
             >
-              Your name <span aria-hidden="true">*</span>
+              Ваше имя <span aria-hidden="true">*</span>
             </label>
             <input
               id="customer-name"
@@ -755,7 +756,7 @@ export function OrderShell({
               maxLength={120}
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Jane Smith"
+              placeholder="Иван Иванов"
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -777,7 +778,7 @@ export function OrderShell({
                 className="font-normal"
                 style={{ color: "var(--color-primary)", opacity: 0.5 }}
               >
-                (optional)
+                (необязательно)
               </span>
             </label>
             <input
@@ -787,7 +788,7 @@ export function OrderShell({
               maxLength={254}
               value={customerEmail}
               onChange={(e) => setCustomerEmail(e.target.value)}
-              placeholder="jane@example.com"
+              placeholder="ivan@example.com"
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -804,12 +805,12 @@ export function OrderShell({
               className="block text-sm font-medium mb-1"
               style={{ color: "var(--color-primary)" }}
             >
-              Phone{" "}
+              Телефон{" "}
               <span
                 className="font-normal"
                 style={{ color: "var(--color-primary)", opacity: 0.5 }}
               >
-                (optional)
+                (необязательно)
               </span>
             </label>
             <input
@@ -820,7 +821,7 @@ export function OrderShell({
               maxLength={40}
               value={customerPhone}
               onChange={(e) => setCustomerPhone(e.target.value)}
-              placeholder="+1 555 000 0000"
+              placeholder="+7 900 000 00 00"
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -837,12 +838,12 @@ export function OrderShell({
               className="block text-sm font-medium mb-1"
               style={{ color: "var(--color-primary)" }}
             >
-              Special requests{" "}
+              Пожелания{" "}
               <span
                 className="font-normal"
                 style={{ color: "var(--color-primary)", opacity: 0.5 }}
               >
-                (optional)
+                (необязательно)
               </span>
             </label>
             <textarea
@@ -851,7 +852,7 @@ export function OrderShell({
               rows={2}
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Allergies, dietary requirements…"
+              placeholder="Аллергии, особые пожелания…"
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 resize-y"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -873,18 +874,17 @@ export function OrderShell({
               (orderType === "delivery" && !deliveryAddress.trim()) ||
               !customerName.trim()
             }
-            className="w-full rounded-lg px-6 py-3 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
             style={{ backgroundColor: "var(--color-accent)" }}
           >
-            {isPending ? "Placing order…" : "Place order"}
+            {isPending ? "Оформляем…" : "Оформить заказ"}
           </button>
 
           <p
             className="text-xs"
             style={{ color: "var(--color-primary)", opacity: 0.4 }}
           >
-            All delivery schedule times are in UTC. Orders are created as
-            pending and confirmed by the restaurant.
+            Время в расписании доставки указано по UTC. Заказы создаются как ожидающие и подтверждаются рестораном.
           </p>
         </form>
       )}

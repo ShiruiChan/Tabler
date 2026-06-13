@@ -221,7 +221,7 @@ alter table public.tenants  enable row level security;
 alter table public.profiles enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 9. RLS policies — tenants
+-- 9. RLS policies - tenants
 -- ---------------------------------------------------------------------------
 
 -- Anyone (anon + authenticated) can read active tenants.
@@ -264,7 +264,7 @@ create policy "tenants: owner update own"
   );
 
 -- ---------------------------------------------------------------------------
--- 10. RLS policies — profiles
+-- 10. RLS policies - profiles
 -- ---------------------------------------------------------------------------
 
 -- Each user can read their own profile row.

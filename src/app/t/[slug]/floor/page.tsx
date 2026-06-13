@@ -32,43 +32,54 @@ export default async function PublicFloorPage({ params }: PublicFloorPageProps) 
       className="font-body min-h-screen"
       style={{ backgroundColor: "var(--color-secondary)" }}
     >
-      <div className="mx-auto max-w-4xl px-6 py-12">
+      <div className="mx-auto max-w-4xl px-6 py-16">
         {/* Page heading */}
-        <h1
-          className="font-heading text-3xl font-bold mb-2"
-          style={{ color: "var(--color-primary)" }}
-        >
-          Our Floor Plan
-        </h1>
-        <p
-          className="text-sm mb-10"
-          style={{ color: "var(--color-primary)", opacity: 0.6 }}
-        >
-          {tenant.name}
-        </p>
+        <header className="animate-fade-up mb-10">
+          <span
+            className="text-xs font-semibold uppercase tracking-[0.2em]"
+            style={{ color: "var(--color-accent)" }}
+          >
+            {tenant.name}
+          </span>
+          <h1
+            className="font-heading mt-2 text-4xl font-bold tracking-tight md:text-5xl"
+            style={{ color: "var(--color-primary)" }}
+          >
+            План зала
+          </h1>
+        </header>
 
         {/* Empty state */}
         {plans.length === 0 && (
-          <p
-            className="text-base"
-            style={{ color: "var(--color-primary)", opacity: 0.7 }}
+          <div
+            className="rounded-2xl border border-dashed py-16 text-center"
+            style={{ borderColor: "rgba(0,0,0,0.12)" }}
           >
-            Floor plan coming soon. Check back later!
-          </p>
+            <p
+              className="text-base"
+              style={{ color: "var(--color-primary)", opacity: 0.65 }}
+            >
+              План зала скоро появится. Загляните позже!
+            </p>
+          </div>
         )}
 
         {/* One section per floor plan */}
         {plans.map((plan, index) => (
-          <section key={plan.id} className={index > 0 ? "mt-16" : undefined}>
+          <section
+            key={plan.id}
+            className={
+              index > 0
+                ? "mt-10 rounded-2xl border bg-white/60 p-5 shadow-sm sm:p-6"
+                : "rounded-2xl border bg-white/60 p-5 shadow-sm sm:p-6"
+            }
+            style={{ borderColor: "rgba(0,0,0,0.07)" }}
+          >
             {/* Show plan name as section heading only when there are multiple plans */}
             {plans.length > 1 && (
               <h2
-                className="font-heading text-xl font-semibold mb-6 border-b pb-2"
-                style={{
-                  color: "var(--color-primary)",
-                  borderColor: "var(--color-primary)",
-                  opacity: 1,
-                }}
+                className="font-heading text-xl font-semibold mb-5"
+                style={{ color: "var(--color-primary)" }}
               >
                 {plan.name}
               </h2>

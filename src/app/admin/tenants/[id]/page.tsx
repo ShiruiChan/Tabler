@@ -2,6 +2,7 @@ import { getTenantWithModules, listModules } from "@/lib/admin-queries";
 import { notFound } from "next/navigation";
 import UpdateTenantForm from "./update-tenant-form";
 import TenantControls from "./tenant-controls";
+import { PageHeader, PanelCard } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -29,16 +30,16 @@ export default async function TenantDetailPage({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">{tenant.name}</h1>
-        <p className="mt-1 font-mono text-sm text-gray-500">{tenant.slug}</p>
-      </div>
+      <PageHeader
+        eyebrow="Ресторан"
+        title={tenant.name}
+        description={<span className="font-mono">{tenant.slug}</span>}
+      />
 
       {/* Edit tenant form */}
-      <section>
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">Edit tenant</h2>
+      <PanelCard title="Редактировать ресторан" description="Измените название и домен ресторана.">
         <UpdateTenantForm tenant={tenant} />
-      </section>
+      </PanelCard>
 
       {/* Status + module controls */}
       <TenantControls

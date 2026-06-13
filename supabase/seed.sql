@@ -1,5 +1,5 @@
 -- =============================================================================
--- seed.sql  —  Development seed data
+-- seed.sql  -  Development seed data
 -- =============================================================================
 -- Run this after applying all migrations to populate the dev database with
 -- representative data.
@@ -56,7 +56,7 @@ on conflict (slug) do nothing;
 -- =============================================================================
 
 -- ---------------------------------------------------------------------------
--- Menu seed — dev data for demo-bistro and pasta-house
+-- Menu seed - dev data for demo-bistro and pasta-house
 -- ---------------------------------------------------------------------------
 -- Uses WHERE NOT EXISTS guards so re-running the seed is idempotent.
 -- Categories and dishes are inserted only when no row with that name already
@@ -352,7 +352,7 @@ select
   cat.tenant_id,
   cat.id,
   'Spaghetti alla Carbonara',
-  'Spaghetti with guanciale, Pecorino Romano, egg yolk, and black pepper — no cream.',
+  'Spaghetti with guanciale, Pecorino Romano, egg yolk, and black pepper - no cream.',
   1650,
   array['gluten','eggs','dairy']::text[],
   true,

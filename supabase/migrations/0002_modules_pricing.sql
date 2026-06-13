@@ -4,7 +4,7 @@
 -- =============================================================================
 
 -- ---------------------------------------------------------------------------
--- 1. modules table — platform-wide catalog (super-admin managed)
+-- 1. modules table - platform-wide catalog (super-admin managed)
 -- ---------------------------------------------------------------------------
 create table public.modules (
   id               text        primary key
@@ -28,7 +28,7 @@ create trigger modules_set_updated_at
   for each row execute function public.set_updated_at();
 
 -- ---------------------------------------------------------------------------
--- 2. tenant_modules table — per-tenant feature flags and price overrides
+-- 2. tenant_modules table - per-tenant feature flags and price overrides
 --
 -- Column-level access design (see section 6 for implementation):
 --   anon + authenticated visitors get only: tenant_id, module_id, enabled,
@@ -58,7 +58,7 @@ create trigger tenant_modules_set_updated_at
   for each row execute function public.set_updated_at();
 
 -- ---------------------------------------------------------------------------
--- 3. Seed — reference data for the module catalog
+-- 3. Seed - reference data for the module catalog
 --    Inserted inside the migration so the catalog is always present.
 -- ---------------------------------------------------------------------------
 insert into public.modules (id, name, description, base_price_cents, billing_period) values
@@ -158,7 +158,7 @@ alter table public.modules        enable row level security;
 alter table public.tenant_modules enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 7. RLS policies — modules
+-- 7. RLS policies - modules
 -- ---------------------------------------------------------------------------
 
 -- Anyone can read modules that are active.
@@ -177,12 +177,12 @@ create policy "modules: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 8. RLS policies — tenant_modules
+-- 8. RLS policies - tenant_modules
 --
 -- Column-level privacy for price_override_cents:
 --   We revoke the default table-level SELECT from anon and authenticated, then
 --   grant SELECT only on the safe columns.  RLS still applies on top of these
---   column grants — both must pass for a row to be visible.
+--   column grants - both must pass for a row to be visible.
 --
 --   Pricing is intentionally excluded from the column grant for anon and
 --   authenticated roles.  Owners, staff, and super_admin access pricing only
@@ -206,7 +206,7 @@ create policy "tenant_modules: public read enabled"
   using (enabled = true);
 
 -- Owner / staff policy: can see ALL rows for their own tenant (incl. disabled
--- and created_at / updated_at — via the definer function for pricing).
+-- and created_at / updated_at - via the definer function for pricing).
 create policy "tenant_modules: tenant role read own"
   on public.tenant_modules
   for select

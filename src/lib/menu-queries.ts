@@ -25,7 +25,7 @@ export interface MenuCategoryWithDishes extends MenuCategory {
  * This function issues two queries then groups dishes into categories in JS
  * to avoid a nested Supabase query and keep type inference straightforward.
  *
- * Authorization: none — RLS public-read policies on menu_categories and dishes
+ * Authorization: none - RLS public-read policies on menu_categories and dishes
  * enforce the is_active / is_available / tenant-active constraints.
  *
  * Returns an empty array when the tenant has no visible menu content.
@@ -79,7 +79,7 @@ export async function getPublicMenu(
 
 /**
  * Returns the full menu for a given tenant including inactive categories and
- * unavailable dishes — intended for the dashboard menu editor.
+ * unavailable dishes - intended for the dashboard menu editor.
  *
  * Authorization:
  *   - The caller must be signed in.

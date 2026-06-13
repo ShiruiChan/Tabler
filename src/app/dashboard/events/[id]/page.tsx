@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getEventsForDashboard, getEventTicketsForDashboard } from "@/lib/event-queries";
 import { TicketStatusActions } from "../ticket-status-actions";
 import type { EventTicket, EventTicketStatus } from "@/lib/types/database";
+import { PageHeader, PanelCard, StatCard, Badge } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,7 @@ export const dynamic = "force-dynamic";
 
 function fmtDatetime(isoUtc: string): string {
   const d = new Date(isoUtc);
-  return d.toLocaleString("en-US", {
+  return d.toLocaleString("ru-RU", {
     year:     "numeric",
     month:    "short",
     day:      "numeric",
@@ -25,7 +26,7 @@ function fmtDatetime(isoUtc: string): string {
 }
 
 function fmtPrice(cents: number, currency: string): string {
-  if (cents === 0) return "Free";
+  if (cents === 0) return "Бесплатно";
   const symbols: Record<string, string> = { usd: "$", eur: "€", gbp: "£", rub: "₽" };
   const sym = symbols[currency] ?? currency.toUpperCase() + " ";
   return `${sym}${(cents / 100).toFixed(2)}`;
@@ -60,21 +61,18 @@ function TicketSummary({ tickets }: TicketSummaryProps) {
   }
 
   const cards = [
-    { label: "Reserved",  value: String(counts.reserved),  cls: "bg-amber-50 border-amber-200 text-amber-800" },
-    { label: "Paid",      value: String(counts.paid),      cls: "bg-green-50 border-green-200 text-green-800" },
-    { label: "Cancelled", value: String(counts.cancelled), cls: "bg-gray-50 border-gray-200 text-gray-600" },
-    { label: "Refunded",  value: String(counts.refunded),  cls: "bg-blue-50 border-blue-200 text-blue-800" },
-    { label: "Active qty", value: String(totalQty),        cls: "bg-gray-50 border-gray-200 text-gray-800" },
-    { label: "Revenue",   value: paidRevenue > 0 ? `$${(paidRevenue / 100).toFixed(2)}` : "—", cls: "bg-gray-50 border-gray-200 text-gray-800" },
+    { label: "Забронировано", value: String(counts.reserved) },
+    { label: "Оплачено",      value: String(counts.paid) },
+    { label: "Отменено",      value: String(counts.cancelled) },
+    { label: "Возвращено",    value: String(counts.refunded) },
+    { label: "Активных мест", value: String(totalQty) },
+    { label: "Выручка",       value: paidRevenue > 0 ? `$${(paidRevenue / 100).toFixed(2)}` : "-" },
   ] as const;
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-      {cards.map(({ label, value, cls }) => (
-        <div key={label} className={`rounded-lg border px-4 py-3 text-center ${cls}`}>
-          <div className="text-xl font-bold tabular-nums">{value}</div>
-          <div className="text-xs font-medium mt-0.5">{label}</div>
-        </div>
+      {cards.map(({ label, value }) => (
+        <StatCard key={label} stat={value} label={label} />
       ))}
     </div>
   );
@@ -101,9 +99,9 @@ export default async function EventAttendeesPage({ params }: AttendeePageProps) 
 
   if (!profile.tenant_id) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 px-6 py-5">
-        <p className="text-sm text-red-700">
-          Your account is not associated with a restaurant. Contact support.
+      <div className="alert-error">
+        <p>
+          Ваш аккаунт не привязан к ресторану. Обратитесь в поддержку.
         </p>
       </div>
     );
@@ -112,7 +110,7 @@ export default async function EventAttendeesPage({ params }: AttendeePageProps) 
   const tenantId = profile.tenant_id;
   const { id: eventId } = await params;
 
-  // Load the event (from the tenant's events list — already auth-checked)
+  // Load the event (from the tenant's events list - already auth-checked)
   const events = await getEventsForDashboard(tenantId);
   const event = events.find((e) => e.id === eventId);
 
@@ -126,98 +124,93 @@ export default async function EventAttendeesPage({ params }: AttendeePageProps) 
 
   return (
     <div className="space-y-8">
-      {/* Back link */}
-      <div>
-        <Link
-          href="/dashboard/events"
-          className="text-sm font-medium text-gray-500 hover:text-gray-900 transition"
-        >
-          &larr; Back to events
-        </Link>
-      </div>
-
-      {/* Page header */}
-      <div>
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-2xl font-bold text-gray-900">{event.title}</h1>
-          {event.is_published ? (
-            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
-              Published
+      <Link
+        href="/dashboard/events"
+        className="inline-block text-sm font-medium text-amber-400 transition hover:text-amber-300"
+      >
+        &larr; Назад к событиям
+      </Link>
+      <PageHeader
+        eyebrow="События"
+        title={
+          <span className="flex flex-wrap items-center gap-3">
+            {event.title}
+            {event.is_published ? (
+              <Badge tone="emerald">Опубликовано</Badge>
+            ) : (
+              <Badge tone="slate">Черновик</Badge>
+            )}
+          </span>
+        }
+        description={
+          <>
+            {fmtDatetime(event.starts_at)}
+            {event.ends_at ? ` - ${fmtDatetime(event.ends_at)}` : ""}
+            <span className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
+              <span>
+                Вместимость:{" "}
+                <span className="font-medium text-slate-300">{event.capacity}</span>
+              </span>
+              <span>
+                Продано:{" "}
+                <span className="font-medium text-slate-300">{event.sold}</span>
+              </span>
+              <span>
+                Осталось:{" "}
+                <span className="font-medium text-slate-300">{remaining}</span>
+              </span>
+              <span>
+                Цена билета:{" "}
+                <span className="font-medium text-slate-300">
+                  {fmtPrice(event.price_cents, event.currency)}
+                </span>
+              </span>
             </span>
-          ) : (
-            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-              Draft
-            </span>
-          )}
-        </div>
-        <p className="mt-1 text-sm text-gray-500">
-          {fmtDatetime(event.starts_at)}
-          {event.ends_at ? ` — ${fmtDatetime(event.ends_at)}` : ""}
-        </p>
-        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-gray-500">
-          <span>
-            Capacity:{" "}
-            <span className="font-medium text-gray-700">{event.capacity}</span>
-          </span>
-          <span>
-            Sold:{" "}
-            <span className="font-medium text-gray-700">{event.sold}</span>
-          </span>
-          <span>
-            Remaining:{" "}
-            <span className="font-medium text-gray-700">{remaining}</span>
-          </span>
-          <span>
-            Ticket price:{" "}
-            <span className="font-medium text-gray-700">
-              {fmtPrice(event.price_cents, event.currency)}
-            </span>
-          </span>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Ticket summary */}
-      <section className="rounded-lg border border-gray-200 bg-white px-6 py-5">
-        <h2 className="mb-4 text-base font-semibold text-gray-900">
-          Sales overview
-        </h2>
+      <PanelCard title="Обзор продаж">
         <TicketSummary tickets={tickets} />
-      </section>
+      </PanelCard>
 
       {/* Attendee list */}
-      <section className="rounded-lg border border-gray-200 bg-white px-6 py-5">
-        <h2 className="mb-4 text-base font-semibold text-gray-900">
-          Attendees{" "}
-          <span className="text-sm font-normal text-gray-500">
-            ({tickets.length} order{tickets.length !== 1 ? "s" : ""})
-          </span>
-        </h2>
-
+      <PanelCard
+        title={
+          <>
+            Участники{" "}
+            <span className="text-sm font-normal text-slate-400">
+              ({tickets.length} {tickets.length === 1 ? "заказ" : "заказов"})
+            </span>
+          </>
+        }
+      >
         {tickets.length === 0 ? (
-          <p className="text-sm text-gray-400">No ticket orders yet.</p>
+          <p className="text-sm text-slate-500">Пока нет заказов билетов.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-100 text-sm">
+            <table className="min-w-full divide-y divide-white/10 text-sm">
               <thead>
-                <tr className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  <th className="pb-2 pr-4 text-left">Buyer</th>
-                  <th className="pb-2 pr-4 text-left">Contact</th>
-                  <th className="pb-2 pr-4 text-right tabular-nums">Qty</th>
-                  <th className="pb-2 pr-4 text-right tabular-nums">Unit price</th>
-                  <th className="pb-2 pr-4 text-right tabular-nums">Total</th>
-                  <th className="pb-2 pr-4 text-left">Ordered at</th>
-                  <th className="pb-2 text-left">Status</th>
+                <tr className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  <th className="pb-2 pr-4 text-left">Покупатель</th>
+                  <th className="pb-2 pr-4 text-left">Контакт</th>
+                  <th className="pb-2 pr-4 text-right tabular-nums">Кол-во</th>
+                  <th className="pb-2 pr-4 text-right tabular-nums">Цена за шт.</th>
+                  <th className="pb-2 pr-4 text-right tabular-nums">Итого</th>
+                  <th className="pb-2 pr-4 text-left">Заказан</th>
+                  <th className="pb-2 text-left">Статус</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody className="divide-y divide-white/5">
                 {tickets.map((ticket) => (
                   <tr key={ticket.id} className="align-top">
                     <td className="py-2 pr-4">
-                      <span className="font-medium text-gray-900">
+                      <span className="font-medium text-slate-100">
                         {ticket.buyer_name}
                       </span>
                     </td>
-                    <td className="py-2 pr-4 text-gray-500">
+                    <td className="py-2 pr-4 text-slate-400">
                       <div className="space-y-0.5">
                         {ticket.buyer_email && (
                           <div className="truncate max-w-[160px]">
@@ -228,20 +221,20 @@ export default async function EventAttendeesPage({ params }: AttendeePageProps) 
                           <div>{ticket.buyer_phone}</div>
                         )}
                         {!ticket.buyer_email && !ticket.buyer_phone && (
-                          <span className="text-gray-300">—</span>
+                          <span className="text-slate-600">-</span>
                         )}
                       </div>
                     </td>
-                    <td className="py-2 pr-4 text-right tabular-nums">
+                    <td className="py-2 pr-4 text-right tabular-nums text-slate-200">
                       {ticket.quantity}
                     </td>
-                    <td className="py-2 pr-4 text-right tabular-nums text-gray-500">
+                    <td className="py-2 pr-4 text-right tabular-nums text-slate-400">
                       {fmtPrice(ticket.unit_price_cents, ticket.currency)}
                     </td>
-                    <td className="py-2 pr-4 text-right tabular-nums font-medium text-gray-900">
+                    <td className="py-2 pr-4 text-right tabular-nums font-medium text-slate-100">
                       {fmtPrice(ticket.quantity * ticket.unit_price_cents, ticket.currency)}
                     </td>
-                    <td className="py-2 pr-4 text-gray-500 whitespace-nowrap">
+                    <td className="py-2 pr-4 text-slate-400 whitespace-nowrap">
                       {fmtDatetime(ticket.created_at)}
                     </td>
                     <td className="py-2">
@@ -257,7 +250,7 @@ export default async function EventAttendeesPage({ params }: AttendeePageProps) 
             </table>
           </div>
         )}
-      </section>
+      </PanelCard>
     </div>
   );
 }

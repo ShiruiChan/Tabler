@@ -37,7 +37,7 @@ export async function getSiteSettings(
 /**
  * Build the public CDN URL for a file stored in the tenant-assets bucket.
  *
- * The bucket is public so no signed URLs are needed — the Supabase Storage
+ * The bucket is public so no signed URLs are needed - the Supabase Storage
  * CDN serves objects at a stable, predictable path.
  *
  * @param path - The object path inside the bucket, including the tenant folder

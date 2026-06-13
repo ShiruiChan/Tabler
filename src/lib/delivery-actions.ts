@@ -14,7 +14,7 @@ import type { Profile } from "@/lib/types/database";
 export type DeliveryActionState = { error: string } | null;
 
 // ---------------------------------------------------------------------------
-// requireTenantStaff (local copy — follows event-actions.ts pattern)
+// requireTenantStaff (local copy - follows event-actions.ts pattern)
 // ---------------------------------------------------------------------------
 
 /**
@@ -80,16 +80,16 @@ async function revalidateDeliveryPaths(tenantId: string): Promise<void> {
  *   "delivery_zone polygon point %: longitude (index 0) must be a number, got %"
  *   "delivery_zone polygon point %: latitude (index 1) must be a number, got %"
  *
- * 23505 — unique constraint violation; the predictable constraint name
+ * 23505 - unique constraint violation; the predictable constraint name
  *         delivery_zones_tenant_id_name_key is mapped to a friendly message.
- * 23514 — check constraint violation.
+ * 23514 - check constraint violation.
  */
 function mapDbError(
   code: string | undefined,
   message: string | undefined,
   defaultMsg: string
 ): string {
-  // Polygon trigger messages — P0001 with substring matches on exact RAISE text.
+  // Polygon trigger messages - P0001 with substring matches on exact RAISE text.
   if (code === "P0001") {
     if (message?.includes("delivery_zone polygon must be a JSON array")) {
       return "Polygon must be a JSON array of [lng,lat] pairs.";
@@ -384,8 +384,8 @@ const deliveryZoneWriteSchema = z.object({
  *
  * Expected field names (for each day 0–6):
  *   schedule_{day}_closed: "true" if closed (checkbox hidden-field pattern)
- *   schedule_{day}_open:   "HH:MM" (UTC) — opening time
- *   schedule_{day}_close:  "HH:MM" (UTC) — closing time
+ *   schedule_{day}_open:   "HH:MM" (UTC) - opening time
+ *   schedule_{day}_close:  "HH:MM" (UTC) - closing time
  *
  * Validation:
  *   - open and close must match HH:MM regex
@@ -425,7 +425,7 @@ function assembleSchedule(
     // When not closed, both times are required and open must be before close.
     if (!closed) {
       if (!openRaw || !closeRaw) {
-        // Missing times: treat this day as not yet configured — skip it.
+        // Missing times: treat this day as not yet configured - skip it.
         continue;
       }
       // Lexicographic comparison is correct for HH:MM strings (e.g. "09:00" < "22:00").

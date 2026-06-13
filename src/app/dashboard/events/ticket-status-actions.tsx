@@ -9,17 +9,17 @@ import type { EventTicketStatus } from "@/lib/types/database";
 // ---------------------------------------------------------------------------
 
 const STATUS_LABELS: Record<EventTicketStatus, string> = {
-  reserved:  "Reserved",
-  paid:      "Paid",
-  cancelled: "Cancelled",
-  refunded:  "Refunded",
+  reserved:  "Забронировано",
+  paid:      "Оплачено",
+  cancelled: "Отменено",
+  refunded:  "Возвращено",
 };
 
 const STATUS_BADGE: Record<EventTicketStatus, string> = {
-  reserved:  "bg-amber-100 text-amber-800",
-  paid:      "bg-green-100 text-green-800",
-  cancelled: "bg-gray-100 text-gray-600",
-  refunded:  "bg-blue-100 text-blue-800",
+  reserved:  "badge badge-amber",
+  paid:      "badge badge-emerald",
+  cancelled: "badge badge-slate",
+  refunded:  "badge badge-sky",
 };
 
 const ALL_STATUSES: EventTicketStatus[] = ["reserved", "paid", "cancelled", "refunded"];
@@ -35,7 +35,7 @@ interface TicketStatusActionsProps {
 }
 
 // ---------------------------------------------------------------------------
-// Component — per-ticket client island (scoped pending state per ticket row)
+// Component - per-ticket client island (scoped pending state per ticket row)
 // ---------------------------------------------------------------------------
 
 export function TicketStatusActions({
@@ -71,9 +71,7 @@ export function TicketStatusActions({
     <div className="flex flex-col gap-1 items-start">
       <div className="flex items-center gap-2">
         {/* Current status badge */}
-        <span
-          className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_BADGE[status]}`}
-        >
+        <span className={STATUS_BADGE[status]}>
           {STATUS_LABELS[status]}
         </span>
 
@@ -82,8 +80,8 @@ export function TicketStatusActions({
           value={status}
           onChange={handleChange}
           disabled={isPending}
-          aria-label="Change ticket status"
-          className="rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:opacity-50"
+          aria-label="Изменить статус билета"
+          className="select-dark py-1 text-xs disabled:opacity-50"
         >
           {ALL_STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -93,12 +91,12 @@ export function TicketStatusActions({
         </select>
 
         {isPending && (
-          <span className="text-xs text-gray-400">Saving…</span>
+          <span className="text-xs text-slate-500">Сохранение…</span>
         )}
       </div>
 
       {error && (
-        <p className="text-xs text-red-600" role="alert">
+        <p className="text-xs text-rose-400" role="alert">
           {error}
         </p>
       )}

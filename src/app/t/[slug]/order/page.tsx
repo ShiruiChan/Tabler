@@ -44,7 +44,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
   ]);
 
   const isAuthenticated = !!userData?.user;
-  // getMyOrders already filters by tenantId (cross-tenant bleed fix — see
+  // getMyOrders already filters by tenantId (cross-tenant bleed fix - see
   // order-queries.ts design note).
   const myOrders = isAuthenticated ? await getMyOrders(tenant.id) : [];
 
@@ -53,20 +53,22 @@ export default async function OrderPage({ params }: OrderPageProps) {
       className="font-body min-h-screen"
       style={{ backgroundColor: "var(--color-secondary)" }}
     >
-      <div className="mx-auto max-w-3xl px-6 py-12">
+      <div className="mx-auto max-w-3xl px-6 py-16">
         {/* ── Page heading ──────────────────────────────────────────────── */}
-        <h1
-          className="font-heading text-3xl font-bold mb-2"
-          style={{ color: "var(--color-primary)" }}
-        >
-          Order
-        </h1>
-        <p
-          className="text-sm mb-10"
-          style={{ color: "var(--color-primary)", opacity: 0.6 }}
-        >
-          {tenant.name}
-        </p>
+        <header className="animate-fade-up mb-10">
+          <span
+            className="text-xs font-semibold uppercase tracking-[0.2em]"
+            style={{ color: "var(--color-accent)" }}
+          >
+            {tenant.name}
+          </span>
+          <h1
+            className="font-heading mt-2 text-4xl font-bold tracking-tight md:text-5xl"
+            style={{ color: "var(--color-primary)" }}
+          >
+            Заказ
+          </h1>
+        </header>
 
         {/* ── Order shell (cart + checkout) ─────────────────────────────── */}
         <OrderShell
@@ -79,18 +81,18 @@ export default async function OrderPage({ params }: OrderPageProps) {
 
         {/* ── My orders (authenticated visitors only) ───────────────────── */}
         {isAuthenticated && (
-          <section aria-label="My orders" className="mt-16">
+          <section aria-label="Мои заказы" className="mt-16">
             <h2
               className="font-heading text-2xl font-bold mb-2"
               style={{ color: "var(--color-primary)" }}
             >
-              My Orders
+              Мои заказы
             </h2>
             <p
               className="text-sm mb-6"
               style={{ color: "var(--color-primary)", opacity: 0.6 }}
             >
-              Your order history for {tenant.name}
+              История заказов в {tenant.name}
             </p>
             <MyOrders orders={myOrders} />
           </section>

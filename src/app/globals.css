@@ -26,6 +26,102 @@ body {
   }
 }
 
+/* ─── Tabler console design system ────────────────────────────────────────────
+ * Shared component classes for every "Tabler-branded" surface (auth, dashboard,
+ * admin). They mirror the landing page aesthetic: near-black background, glass
+ * surfaces, amber→orange accents. Tenant-facing `t/[slug]` pages do NOT use
+ * these - they are white-label and themed per tenant via CSS custom properties.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+@layer components {
+  /* Page background for the whole console shell */
+  .console {
+    @apply min-h-screen bg-[#0a0a0b] text-slate-100;
+  }
+
+  /* Glass surface - the workhorse card */
+  .glass {
+    @apply rounded-2xl border border-white/10 bg-white/[0.05] backdrop-blur-md;
+  }
+  .glass-hover {
+    @apply transition-all duration-300 hover:border-white/20 hover:bg-white/[0.07];
+  }
+
+  /* Eyebrow / section kicker */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-widest text-amber-400;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 px-5 py-2.5 text-sm font-semibold text-[#0a0a0b] shadow-lg shadow-amber-500/20 transition-all hover:scale-[1.02] hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0b] disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-5 py-2.5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 disabled:pointer-events-none disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm text-slate-400 transition-colors hover:text-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400;
+  }
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-5 py-2.5 text-sm font-medium text-rose-300 transition-colors hover:bg-rose-500/20 hover:text-rose-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* Form fields */
+  .label-dark {
+    @apply mb-1.5 block text-sm font-medium text-slate-300;
+  }
+  .input-dark {
+    @apply block w-full rounded-lg border border-white/10 bg-white/5 px-3.5 py-2.5 text-sm text-slate-100 placeholder:text-slate-500 transition-colors focus:border-amber-400/50 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-amber-400/30;
+  }
+  /* Native <select> + <option> need an explicit dark background so the
+     dropdown list is legible on dark UIs. */
+  .select-dark {
+    @apply input-dark appearance-none bg-[#16161a];
+  }
+  .select-dark option {
+    @apply bg-[#16161a] text-slate-100;
+  }
+  .field-hint {
+    @apply mt-1.5 text-xs text-slate-500;
+  }
+
+  /* Badges / pills */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .badge-amber {
+    @apply border border-amber-400/25 bg-amber-400/15 text-amber-400;
+  }
+  .badge-emerald {
+    @apply border border-emerald-500/25 bg-emerald-500/15 text-emerald-400;
+  }
+  .badge-rose {
+    @apply border border-rose-500/25 bg-rose-500/15 text-rose-300;
+  }
+  .badge-sky {
+    @apply border border-sky-500/25 bg-sky-500/15 text-sky-300;
+  }
+  .badge-slate {
+    @apply border border-white/10 bg-white/5 text-slate-400;
+  }
+
+  /* Alerts */
+  .alert-error {
+    @apply rounded-xl border border-rose-500/25 bg-rose-500/10 px-4 py-3 text-sm text-rose-200;
+  }
+  .alert-success {
+    @apply rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200;
+  }
+
+  /* Sidebar nav links (active state applied via .is-active) */
+  .nav-link {
+    @apply flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-400 transition-colors hover:bg-white/5 hover:text-slate-100;
+  }
+  .nav-link.is-active {
+    @apply bg-amber-400/10 text-amber-400;
+  }
+}
+
 /* ─── Landing page animations ─────────────────────────────────────────────── */
 
 @keyframes aurora-drift-1 {

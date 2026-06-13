@@ -11,18 +11,14 @@ import type { FloorActionState } from "@/lib/floor-actions";
 import type { FloorPlan } from "@/lib/types/database";
 
 // ---------------------------------------------------------------------------
-// Submit button — must be its own component to use useFormStatus
+// Submit button - must be its own component to use useFormStatus
 // ---------------------------------------------------------------------------
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-    >
-      {pending ? "Saving…" : label}
+    <button type="submit" disabled={pending} className="btn-primary">
+      {pending ? "Сохранение…" : label}
     </button>
   );
 }
@@ -39,7 +35,7 @@ function CreateFloorPlanForm() {
   return (
     <form action={formAction} className="space-y-3">
       {state?.error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {state.error}
         </p>
       )}
@@ -47,11 +43,8 @@ function CreateFloorPlanForm() {
       <div className="flex flex-wrap items-end gap-3">
         {/* Name */}
         <div className="flex-1 min-w-[180px]">
-          <label
-            htmlFor="create-floor-name"
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Name
+          <label htmlFor="create-floor-name" className="label-dark">
+            Название
           </label>
           <input
             id="create-floor-name"
@@ -59,18 +52,15 @@ function CreateFloorPlanForm() {
             type="text"
             required
             maxLength={80}
-            placeholder="e.g. Main Hall"
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="Например, Главный зал"
+            className="input-dark"
           />
         </div>
 
         {/* Width */}
         <div className="w-28">
-          <label
-            htmlFor="create-floor-width"
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Width <span className="text-gray-400">(px)</span>
+          <label htmlFor="create-floor-width" className="label-dark">
+            Ширина <span className="text-slate-500">(px)</span>
           </label>
           <input
             id="create-floor-width"
@@ -79,17 +69,14 @@ function CreateFloorPlanForm() {
             min={100}
             max={10000}
             defaultValue={1000}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
         {/* Height */}
         <div className="w-28">
-          <label
-            htmlFor="create-floor-height"
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Height <span className="text-gray-400">(px)</span>
+          <label htmlFor="create-floor-height" className="label-dark">
+            Высота <span className="text-slate-500">(px)</span>
           </label>
           <input
             id="create-floor-height"
@@ -98,11 +85,11 @@ function CreateFloorPlanForm() {
             min={100}
             max={10000}
             defaultValue={700}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
-        <SubmitButton label="Add plan" />
+        <SubmitButton label="Добавить схему" />
       </div>
     </form>
   );
@@ -125,7 +112,7 @@ function EditFloorPlanForm({ plan }: EditFloorPlanFormProps) {
   function handleDelete() {
     if (
       !confirm(
-        `Delete floor plan "${plan.name}"? All table zones will also be deleted. This cannot be undone.`
+        `Удалить схему «${plan.name}»? Все зоны столов также будут удалены. Это действие необратимо.`
       )
     ) {
       return;
@@ -138,7 +125,7 @@ function EditFloorPlanForm({ plan }: EditFloorPlanFormProps) {
   return (
     <form action={formAction} className="space-y-3">
       {state?.error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {state.error}
         </p>
       )}
@@ -149,11 +136,8 @@ function EditFloorPlanForm({ plan }: EditFloorPlanFormProps) {
       <div className="flex flex-wrap items-end gap-3">
         {/* Name */}
         <div className="flex-1 min-w-[180px]">
-          <label
-            htmlFor={`edit-floor-name-${plan.id}`}
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Name
+          <label htmlFor={`edit-floor-name-${plan.id}`} className="label-dark">
+            Название
           </label>
           <input
             id={`edit-floor-name-${plan.id}`}
@@ -162,17 +146,14 @@ function EditFloorPlanForm({ plan }: EditFloorPlanFormProps) {
             required
             maxLength={80}
             defaultValue={plan.name}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
         {/* Sort order */}
         <div className="w-24">
-          <label
-            htmlFor={`edit-floor-sort-${plan.id}`}
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Order
+          <label htmlFor={`edit-floor-sort-${plan.id}`} className="label-dark">
+            Порядок
           </label>
           <input
             id={`edit-floor-sort-${plan.id}`}
@@ -180,12 +161,12 @@ function EditFloorPlanForm({ plan }: EditFloorPlanFormProps) {
             type="number"
             min={0}
             defaultValue={plan.sort_order}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
-        {/* is_active toggle — matches the pattern from category-form.tsx */}
-        <div className="flex items-center gap-2 pb-0.5">
+        {/* is_active toggle - matches the pattern from category-form.tsx */}
+        <div className="flex items-center gap-2 pb-2">
           <input
             id={`edit-floor-active-${plan.id}`}
             name="is_active"
@@ -201,7 +182,7 @@ function EditFloorPlanForm({ plan }: EditFloorPlanFormProps) {
                 hiddenInput.disabled = e.currentTarget.checked;
               }
             }}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-white/20 bg-white/5 accent-amber-500"
           />
           <input
             type="hidden"
@@ -211,21 +192,21 @@ function EditFloorPlanForm({ plan }: EditFloorPlanFormProps) {
           />
           <label
             htmlFor={`edit-floor-active-${plan.id}`}
-            className="text-xs font-medium text-gray-600"
+            className="text-xs font-medium text-slate-300"
           >
-            Active
+            Активна
           </label>
         </div>
 
         <div className="flex items-end gap-2 pb-0.5">
-          <SubmitButton label="Save" />
+          <SubmitButton label="Сохранить" />
           <button
             type="button"
             onClick={handleDelete}
             disabled={isPending}
-            className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+            className="btn-danger"
           >
-            {isPending ? "Deleting…" : "Delete plan"}
+            {isPending ? "Удаление…" : "Удалить схему"}
           </button>
         </div>
       </div>

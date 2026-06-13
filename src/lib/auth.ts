@@ -64,7 +64,7 @@ export async function requireRole(...roles: UserRole[]): Promise<Profile> {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError || !userData.user) {
     // We can't easily determine the current pathname in a server component
-    // without the incoming request — callers may pass a `next` hint.
+    // without the incoming request - callers may pass a `next` hint.
     // For now, redirect to /login without a next param.  Pages that need
     // the exact next URL should call redirect() themselves after requireRole.
     redirect("/login");

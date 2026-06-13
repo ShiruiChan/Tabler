@@ -21,7 +21,7 @@ create table public.site_settings (
   logo_url          text,
   hero_image_url    text,
 
-  -- Brand colours — CSS hex notation, enforced by constraint
+  -- Brand colours - CSS hex notation, enforced by constraint
   primary_color     text         not null default '#1a1a1a'
                       constraint site_settings_primary_color_hex
                       check (primary_color ~ '^#[0-9a-fA-F]{6}$'),
@@ -32,7 +32,7 @@ create table public.site_settings (
                       constraint site_settings_accent_color_hex
                       check (accent_color ~ '^#[0-9a-fA-F]{6}$'),
 
-  -- Typography — restricted to supported web-font families
+  -- Typography - restricted to supported web-font families
   font_heading      text         not null default 'Inter'
                       constraint site_settings_font_heading_allowlist
                       check (font_heading in (
@@ -101,18 +101,18 @@ on conflict (tenant_id) do nothing;
 alter table public.site_settings enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 5. RLS policies — site_settings
+-- 5. RLS policies - site_settings
 --
 -- Policy summary:
 --   anon + authenticated  | SELECT | active-tenant rows only (public branding)
 --   owner / staff         | SELECT | own tenant, regardless of status
 --   restaurant_owner only | UPDATE | own row (staff may not write settings)
 --   super_admin           | ALL    | unrestricted
---   (no INSERT/DELETE for non-super-admin — rows managed by trigger/cascade)
+--   (no INSERT/DELETE for non-super-admin - rows managed by trigger/cascade)
 -- ---------------------------------------------------------------------------
 
 -- Public read: anyone can see settings for active tenants (needed for public
--- restaurant microsites — CSS variables, logo URL, etc.).
+-- restaurant microsites - CSS variables, logo URL, etc.).
 create policy "site_settings: public read active tenant"
   on public.site_settings
   for select
@@ -167,7 +167,7 @@ create policy "site_settings: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 6. Storage — tenant-assets bucket
+-- 6. Storage - tenant-assets bucket
 --
 -- Bucket is public so the Supabase CDN serves images without auth tokens.
 -- All WRITE operations are still gated by storage RLS policies below.
@@ -181,7 +181,7 @@ insert into storage.buckets (id, name, public)
 on conflict (id) do nothing;
 
 -- ---------------------------------------------------------------------------
--- 7. Storage RLS policies — storage.objects
+-- 7. Storage RLS policies - storage.objects
 -- ---------------------------------------------------------------------------
 
 -- Public read: anyone may read objects in the tenant-assets bucket

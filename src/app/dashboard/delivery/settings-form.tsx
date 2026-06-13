@@ -10,13 +10,13 @@ import type { DeliverySettings, DeliveryScheduleDay } from "@/lib/types/database
 // ---------------------------------------------------------------------------
 
 const WEEKDAY_LABELS = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
+  "Воскресенье",
+  "Понедельник",
+  "Вторник",
+  "Среда",
+  "Четверг",
+  "Пятница",
+  "Суббота",
 ] as const;
 
 // Display order Mon–Sun, then Sun at end matches the reservations pattern.
@@ -48,49 +48,49 @@ function ScheduleRow({ day, initial }: ScheduleRowProps) {
   const [closeTime, setCloseTime] = useState<string>(initial?.close ?? "22:00");
 
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-md border border-gray-200 bg-white px-4 py-3">
+    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-white/10 bg-white/[0.03] px-4 py-3">
       {/* Hidden fields carry the values into the parent form */}
       <input type="hidden" name={`schedule_${day}_closed`} value={isClosed ? "true" : "false"} />
       <input type="hidden" name={`schedule_${day}_open`} value={openTime} />
       <input type="hidden" name={`schedule_${day}_close`} value={closeTime} />
 
-      <span className="w-24 shrink-0 text-sm font-medium text-gray-900">
+      <span className="w-28 shrink-0 text-sm font-medium text-slate-100">
         {WEEKDAY_LABELS[day]}
       </span>
 
       {/* Closed toggle */}
-      <label className="flex cursor-pointer select-none items-center gap-1.5 text-sm text-gray-600">
+      <label className="flex cursor-pointer select-none items-center gap-1.5 text-sm text-slate-300">
         <input
           type="checkbox"
           checked={isClosed}
           onChange={(e) => setIsClosed(e.target.checked)}
-          className="h-3.5 w-3.5 rounded border-gray-300"
+          className="h-3.5 w-3.5 rounded border-white/20 bg-white/5 accent-amber-500"
         />
-        Closed
+        Закрыто
       </label>
 
-      {/* Time inputs — dimmed when closed */}
+      {/* Time inputs - dimmed when closed */}
       <div
         className={`flex flex-wrap items-center gap-2 ${
           isClosed ? "pointer-events-none opacity-40" : ""
         }`}
       >
-        <label className="flex items-center gap-1 text-xs text-gray-500">
-          Open (UTC)
+        <label className="flex items-center gap-1 text-xs text-slate-500">
+          Открытие (UTC)
           <input
             type="time"
             value={openTime}
             onChange={(e) => setOpenTime(e.target.value)}
-            className="ml-1 rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            className="ml-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-400/50 [color-scheme:dark]"
           />
         </label>
-        <label className="flex items-center gap-1 text-xs text-gray-500">
-          Close (UTC)
+        <label className="flex items-center gap-1 text-xs text-slate-500">
+          Закрытие (UTC)
           <input
             type="time"
             value={closeTime}
             onChange={(e) => setCloseTime(e.target.value)}
-            className="ml-1 rounded border border-gray-300 px-1.5 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400"
+            className="ml-1 rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-xs text-slate-100 focus:outline-none focus:ring-1 focus:ring-amber-400/50 [color-scheme:dark]"
           />
         </label>
       </div>
@@ -113,7 +113,7 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
   const [saved, setSaved] = useState(false);
   const [isPending, startTransition] = useTransition();
 
-  // Checkbox controlled state for is_enabled (hidden-field pattern — TASK-013/014)
+  // Checkbox controlled state for is_enabled (hidden-field pattern - TASK-013/014)
   const [isEnabled, setIsEnabled] = useState<boolean>(settings.is_enabled);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -138,12 +138,12 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-5">
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {error}
         </p>
       )}
 
-      {/* is_enabled — checkbox hidden-field pattern */}
+      {/* is_enabled - checkbox hidden-field pattern */}
       <div className="flex items-center gap-2">
         <input
           id="is-enabled"
@@ -152,7 +152,7 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
           value="true"
           checked={isEnabled}
           onChange={(e) => setIsEnabled(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded border-white/20 bg-white/5 accent-amber-500"
         />
         <input
           type="hidden"
@@ -160,20 +160,20 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
           value="false"
           disabled={isEnabled}
         />
-        <label htmlFor="is-enabled" className="text-sm font-medium text-gray-700">
-          Enable delivery
+        <label htmlFor="is-enabled" className="text-sm font-medium text-slate-200">
+          Включить доставку
         </label>
       </div>
 
       {/* Currency */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Currency
+        <label className="label-dark">
+          Валюта
         </label>
         <select
           name="currency"
           defaultValue={settings.currency}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+          className="select-dark w-auto"
         >
           <option value="usd">USD</option>
           <option value="eur">EUR</option>
@@ -185,8 +185,8 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
       {/* Money fields */}
       <div className="flex flex-wrap gap-4">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Minimum order
+          <label className="label-dark">
+            Минимальный заказ
           </label>
           <input
             name="min_order_cents"
@@ -195,14 +195,14 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
             step={0.01}
             defaultValue={centsToMajor(settings.min_order_cents)}
             placeholder="0.00"
-            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark w-32"
           />
-          <p className="mt-0.5 text-xs text-gray-400">0 = no minimum</p>
+          <p className="field-hint">0 = без минимума</p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Base delivery fee
+          <label className="label-dark">
+            Базовая стоимость доставки
           </label>
           <input
             name="base_fee_cents"
@@ -211,15 +211,15 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
             step={0.01}
             defaultValue={centsToMajor(settings.base_fee_cents)}
             placeholder="0.00"
-            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark w-32"
           />
-          <p className="mt-0.5 text-xs text-gray-400">0 = free</p>
+          <p className="field-hint">0 = бесплатно</p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Free delivery over{" "}
-            <span className="text-gray-400">(optional)</span>
+          <label className="label-dark">
+            Бесплатно от{" "}
+            <span className="text-slate-500">(необязательно)</span>
           </label>
           <input
             name="free_delivery_over_cents"
@@ -227,16 +227,16 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
             min={0}
             step={0.01}
             defaultValue={centsToMajor(settings.free_delivery_over_cents)}
-            placeholder="e.g. 30.00"
-            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="например, 30.00"
+            className="input-dark w-32"
           />
-          <p className="mt-0.5 text-xs text-gray-400">Leave blank to disable</p>
+          <p className="field-hint">Оставьте пустым, чтобы отключить</p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Estimated delivery{" "}
-            <span className="text-gray-400">(min, optional)</span>
+          <label className="label-dark">
+            Ожидаемая доставка{" "}
+            <span className="text-slate-500">(мин, необязательно)</span>
           </label>
           <input
             name="estimated_minutes"
@@ -245,17 +245,17 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
             max={480}
             step={1}
             defaultValue={settings.estimated_minutes ?? ""}
-            placeholder="e.g. 45"
-            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="например, 45"
+            className="input-dark w-32"
           />
-          <p className="mt-0.5 text-xs text-gray-400">5–480 min; blank = not shown</p>
+          <p className="field-hint">5–480 мин; пусто = не показывать</p>
         </div>
       </div>
 
       {/* Schedule editor */}
       <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
-          Delivery hours (UTC)
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Часы доставки (UTC)
         </p>
         <div className="space-y-2">
           {DISPLAY_ORDER.map((day) => (
@@ -266,18 +266,14 @@ export function DeliverySettingsForm({ settings }: DeliverySettingsFormProps) {
             />
           ))}
         </div>
-        <p className="mt-1 text-xs text-gray-400">
-          All times are UTC. Missing days are treated as closed.
+        <p className="field-hint mt-1">
+          Всё время в UTC. Пропущенные дни считаются закрытыми.
         </p>
       </div>
 
       <div>
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-md bg-gray-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-        >
-          {isPending ? "Saving…" : saved ? "Saved!" : "Save settings"}
+        <button type="submit" disabled={isPending} className="btn-primary">
+          {isPending ? "Сохранение…" : saved ? "Сохранено!" : "Сохранить настройки"}
         </button>
       </div>
     </form>

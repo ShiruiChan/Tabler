@@ -166,7 +166,7 @@ on conflict (tenant_id) do nothing;
 create table public.reservations (
   id              uuid        primary key default gen_random_uuid(),
 
-  -- Denormalized for RLS speed — enforced to match floor_table's tenant_id
+  -- Denormalized for RLS speed - enforced to match floor_table's tenant_id
   -- by the check_reservation_table_tenant trigger below.
   tenant_id       uuid        not null
                     references public.tenants(id) on delete cascade,
@@ -384,7 +384,7 @@ alter table public.reservation_settings  enable row level security;
 alter table public.reservations          enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 9. RLS policies — availability_rules
+-- 9. RLS policies - availability_rules
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | tenant active (B2C slot computation)
@@ -444,14 +444,14 @@ create policy "availability_rules: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 10. RLS policies — reservation_settings
+-- 10. RLS policies - reservation_settings
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | tenant active (B2C booking form)
 --   restaurant_owner / staff       | SELECT | own tenant, regardless of status
 --   restaurant_owner / staff       | UPDATE | own tenant (WITH CHECK)
 --   super_admin                    | ALL    | unrestricted
---   (no non-super INSERT/DELETE — rows managed by trigger/cascade)
+--   (no non-super INSERT/DELETE - rows managed by trigger/cascade)
 -- ---------------------------------------------------------------------------
 
 -- Public read: B2C booking form needs max_party_size etc. to validate input.
@@ -492,10 +492,10 @@ create policy "reservation_settings: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 11. RLS policies — reservations
+-- 11. RLS policies - reservations
 --
 -- Policy matrix:
---   anon                           | (none) — PII; unauthenticated creation goes
+--   anon                           | (none) - PII; unauthenticated creation goes
 --                                  |          via service-role API (TASK-019)
 --   authenticated visitor          | SELECT | own rows (user_id = auth.uid())
 --   authenticated visitor          | INSERT | own rows, tenant active, status='pending'

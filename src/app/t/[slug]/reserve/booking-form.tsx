@@ -15,7 +15,7 @@ export interface BookingFormProps {
   tenantId: string;
   slots: AvailabilitySlot[];
   plans: FloorPlanWithTables[];
-  /** The selected party size — passed as a hidden field and shown in confirmations. */
+  /** The selected party size - passed as a hidden field and shown in confirmations. */
   defaultParty: number;
   /** Optional table id pre-selected (from the floor page CTA). */
   preselectedTableId: string | null;
@@ -27,7 +27,7 @@ export interface BookingFormProps {
 
 /**
  * Format an ISO UTC datetime as "HH:MM UTC" for display.
- * Availability times are UTC by design — we display the UTC offset explicitly
+ * Availability times are UTC by design - we display the UTC offset explicitly
  * to avoid silently rendering a misleading local time.
  */
 function formatSlotTime(isoUtc: string): string {
@@ -38,11 +38,11 @@ function formatSlotTime(isoUtc: string): string {
 }
 
 /**
- * Format a UTC date string as a short human-readable date (e.g. "Wed, Jun 12").
+ * Format a UTC date string as a short human-readable date (e.g. "ср, 12 июн.").
  */
 function formatSlotDate(isoUtc: string): string {
   const d = new Date(isoUtc);
-  return d.toLocaleDateString("en-US", {
+  return d.toLocaleDateString("ru-RU", {
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -54,7 +54,7 @@ function formatSlotDate(isoUtc: string): string {
  * Derive a floor plan with non-available tables marked as non-bookable,
  * so the FloorPlanPicker will render them as unavailable zones.
  *
- * We never mutate the original plan object — we return a new object with
+ * We never mutate the original plan object - we return a new object with
  * a new tables array where each table is given a derived is_bookable flag.
  *
  * Tables that are:
@@ -77,7 +77,7 @@ function derivePlanForSlot(
 }
 
 // ---------------------------------------------------------------------------
-// Submit button — receives isPending as a prop (driven by useTransition)
+// Submit button - receives isPending as a prop (driven by useTransition)
 // ---------------------------------------------------------------------------
 
 function SubmitButton({ isPending }: { isPending: boolean }) {
@@ -85,16 +85,16 @@ function SubmitButton({ isPending }: { isPending: boolean }) {
     <button
       type="submit"
       disabled={isPending}
-      className="w-full rounded-lg px-6 py-3 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+      className="w-full rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
       style={{ backgroundColor: "var(--color-accent)" }}
     >
-      {isPending ? "Requesting…" : "Request reservation"}
+      {isPending ? "Отправляем…" : "Отправить заявку"}
     </button>
   );
 }
 
 // ---------------------------------------------------------------------------
-// BookingForm — main client island
+// BookingForm - main client island
 // ---------------------------------------------------------------------------
 
 export function BookingForm({
@@ -202,10 +202,10 @@ export function BookingForm({
   if (succeeded && confirmedSlot) {
     return (
       <div
-        className="rounded-xl border p-8 text-center"
+        className="animate-fade-up rounded-2xl border p-8 text-center shadow-sm"
         style={{
-          borderColor: "var(--color-accent)",
-          backgroundColor: "rgba(0,0,0,0.03)",
+          borderColor: "color-mix(in srgb, var(--color-accent) 40%, transparent)",
+          backgroundColor: "color-mix(in srgb, var(--color-accent) 6%, transparent)",
         }}
         role="status"
         aria-live="polite"
@@ -214,29 +214,29 @@ export function BookingForm({
           className="font-heading text-2xl font-bold mb-2"
           style={{ color: "var(--color-primary)" }}
         >
-          Reservation requested!
+          Заявка отправлена!
         </div>
         <p
           className="text-base mb-1"
           style={{ color: "var(--color-primary)", opacity: 0.8 }}
         >
-          {formatSlotDate(confirmedSlot.slot)} at{" "}
-          {formatSlotTime(confirmedSlot.slot)} — party of {defaultParty}
-          {confirmedTable ? `, table ${confirmedTable.label}` : ""}
+          {formatSlotDate(confirmedSlot.slot)} в{" "}
+          {formatSlotTime(confirmedSlot.slot)} - {defaultParty} гостей
+          {confirmedTable ? `, столик ${confirmedTable.label}` : ""}
         </p>
         <p
           className="text-sm mb-6"
           style={{ color: "var(--color-primary)", opacity: 0.55 }}
         >
-          We&apos;ll confirm your booking shortly.
+          Мы свяжемся с вами для подтверждения брони.
         </p>
         <button
           type="button"
           onClick={handleReset}
-          className="inline-block rounded-lg px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2"
+          className="inline-block rounded-full px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2"
           style={{ backgroundColor: "var(--color-accent)" }}
         >
-          Make another booking
+          Новое бронирование
         </button>
       </div>
     );
@@ -284,19 +284,19 @@ export function BookingForm({
           className="font-heading text-lg font-semibold mb-4"
           style={{ color: "var(--color-primary)" }}
         >
-          1. Pick a time
+          1. Выберите время
           <span
             className="ml-2 text-sm font-normal"
             style={{ color: "var(--color-primary)", opacity: 0.5 }}
           >
-            (times shown in UTC)
+            (время по UTC)
           </span>
         </legend>
 
         <div
           className="flex flex-wrap gap-2"
           role="radiogroup"
-          aria-label="Available time slots"
+          aria-label="Доступное время"
         >
           {slots.map((slot) => {
             const isSelected = selectedSlotIso === slot.slot;
@@ -313,7 +313,7 @@ export function BookingForm({
                   !isDisabled &&
                   setSelectedSlotIso(isSelected ? null : slot.slot)
                 }
-                className="rounded-lg border px-4 py-2.5 text-sm font-medium transition focus:outline-none focus:ring-2 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="rounded-full border px-5 py-2.5 text-sm font-medium transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 style={
                   isSelected
                     ? {
@@ -323,7 +323,7 @@ export function BookingForm({
                       }
                     : {
                         backgroundColor: "transparent",
-                        borderColor: "var(--color-accent)",
+                        borderColor: "color-mix(in srgb, var(--color-accent) 45%, transparent)",
                         color: "var(--color-primary)",
                       }
                 }
@@ -340,24 +340,24 @@ export function BookingForm({
             style={{ color: "var(--color-primary)", opacity: 0.5 }}
             aria-live="polite"
           >
-            Please select a time slot above to continue.
+            Выберите время выше, чтобы продолжить.
           </p>
         )}
       </fieldset>
 
       {/* ── Step 2: Table selection (optional) ───────────────────────── */}
       {plans.length > 0 && (
-        <section aria-label="Seat selection (optional)">
+        <section aria-label="Выбор столика (необязательно)">
           <h2
             className="font-heading text-lg font-semibold mb-1"
             style={{ color: "var(--color-primary)" }}
           >
-            2. Choose a table{" "}
+            2. Выберите столик{" "}
             <span
               className="text-sm font-normal"
               style={{ color: "var(--color-primary)", opacity: 0.5 }}
             >
-              (optional)
+              (необязательно)
             </span>
           </h2>
           {selectedSlot === null && (
@@ -365,7 +365,7 @@ export function BookingForm({
               className="text-sm mb-4"
               style={{ color: "var(--color-primary)", opacity: 0.5 }}
             >
-              Select a time slot first to see available tables.
+              Сначала выберите время, чтобы увидеть свободные столики.
             </p>
           )}
           {selectedSlot !== null && (
@@ -373,8 +373,7 @@ export function BookingForm({
               className="text-sm mb-4"
               style={{ color: "var(--color-primary)", opacity: 0.6 }}
             >
-              Highlighted tables are available for the selected slot. Greyed
-              zones are already booked.
+              Подсвеченные столики свободны для выбранного времени. Серые зоны уже заняты.
             </p>
           )}
 
@@ -409,7 +408,7 @@ export function BookingForm({
               style={{ color: "var(--color-accent)" }}
               aria-live="polite"
             >
-              Table {selectedTable.label} selected (seats{" "}
+              Выбран столик {selectedTable.label} (мест:{" "}
               {selectedTable.capacity})
             </p>
           )}
@@ -422,7 +421,7 @@ export function BookingForm({
           className="font-heading text-lg font-semibold mb-4"
           style={{ color: "var(--color-primary)" }}
         >
-          {plans.length > 0 ? "3." : "2."} Your details
+          {plans.length > 0 ? "3." : "2."} Ваши данные
         </h2>
 
         <div className="space-y-4">
@@ -433,7 +432,7 @@ export function BookingForm({
               className="block text-sm font-medium mb-1"
               style={{ color: "var(--color-primary)" }}
             >
-              Full name <span aria-hidden="true">*</span>
+              Имя и фамилия <span aria-hidden="true">*</span>
             </label>
             <input
               id="guest_name"
@@ -442,7 +441,7 @@ export function BookingForm({
               required
               autoComplete="name"
               maxLength={120}
-              placeholder="Jane Smith"
+              placeholder="Иван Иванов"
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -467,7 +466,7 @@ export function BookingForm({
               type="email"
               autoComplete="email"
               maxLength={254}
-              placeholder="jane@example.com"
+              placeholder="ivan@example.com"
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -484,7 +483,7 @@ export function BookingForm({
               className="block text-sm font-medium mb-1"
               style={{ color: "var(--color-primary)" }}
             >
-              Phone
+              Телефон
             </label>
             <input
               id="guest_phone"
@@ -492,7 +491,7 @@ export function BookingForm({
               type="tel"
               autoComplete="tel"
               maxLength={40}
-              placeholder="+1 555 000 0000"
+              placeholder="+7 900 000 00 00"
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -504,8 +503,7 @@ export function BookingForm({
               className="text-xs mt-1"
               style={{ color: "var(--color-primary)", opacity: 0.5 }}
             >
-              Please provide an email or phone number so we can confirm your
-              booking.
+              Укажите email или телефон, чтобы мы могли подтвердить бронь.
             </p>
           </div>
 
@@ -516,12 +514,12 @@ export function BookingForm({
               className="block text-sm font-medium mb-1"
               style={{ color: "var(--color-primary)" }}
             >
-              Special requests{" "}
+              Пожелания{" "}
               <span
                 className="font-normal"
                 style={{ color: "var(--color-primary)", opacity: 0.5 }}
               >
-                (optional)
+                (необязательно)
               </span>
             </label>
             <textarea
@@ -529,7 +527,7 @@ export function BookingForm({
               name="notes"
               rows={3}
               maxLength={1000}
-              placeholder="Dietary requirements, occasion, etc."
+              placeholder="Диета, повод, особые пожелания и т. п."
               className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2 resize-none"
               style={{
                 borderColor: "rgba(0,0,0,0.18)",
@@ -548,7 +546,7 @@ export function BookingForm({
             className="text-sm mb-3 text-center"
             style={{ color: "var(--color-primary)", opacity: 0.5 }}
           >
-            Select a time slot above to complete your booking.
+            Выберите время выше, чтобы завершить бронирование.
           </p>
         )}
         <SubmitButton isPending={isPending} />
@@ -556,8 +554,7 @@ export function BookingForm({
           className="text-xs text-center mt-3"
           style={{ color: "var(--color-primary)", opacity: 0.4 }}
         >
-          All times shown in UTC. Your reservation will be pending until
-          confirmed by the restaurant.
+          Время указано по UTC. Бронь остаётся в ожидании, пока ресторан её не подтвердит.
         </p>
       </div>
     </form>

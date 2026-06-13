@@ -87,40 +87,39 @@ export default async function ReservePage({
       className="font-body min-h-screen"
       style={{ backgroundColor: "var(--color-secondary)" }}
     >
-      <div className="mx-auto max-w-3xl px-6 py-12">
+      <div className="mx-auto max-w-3xl px-6 py-16">
         {/* Page heading */}
-        <h1
-          className="font-heading text-3xl font-bold mb-2"
-          style={{ color: "var(--color-primary)" }}
-        >
-          Reserve a Table
-        </h1>
-        <p
-          className="text-sm mb-10"
-          style={{ color: "var(--color-primary)", opacity: 0.6 }}
-        >
-          {tenant.name}
-        </p>
+        <header className="animate-fade-up mb-10">
+          <span
+            className="text-xs font-semibold uppercase tracking-[0.2em]"
+            style={{ color: "var(--color-accent)" }}
+          >
+            {tenant.name}
+          </span>
+          <h1
+            className="font-heading mt-2 text-4xl font-bold tracking-tight md:text-5xl"
+            style={{ color: "var(--color-primary)" }}
+          >
+            Бронирование столика
+          </h1>
+        </header>
 
-        {/* ── Filter form (plain GET — no JS required) ───────────────── */}
+        {/* ── Filter form (plain GET - no JS required) ───────────────── */}
         <section
-          className="rounded-xl border p-6 mb-8"
-          style={{
-            borderColor: "rgba(0,0,0,0.10)",
-            backgroundColor: "rgba(0,0,0,0.03)",
-          }}
-          aria-label="Search availability"
+          className="rounded-2xl border bg-white/60 p-6 mb-8 shadow-sm"
+          style={{ borderColor: "rgba(0,0,0,0.08)" }}
+          aria-label="Поиск свободного времени"
         >
           <h2
             className="font-heading text-lg font-semibold mb-4"
             style={{ color: "var(--color-primary)" }}
           >
-            Find available times
+            Найти свободное время
           </h2>
 
           {/*
             action="" keeps us on the current path (same page) when submitted.
-            method="get" serialises inputs as query params — no JS needed.
+            method="get" serialises inputs as query params - no JS needed.
           */}
           <form
             method="get"
@@ -134,7 +133,7 @@ export default async function ReservePage({
                 className="text-sm font-medium"
                 style={{ color: "var(--color-primary)" }}
               >
-                Date
+                Дата
               </label>
               <input
                 id="date-input"
@@ -160,7 +159,7 @@ export default async function ReservePage({
                 className="text-sm font-medium"
                 style={{ color: "var(--color-primary)" }}
               >
-                Party size
+                Гостей
               </label>
               <select
                 id="party-input"
@@ -177,7 +176,7 @@ export default async function ReservePage({
                 {Array.from({ length: maxParty }, (_, i) => i + 1).map(
                   (n) => (
                     <option key={n} value={n}>
-                      {n} {n === 1 ? "guest" : "guests"}
+                      {n} {n === 1 ? "гость" : "гостей"}
                     </option>
                   )
                 )}
@@ -186,28 +185,33 @@ export default async function ReservePage({
 
             <button
               type="submit"
-              className="rounded-lg px-5 py-2 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2"
+              className="rounded-full px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2"
               style={{
                 backgroundColor: "var(--color-accent)",
               }}
             >
-              Check availability
+              Проверить наличие
             </button>
           </form>
         </section>
 
         {/* ── Booking form (client island) ───────────────────────────── */}
         {slots.length === 0 ? (
-          <p
-            className="text-base text-center py-12"
-            style={{ color: "var(--color-primary)", opacity: 0.6 }}
+          <div
+            className="rounded-2xl border border-dashed py-14 text-center"
+            style={{ borderColor: "rgba(0,0,0,0.12)" }}
           >
-            No availability found for{" "}
-            <strong>
-              {date} · {party} {party === 1 ? "guest" : "guests"}
-            </strong>
-            . Try a different date or party size.
-          </p>
+            <p
+              className="text-base"
+              style={{ color: "var(--color-primary)", opacity: 0.65 }}
+            >
+              Нет свободного времени на{" "}
+              <strong>
+                {date} · {party} {party === 1 ? "гость" : "гостей"}
+              </strong>
+              . Попробуйте другую дату или количество гостей.
+            </p>
+          </div>
         ) : (
           <BookingForm
             tenantId={tenant.id}

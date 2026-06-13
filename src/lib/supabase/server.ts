@@ -32,7 +32,7 @@ export function createClient() {
             cookieStore.set(name, value, options)
           );
         } catch {
-          // setAll is called from a Server Component — cookies cannot be
+          // setAll is called from a Server Component - cookies cannot be
           // mutated here (only in middleware / Route Handlers). This is safe
           // to ignore; session refresh is handled by middleware.
         }

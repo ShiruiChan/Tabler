@@ -13,7 +13,7 @@ export interface SettingsFormProps {
 }
 
 // ---------------------------------------------------------------------------
-// SettingsForm — single-save form for reservation_settings scalars
+// SettingsForm - single-save form for reservation_settings scalars
 // ---------------------------------------------------------------------------
 
 export function SettingsForm({ settings }: SettingsFormProps) {
@@ -52,11 +52,8 @@ export function SettingsForm({ settings }: SettingsFormProps) {
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Max party size */}
         <div>
-          <label
-            htmlFor="rs_max_party"
-            className="block text-xs font-medium text-gray-700 mb-1"
-          >
-            Max party size (1–100)
+          <label htmlFor="rs_max_party" className="label-dark">
+            Макс. размер компании (1–100)
           </label>
           <input
             id="rs_max_party"
@@ -65,17 +62,14 @@ export function SettingsForm({ settings }: SettingsFormProps) {
             max={100}
             value={maxParty}
             onChange={(e) => setMaxParty(e.target.value)}
-            className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="input-dark"
           />
         </div>
 
         {/* Default duration */}
         <div>
-          <label
-            htmlFor="rs_duration"
-            className="block text-xs font-medium text-gray-700 mb-1"
-          >
-            Default booking duration (15–480 min)
+          <label htmlFor="rs_duration" className="label-dark">
+            Длительность брони по умолчанию (15–480 мин)
           </label>
           <input
             id="rs_duration"
@@ -85,17 +79,14 @@ export function SettingsForm({ settings }: SettingsFormProps) {
             step={15}
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
-            className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="input-dark"
           />
         </div>
 
         {/* Min advance minutes */}
         <div>
-          <label
-            htmlFor="rs_min_adv"
-            className="block text-xs font-medium text-gray-700 mb-1"
-          >
-            Min advance notice (minutes, ≥ 0)
+          <label htmlFor="rs_min_adv" className="label-dark">
+            Мин. срок заблаговременной брони (мин, ≥ 0)
           </label>
           <input
             id="rs_min_adv"
@@ -103,17 +94,14 @@ export function SettingsForm({ settings }: SettingsFormProps) {
             min={0}
             value={minAdv}
             onChange={(e) => setMinAdv(e.target.value)}
-            className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="input-dark"
           />
         </div>
 
         {/* Max advance days */}
         <div>
-          <label
-            htmlFor="rs_max_adv"
-            className="block text-xs font-medium text-gray-700 mb-1"
-          >
-            Max advance window (days, ≥ 0)
+          <label htmlFor="rs_max_adv" className="label-dark">
+            Макс. окно брони наперёд (дней, ≥ 0)
           </label>
           <input
             id="rs_max_adv"
@@ -121,13 +109,13 @@ export function SettingsForm({ settings }: SettingsFormProps) {
             min={0}
             value={maxAdv}
             onChange={(e) => setMaxAdv(e.target.value)}
-            className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
+            className="input-dark"
           />
         </div>
       </div>
 
       {error && (
-        <p className="text-sm text-red-600" role="alert">{error}</p>
+        <p className="alert-error" role="alert">{error}</p>
       )}
 
       <div className="flex items-center gap-3">
@@ -135,13 +123,13 @@ export function SettingsForm({ settings }: SettingsFormProps) {
           type="button"
           disabled={isPending}
           onClick={handleSave}
-          className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          className="btn-primary"
         >
-          {isPending ? "Saving…" : saved ? "Saved!" : "Save settings"}
+          {isPending ? "Сохранение…" : saved ? "Сохранено!" : "Сохранить настройки"}
         </button>
         {saved && (
-          <span className="text-sm text-green-600" aria-live="polite">
-            Settings saved.
+          <span className="text-sm text-emerald-400" aria-live="polite">
+            Настройки сохранены.
           </span>
         )}
       </div>

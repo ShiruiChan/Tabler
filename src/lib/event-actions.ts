@@ -20,7 +20,7 @@ import type { Profile, EventTicketStatus } from "@/lib/types/database";
 export type EventActionState = { error: string } | null;
 
 // ---------------------------------------------------------------------------
-// requireTenantStaff (local copy — follows floor-actions.ts / reservation-actions.ts pattern)
+// requireTenantStaff (local copy - follows floor-actions.ts / reservation-actions.ts pattern)
 // ---------------------------------------------------------------------------
 
 /**
@@ -81,10 +81,10 @@ async function revalidateEventPaths(tenantId: string): Promise<void> {
  *     "event <uuid> is at capacity (capacity=<n>, active_qty=<n>, requested=<n>)"
  *   We match on the substring "is at capacity" to produce a friendly message.
  *
- * 23P01 — exclusion constraint violation (not used for events, but kept for
+ * 23P01 - exclusion constraint violation (not used for events, but kept for
  *          completeness / future FK overlaps).
- * 23505 — unique constraint violation (duplicate row).
- * 23514 — check constraint violation (e.g. starts_at > ends_at).
+ * 23505 - unique constraint violation (duplicate row).
+ * 23514 - check constraint violation (e.g. starts_at > ends_at).
  */
 function mapDbError(
   code: string | undefined,
@@ -103,7 +103,7 @@ function mapDbError(
     return "Event not found.";
   }
   if (code === "23P01") {
-    return "A scheduling conflict exists — please try again.";
+    return "A scheduling conflict exists - please try again.";
   }
   if (code === "23505") {
     return "A duplicate record already exists.";
@@ -605,7 +605,7 @@ export async function purchaseTickets(
   await expireStaleReservedTickets(event_id);
 
   // 2. Load the event server-side.
-  //    Use session client — RLS enforces is_published=true and tenant active
+  //    Use session client - RLS enforces is_published=true and tenant active
   //    for anonymous/visitor callers on the events table.
   const supabase = createClient();
 
@@ -859,7 +859,7 @@ export async function cancelMyTicket(id: string): Promise<EventActionState> {
  * error via mapDbError.
  *
  * FormData fields: id (UUID), status ('reserved'|'paid'|'cancelled'|'refunded'),
- * tenant_id (UUID — double-scope confirmation)
+ * tenant_id (UUID - double-scope confirmation)
  */
 export async function staffUpdateTicketStatus(
   _prev: EventActionState,

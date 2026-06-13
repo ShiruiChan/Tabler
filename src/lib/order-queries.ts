@@ -24,7 +24,7 @@ import type {
  */
 export interface OrderingContext {
   settings: DeliverySettings | null;
-  /** Active delivery zones only (is_active=true, tenant active — RLS enforced). */
+  /** Active delivery zones only (is_active=true, tenant active - RLS enforced). */
   zones: DeliveryZone[];
   /**
    * True when the current UTC time falls within today's delivery schedule window.
@@ -100,7 +100,7 @@ export function isDeliveryOpenNow(settings: DeliverySettings | null): boolean {
  * Returns the ordering context for the B2C order page:
  *   - delivery_settings singleton for this tenant (readable by anon + auth via
  *     public RLS when tenant is active)
- *   - active delivery zones (is_active=true, tenant active — public RLS)
+ *   - active delivery zones (is_active=true, tenant active - public RLS)
  *   - whether delivery is open right now (derived from settings.schedule)
  *
  * Uses the session client (anon key); public RLS allows reading both tables
@@ -180,7 +180,7 @@ export async function getMyOrders(tenantId: string): Promise<OrderWithItems[]> {
   const orderIds = orders.map((o) => o.id);
 
   // Fetch items for these orders (RLS scopes to items whose parent order has
-  // user_id = auth.uid() — see order_items visitor select own policy).
+  // user_id = auth.uid() - see order_items visitor select own policy).
   const { data: itemsData } = await supabase
     .from("order_items")
     .select("*")

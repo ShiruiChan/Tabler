@@ -36,7 +36,7 @@ interface TenantLayoutProps {
  *
  * If no site_settings row exists (tenant exists but settings not yet saved),
  * buildThemeStyle(null) and googleFontsUrl(null) fall back to DEFAULT_THEME
- * — Inter colours — so the layout never crashes.
+ * - Inter colours - so the layout never crashes.
  */
 export default async function TenantLayout({
   children,
@@ -51,17 +51,23 @@ export default async function TenantLayout({
   return (
     // Cast to React.CSSProperties because CSS custom properties are not part
     // of that type definition but are fully supported by React at runtime.
-    <div style={themeStyle as React.CSSProperties} className="min-h-screen">
+    <div
+      style={themeStyle as React.CSSProperties}
+      className="min-h-screen"
+    >
       {fontsUrl && (
         // App Router hoists <link> tags from server components into <head>.
         // eslint-disable-next-line @next/next/no-page-custom-font
         <link rel="stylesheet" href={fontsUrl} />
       )}
       <header
-        className="border-b px-6 py-4"
-        style={{ borderColor: "var(--color-secondary)" }}
+        className="sticky top-0 z-30 border-b backdrop-blur-md"
+        style={{
+          borderColor: "rgba(0,0,0,0.08)",
+          backgroundColor: "color-mix(in srgb, var(--color-secondary) 88%, transparent)",
+        }}
       >
-        <div className="flex items-center gap-3">
+        <div className="mx-auto flex max-w-5xl items-center gap-3 px-6 py-4">
           {settings?.logo_url && (
             // logo_url is a full public URL (see decision note above).
             // eslint-disable-next-line @next/next/no-img-element
@@ -72,7 +78,7 @@ export default async function TenantLayout({
             />
           )}
           <span
-            className="text-lg font-semibold"
+            className="text-lg font-semibold tracking-tight"
             style={{
               fontFamily: "var(--font-heading)",
               color: "var(--color-primary)",

@@ -83,8 +83,8 @@ function DragPreview({
         y={y}
         width={w}
         height={h}
-        fill="rgba(59,130,246,0.2)"
-        stroke="#3b82f6"
+        fill="rgba(251,191,36,0.2)"
+        stroke="#fbbf24"
         strokeWidth={2}
         strokeDasharray="6 3"
         pointerEvents="none"
@@ -100,8 +100,8 @@ function DragPreview({
         cx={drag.startX}
         cy={drag.startY}
         r={r}
-        fill="rgba(59,130,246,0.2)"
-        stroke="#3b82f6"
+        fill="rgba(251,191,36,0.2)"
+        stroke="#fbbf24"
         strokeWidth={2}
         strokeDasharray="6 3"
         pointerEvents="none"
@@ -111,7 +111,7 @@ function DragPreview({
 }
 
 // ---------------------------------------------------------------------------
-// TableShape — renders a single table as an SVG shape
+// TableShape - renders a single table as an SVG shape
 // ---------------------------------------------------------------------------
 
 function TableShape({
@@ -124,12 +124,12 @@ function TableShape({
   onClick: () => void;
 }) {
   const zone = table.zone;
-  const fillBookable = isSelected ? "#1e40af" : "#3b82f6";
-  const fillNonBookable = isSelected ? "#4b5563" : "#9ca3af";
+  const fillBookable = isSelected ? "#f59e0b" : "#fbbf24";
+  const fillNonBookable = isSelected ? "#64748b" : "#475569";
   const fill = table.is_bookable ? fillBookable : fillNonBookable;
-  const stroke = isSelected ? "#1e3a8a" : "transparent";
-  const textFill = "#ffffff";
-  const opacity = table.is_bookable ? 0.85 : 0.55;
+  const stroke = isSelected ? "#fde68a" : "transparent";
+  const textFill = table.is_bookable ? "#0a0a0b" : "#e2e8f0";
+  const opacity = table.is_bookable ? 0.9 : 0.7;
 
   const sharedProps = {
     fill,
@@ -194,18 +194,14 @@ function TableShape({
 }
 
 // ---------------------------------------------------------------------------
-// TableForm — create/edit panel that slides in below the canvas
+// TableForm - create/edit panel that slides in below the canvas
 // ---------------------------------------------------------------------------
 
 function UpsertSubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-    >
-      {pending ? "Saving…" : "Save table"}
+    <button type="submit" disabled={pending} className="btn-primary">
+      {pending ? "Сохранение…" : "Сохранить стол"}
     </button>
   );
 }
@@ -274,7 +270,7 @@ function TableForm({
       : JSON.stringify({ type: "circle", cx, cy, r: cr });
 
   // Close on successful save (state becomes null after success, then rerender
-  // from server replaces this component anyway — just handle the error case).
+  // from server replaces this component anyway - just handle the error case).
   const prevState = useRef(state);
   useEffect(() => {
     if (prevState.current !== null && state === null) {
@@ -286,7 +282,7 @@ function TableForm({
   function handleDelete() {
     if (!editingTable) return;
     if (
-      !confirm(`Delete table "${editingTable.label}"? This cannot be undone.`)
+      !confirm(`Удалить стол «${editingTable.label}»? Это действие необратимо.`)
     ) {
       return;
     }
@@ -305,12 +301,12 @@ function TableForm({
     <form action={formAction} className="space-y-4">
       {/* Server action errors */}
       {state?.error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {state.error}
         </p>
       )}
       {deleteError && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {deleteError}
         </p>
       )}
@@ -325,8 +321,8 @@ function TableForm({
       <div className="flex flex-wrap gap-3">
         {/* Label */}
         <div className="w-28">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Label
+          <label className="label-dark">
+            Метка
           </label>
           <input
             name="label"
@@ -334,15 +330,15 @@ function TableForm({
             required
             maxLength={20}
             defaultValue={editingTable?.label ?? ""}
-            placeholder="e.g. T1"
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="Например, T1"
+            className="input-dark"
           />
         </div>
 
         {/* Capacity */}
         <div className="w-24">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Capacity
+          <label className="label-dark">
+            Мест
           </label>
           <input
             name="capacity"
@@ -351,12 +347,12 @@ function TableForm({
             min={1}
             max={50}
             defaultValue={editingTable?.capacity ?? 4}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
         {/* is_bookable */}
-        <div className="flex items-end gap-2 pb-0.5">
+        <div className="flex items-end gap-2 pb-2">
           <input
             id={`bookable-${editingTable?.id ?? "new"}`}
             name="is_bookable"
@@ -370,7 +366,7 @@ function TableForm({
                 );
               if (hidden) hidden.disabled = e.currentTarget.checked;
             }}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-white/20 bg-white/5 accent-amber-500"
           />
           <input
             type="hidden"
@@ -380,36 +376,38 @@ function TableForm({
           />
           <label
             htmlFor={`bookable-${editingTable?.id ?? "new"}`}
-            className="text-xs font-medium text-gray-600"
+            className="text-xs font-medium text-slate-300"
           >
-            Bookable
+            Доступен для брони
           </label>
         </div>
       </div>
 
       {/* Zone geometry */}
-      <div className="rounded-md border border-gray-200 p-3 space-y-3 bg-gray-50">
+      <div className="rounded-md border border-white/10 p-3 space-y-3 bg-white/[0.02]">
         <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-gray-600">Shape:</span>
-          <label className="flex items-center gap-1 text-xs text-gray-700">
+          <span className="text-xs font-medium text-slate-400">Форма:</span>
+          <label className="flex items-center gap-1 text-xs text-slate-300">
             <input
               type="radio"
               name="shape_mode_ui"
               value="rect"
               checked={zoneType === "rect"}
               onChange={() => setZoneType("rect")}
+              className="accent-amber-500"
             />
-            Rectangle
+            Прямоугольник
           </label>
-          <label className="flex items-center gap-1 text-xs text-gray-700">
+          <label className="flex items-center gap-1 text-xs text-slate-300">
             <input
               type="radio"
               name="shape_mode_ui"
               value="circle"
               checked={zoneType === "circle"}
               onChange={() => setZoneType("circle")}
+              className="accent-amber-500"
             />
-            Circle
+            Круг
           </label>
         </div>
 
@@ -424,7 +422,7 @@ function TableForm({
               ] as const
             ).map(({ label, value, setter, min, max }) => (
               <div key={label} className="w-20">
-                <label className="block text-[10px] font-medium text-gray-500 mb-0.5">
+                <label className="block text-[10px] font-medium text-slate-500 mb-0.5">
                   {label}
                 </label>
                 <input
@@ -433,7 +431,7 @@ function TableForm({
                   min={min}
                   max={max}
                   onChange={(e) => setter(parseInt(e.target.value, 10) || 0)}
-                  className="block w-full rounded border border-gray-300 px-2 py-1 text-xs focus:border-gray-900 focus:outline-none"
+                  className="input-dark"
                 />
               </div>
             ))}
@@ -448,7 +446,7 @@ function TableForm({
               ] as const
             ).map(({ label, value, setter, min, max }) => (
               <div key={label} className="w-20">
-                <label className="block text-[10px] font-medium text-gray-500 mb-0.5">
+                <label className="block text-[10px] font-medium text-slate-500 mb-0.5">
                   {label}
                 </label>
                 <input
@@ -457,7 +455,7 @@ function TableForm({
                   min={min}
                   max={max}
                   onChange={(e) => setter(parseInt(e.target.value, 10) || 0)}
-                  className="block w-full rounded border border-gray-300 px-2 py-1 text-xs focus:border-gray-900 focus:outline-none"
+                  className="input-dark"
                 />
               </div>
             ))}
@@ -468,21 +466,17 @@ function TableForm({
       {/* Actions */}
       <div className="flex items-center gap-2">
         <UpsertSubmitButton />
-        <button
-          type="button"
-          onClick={onClose}
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
-        >
-          Cancel
+        <button type="button" onClick={onClose} className="btn-secondary">
+          Отмена
         </button>
         {editingTable && (
           <button
             type="button"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="ml-auto rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+            className="btn-danger ml-auto"
           >
-            {isDeleting ? "Deleting…" : "Delete table"}
+            {isDeleting ? "Удаление…" : "Удалить стол"}
           </button>
         )}
       </div>
@@ -491,7 +485,7 @@ function TableForm({
 }
 
 // ---------------------------------------------------------------------------
-// ZoneEditor — the main exported component
+// ZoneEditor - the main exported component
 // ---------------------------------------------------------------------------
 
 interface ZoneEditorProps {
@@ -585,53 +579,53 @@ export function ZoneEditor({ plan, tables }: ZoneEditorProps) {
     <div className="space-y-4">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-3">
-        <span className="text-xs font-medium text-gray-600">Draw shape:</span>
-        <div className="flex rounded-md border border-gray-300 overflow-hidden text-xs">
+        <span className="text-xs font-medium text-slate-400">Рисовать:</span>
+        <div className="flex rounded-md border border-white/15 overflow-hidden text-xs">
           <button
             type="button"
             onClick={() => setShapeMode("rect")}
             className={[
-              "px-3 py-1.5 font-medium",
+              "px-3 py-1.5 font-medium transition",
               shapeMode === "rect"
-                ? "bg-gray-900 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-50",
+                ? "bg-amber-500 text-[#0a0a0b]"
+                : "bg-white/5 text-slate-300 hover:bg-white/10",
             ].join(" ")}
           >
-            Rectangle
+            Прямоугольник
           </button>
           <button
             type="button"
             onClick={() => setShapeMode("circle")}
             className={[
-              "px-3 py-1.5 font-medium border-l border-gray-300",
+              "px-3 py-1.5 font-medium border-l border-white/15 transition",
               shapeMode === "circle"
-                ? "bg-gray-900 text-white"
-                : "bg-white text-gray-700 hover:bg-gray-50",
+                ? "bg-amber-500 text-[#0a0a0b]"
+                : "bg-white/5 text-slate-300 hover:bg-white/10",
             ].join(" ")}
           >
-            Circle
+            Круг
           </button>
         </div>
-        <span className="text-xs text-gray-400">
-          Drag on the canvas to draw a new table zone. Click an existing table
-          to edit.
+        <span className="text-xs text-slate-500">
+          Проведите по холсту, чтобы нарисовать новую зону стола. Нажмите на
+          существующий стол, чтобы изменить его.
         </span>
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-4 text-xs text-gray-500">
+      <div className="flex items-center gap-4 text-xs text-slate-500">
         <span className="flex items-center gap-1">
-          <span className="inline-block h-3 w-3 rounded-sm bg-blue-500 opacity-85" />
-          Bookable
+          <span className="inline-block h-3 w-3 rounded-sm bg-amber-400 opacity-90" />
+          Доступен для брони
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-3 w-3 rounded-sm bg-gray-400 opacity-55" />
-          Non-bookable
+          <span className="inline-block h-3 w-3 rounded-sm bg-slate-600 opacity-70" />
+          Недоступен
         </span>
       </div>
 
       {/* Canvas */}
-      <div className="overflow-auto rounded-lg border border-gray-200 bg-gray-100">
+      <div className="overflow-auto rounded-lg border border-white/10 bg-[#0a0a0b]">
         <div
           style={{ minWidth: "100%" }}
           className="relative"
@@ -674,7 +668,7 @@ export function ZoneEditor({ plan, tables }: ZoneEditorProps) {
                     <path
                       d={`M 50 0 L 0 0 0 50`}
                       fill="none"
-                      stroke="#d1d5db"
+                      stroke="rgba(255,255,255,0.08)"
                       strokeWidth={1}
                     />
                   </pattern>
@@ -682,7 +676,7 @@ export function ZoneEditor({ plan, tables }: ZoneEditorProps) {
                 <rect
                   width={plan.width}
                   height={plan.height}
-                  fill="#f9fafb"
+                  fill="#141416"
                 />
                 <rect
                   width={plan.width}
@@ -710,16 +704,17 @@ export function ZoneEditor({ plan, tables }: ZoneEditorProps) {
 
       {/* Empty state */}
       {tables.length === 0 && !showForm && (
-        <p className="text-xs text-gray-400">
-          No tables yet. Drag on the canvas above to draw your first table zone.
+        <p className="text-xs text-slate-500">
+          Пока нет ни одного стола. Проведите по холсту выше, чтобы нарисовать
+          первую зону стола.
         </p>
       )}
 
       {/* Table create/edit form */}
       {showForm && (
-        <div className="rounded-lg border border-blue-100 bg-blue-50 px-5 py-4">
-          <h3 className="mb-3 text-sm font-semibold text-gray-900">
-            {selectedTable ? `Edit table: ${selectedTable.label}` : "New table"}
+        <div className="rounded-lg border border-amber-400/20 bg-amber-400/[0.06] px-5 py-4">
+          <h3 className="mb-3 text-sm font-semibold text-slate-100">
+            {selectedTable ? `Изменить стол: ${selectedTable.label}` : "Новый стол"}
           </h3>
           <TableForm
             key={selectedTable?.id ?? "new"}

@@ -14,12 +14,8 @@ import { ALLERGENS } from "@/lib/types/database";
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-    >
-      {pending ? "Saving…" : label}
+    <button type="submit" disabled={pending} className="btn-primary">
+      {pending ? "Сохранение…" : label}
     </button>
   );
 }
@@ -31,18 +27,21 @@ function SubmitButton({ label }: { label: string }) {
 function AllergenCheckboxes({ selected }: { selected: string[] }) {
   return (
     <fieldset>
-      <legend className="text-xs font-medium text-gray-600 mb-1">
-        Allergens
+      <legend className="mb-1.5 text-sm font-medium text-slate-300">
+        Аллергены
       </legend>
-      <div className="flex flex-wrap gap-x-4 gap-y-1">
+      <div className="flex flex-wrap gap-x-4 gap-y-1.5">
         {ALLERGENS.map((allergen) => (
-          <label key={allergen} className="flex items-center gap-1 text-xs text-gray-700">
+          <label
+            key={allergen}
+            className="flex items-center gap-1.5 text-xs text-slate-300"
+          >
             <input
               type="checkbox"
               name="allergens"
               value={allergen}
               defaultChecked={selected.includes(allergen)}
-              className="h-3.5 w-3.5 rounded border-gray-300"
+              className="h-3.5 w-3.5 rounded border-white/20 bg-white/5 accent-amber-500"
             />
             {allergen}
           </label>
@@ -75,25 +74,21 @@ function DishFields({
       <div className="flex flex-wrap gap-3">
         {/* Name */}
         <div className="flex-1 min-w-[160px]">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Dish name
-          </label>
+          <label className="label-dark">Название блюда</label>
           <input
             name="name"
             type="text"
             required
             maxLength={120}
             defaultValue={defaultValues?.name ?? ""}
-            placeholder="e.g. Caesar Salad"
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="напр. Салат «Цезарь»"
+            className="input-dark"
           />
         </div>
 
         {/* Price */}
         <div className="w-28">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Price ($)
-          </label>
+          <label className="label-dark">Цена ($)</label>
           <input
             name="price"
             type="number"
@@ -102,23 +97,21 @@ function DishFields({
             step={0.01}
             defaultValue={priceDollars}
             placeholder="0.00"
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
         {/* Category */}
         <div className="w-44">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Category
-          </label>
+          <label className="label-dark">Категория</label>
           <select
             name="category_id"
             required
             defaultValue={defaultValues?.category_id ?? defaultCategoryId ?? ""}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="select-dark"
           >
             <option value="" disabled>
-              Select…
+              Выберите…
             </option>
             {categories.map((cat) => (
               <option key={cat.id} value={cat.id}>
@@ -130,31 +123,29 @@ function DishFields({
 
         {/* Sort order */}
         <div className="w-24">
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Order
-          </label>
+          <label className="label-dark">Порядок</label>
           <input
             name="sort_order"
             type="number"
             min={0}
             defaultValue={defaultValues?.sort_order ?? 0}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
       </div>
 
       {/* Description */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Description <span className="text-gray-400">(optional)</span>
+        <label className="label-dark">
+          Описание <span className="text-slate-500">(необязательно)</span>
         </label>
         <textarea
           name="description"
           rows={2}
           maxLength={1000}
           defaultValue={defaultValues?.description ?? ""}
-          placeholder="Short description of the dish…"
-          className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+          placeholder="Краткое описание блюда…"
+          className="input-dark"
         />
       </div>
 
@@ -175,7 +166,7 @@ function DishFields({
               hiddenInput.disabled = e.currentTarget.checked;
             }
           }}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded border-white/20 bg-white/5 accent-amber-500"
         />
         {/* Fallback hidden field so unchecked state sends "false" */}
         <input
@@ -186,9 +177,9 @@ function DishFields({
         />
         <label
           htmlFor={`is-available-${defaultValues?.id ?? "new"}`}
-          className="text-xs font-medium text-gray-600"
+          className="text-xs font-medium text-slate-300"
         >
-          Available
+          В наличии
         </label>
       </div>
 
@@ -216,13 +207,14 @@ export function CreateDishForm({
   const [state, formAction] = useFormState(createDish, createInitialState);
 
   return (
-    <form action={formAction} className="space-y-3 rounded-md border border-dashed border-gray-300 p-4">
-      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-        Add dish
-      </p>
+    <form
+      action={formAction}
+      className="space-y-3 rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4"
+    >
+      <p className="eyebrow">Добавить блюдо</p>
 
       {state?.error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="text-xs text-rose-300">
           {state.error}
         </p>
       )}
@@ -233,7 +225,7 @@ export function CreateDishForm({
       />
 
       <div>
-        <SubmitButton label="Add dish" />
+        <SubmitButton label="Добавить блюдо" />
       </div>
     </form>
   );
@@ -255,7 +247,7 @@ export function EditDishForm({ dish, categories }: EditDishFormProps) {
   const [isPending, startTransition] = useTransition();
 
   function handleDelete() {
-    if (!confirm(`Delete dish "${dish.name}"?`)) return;
+    if (!confirm(`Удалить блюдо «${dish.name}»?`)) return;
     startTransition(async () => {
       await deleteDish(dish.id);
     });
@@ -264,7 +256,7 @@ export function EditDishForm({ dish, categories }: EditDishFormProps) {
   return (
     <form action={formAction} className="space-y-3">
       {state?.error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="text-xs text-rose-300">
           {state.error}
         </p>
       )}
@@ -275,14 +267,14 @@ export function EditDishForm({ dish, categories }: EditDishFormProps) {
       <DishFields categories={categories} defaultValues={dish} />
 
       <div className="flex items-center gap-2">
-        <SubmitButton label="Save dish" />
+        <SubmitButton label="Сохранить блюдо" />
         <button
           type="button"
           onClick={handleDelete}
           disabled={isPending}
-          className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+          className="btn-danger"
         >
-          {isPending ? "Deleting…" : "Delete"}
+          {isPending ? "Удаление…" : "Удалить"}
         </button>
       </div>
     </form>

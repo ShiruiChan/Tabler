@@ -22,7 +22,7 @@ function formatCents(cents: number, currency: string): string {
 
 function formatOrderDate(isoUtc: string): string {
   const d = new Date(isoUtc);
-  const date = d.toLocaleDateString("en-US", {
+  const date = d.toLocaleDateString("ru-RU", {
     weekday: "short",
     year: "numeric",
     month: "short",
@@ -31,24 +31,24 @@ function formatOrderDate(isoUtc: string): string {
   });
   const hh = String(d.getUTCHours()).padStart(2, "0");
   const mm = String(d.getUTCMinutes()).padStart(2, "0");
-  return `${date} at ${hh}:${mm} UTC`;
+  return `${date} в ${hh}:${mm} UTC`;
 }
 
 const ORDER_TYPE_LABELS: Record<string, string> = {
-  in_session: "Dine-in",
-  delivery: "Delivery",
-  banquet: "Banquet",
+  in_session: "В заведении",
+  delivery: "Доставка",
+  banquet: "Банкет",
 };
 
 const STATUS_LABELS: Record<string, string> = {
-  pending: "Pending",
-  confirmed: "Confirmed",
-  preparing: "Preparing",
-  ready: "Ready",
-  out_for_delivery: "Out for delivery",
-  completed: "Completed",
-  cancelled: "Cancelled",
-  refunded: "Refunded",
+  pending: "Ожидает",
+  confirmed: "Подтверждён",
+  preparing: "Готовится",
+  ready: "Готов",
+  out_for_delivery: "В доставке",
+  completed: "Выполнен",
+  cancelled: "Отменён",
+  refunded: "Возврат",
 };
 
 const STATUS_BG: Record<string, string> = {
@@ -82,7 +82,7 @@ interface MyOrdersProps {
 }
 
 // ---------------------------------------------------------------------------
-// CancelButton — per-row cancel with useTransition (mirrors CancelButton in my-tickets.tsx)
+// CancelButton - per-row cancel with useTransition (mirrors CancelButton in my-tickets.tsx)
 // ---------------------------------------------------------------------------
 
 function CancelButton({ orderId }: { orderId: string }) {
@@ -96,13 +96,13 @@ function CancelButton({ orderId }: { orderId: string }) {
         className="text-xs"
         style={{ color: "var(--color-primary)", opacity: 0.5 }}
       >
-        Cancelled
+        Отменён
       </span>
     );
   }
 
   function handleCancel() {
-    if (!confirm("Cancel this order? This cannot be undone.")) return;
+    if (!confirm("Отменить заказ? Это действие нельзя отменить.")) return;
     startTransition(async () => {
       const res = await cancelMyOrder(orderId);
       if (res === null) {
@@ -126,7 +126,7 @@ function CancelButton({ orderId }: { orderId: string }) {
           color: "rgb(220,38,38)",
         }}
       >
-        {isPending ? "Cancelling…" : "Cancel"}
+        {isPending ? "Отмена…" : "Отменить"}
       </button>
       {error && (
         <span
@@ -142,7 +142,7 @@ function CancelButton({ orderId }: { orderId: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// MyOrders — server-passed list, cancel interactions are client-side
+// MyOrders - server-passed list, cancel interactions are client-side
 // ---------------------------------------------------------------------------
 
 export function MyOrders({ orders }: MyOrdersProps) {
@@ -152,7 +152,7 @@ export function MyOrders({ orders }: MyOrdersProps) {
         className="text-sm"
         style={{ color: "var(--color-primary)", opacity: 0.6 }}
       >
-        You have no orders yet.
+        У вас пока нет заказов.
       </p>
     );
   }
@@ -170,8 +170,8 @@ export function MyOrders({ orders }: MyOrdersProps) {
         return (
           <li
             key={order.id}
-            className="rounded-lg p-4 space-y-3"
-            style={{ backgroundColor: "rgba(0,0,0,0.04)" }}
+            className="rounded-2xl border bg-white/60 p-4 space-y-3 shadow-sm"
+            style={{ borderColor: "rgba(0,0,0,0.07)" }}
           >
             {/* Header row */}
             <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -246,7 +246,7 @@ export function MyOrders({ orders }: MyOrdersProps) {
               <span style={{ opacity: 0.65 }}>
                 {order.order_type === "delivery" &&
                   order.delivery_fee_cents > 0 &&
-                  `Delivery: ${formatCents(
+                  `Доставка: ${formatCents(
                     order.delivery_fee_cents,
                     order.currency
                   )} · `}
@@ -260,7 +260,7 @@ export function MyOrders({ orders }: MyOrdersProps) {
                   )}
               </span>
               <span className="font-semibold">
-                Total:{" "}
+                Итого:{" "}
                 <span style={{ color: "var(--color-accent)" }}>
                   {formatCents(order.total_cents, order.currency)}
                 </span>

@@ -15,7 +15,7 @@
 --    The check_event_capacity trigger runs BEFORE INSERT OR UPDATE on
 --    event_tickets.  When NEW.status IN ('reserved','paid') it:
 --      a) acquires a row-level lock on the parent events row via
---         SELECT … FOR UPDATE — this serializes concurrent inserts/updates for
+--         SELECT … FOR UPDATE - this serializes concurrent inserts/updates for
 --         the same event so two simultaneous buyers cannot jointly oversell;
 --      b) sums quantity of all OTHER active (reserved+paid) tickets for the
 --         event and raises if that sum + NEW.quantity > events.capacity.
@@ -26,12 +26,12 @@
 --    price_cents / currency at purchase time.  The events columns may be updated
 --    by restaurant staff later without retroactively changing prior purchase
 --    amounts.  Integrity of the snapshot values for visitor INSERTs is enforced
---    in the TASK-023 API layer (not in RLS — RLS cannot read events.price_cents
+--    in the TASK-023 API layer (not in RLS - RLS cannot read events.price_cents
 --    at INSERT time without a subquery that risks TOCTOU drift).
 --
 -- 4. Anonymous / guest creation is NOT exposed through RLS.  Unauthenticated
 --    purchases must go through the TASK-023 server-side API route which uses
---    the service role to bypass RLS — matching the pattern in 0006_reservations.sql.
+--    the service role to bypass RLS - matching the pattern in 0006_reservations.sql.
 --
 -- 5. The guard_visitor_ticket_update BEFORE UPDATE trigger restricts visitor
 --    (non-tenant-role) callers to a single allowed mutation: status column only,
@@ -43,9 +43,9 @@
 --
 -- 6. Trigger alphabetical firing order on event_tickets (BEFORE triggers fire
 --    alphabetically by trigger name):
---      event_tickets_check_capacity       — fires 1st (INSERT OR UPDATE)
---      event_tickets_check_event_tenant   — fires 2nd (INSERT OR UPDATE)
---      event_tickets_guard_visitor_update — fires 3rd (UPDATE only)
+--      event_tickets_check_capacity       - fires 1st (INSERT OR UPDATE)
+--      event_tickets_check_event_tenant   - fires 2nd (INSERT OR UPDATE)
+--      event_tickets_guard_visitor_update - fires 3rd (UPDATE only)
 --    The cross-tenant check and capacity check are order-independent for
 --    correctness: both reject invalid rows regardless of which fires first.
 --    The capacity trigger also raises when the event row does not exist, covering
@@ -61,7 +61,7 @@
 create table public.events (
   id            uuid        primary key default gen_random_uuid(),
 
-  -- Denormalized for RLS speed — event_tickets also carry tenant_id and the
+  -- Denormalized for RLS speed - event_tickets also carry tenant_id and the
   -- check_event_ticket_event_tenant trigger keeps them consistent.
   tenant_id     uuid        not null
                   references public.tenants(id) on delete cascade,
@@ -129,7 +129,7 @@ create index events_tenant_starts_published_idx
 create table public.event_tickets (
   id              uuid        primary key default gen_random_uuid(),
 
-  -- Denormalized for RLS speed — enforced to match event's tenant_id by the
+  -- Denormalized for RLS speed - enforced to match event's tenant_id by the
   -- check_event_ticket_event_tenant trigger below.
   tenant_id       uuid        not null
                     references public.tenants(id) on delete cascade,
@@ -203,7 +203,7 @@ create trigger event_tickets_set_updated_at
   for each row execute function public.set_updated_at();
 
 -- Drives capacity-sum queries: active (reserved + paid) tickets for an event.
--- Partial index keeps it narrow — cancelled/refunded rows are excluded.
+-- Partial index keeps it narrow - cancelled/refunded rows are excluded.
 create index event_tickets_event_active_idx
   on public.event_tickets (event_id)
   where status in ('reserved', 'paid');
@@ -279,7 +279,7 @@ create trigger event_tickets_check_capacity
 -- 4. Cross-tenant integrity trigger
 --    Ensures that event_id belongs to the same tenant as the ticket row.
 --    Fires BEFORE INSERT OR UPDATE (fires after event_tickets_check_capacity
---    alphabetically; both reject bad rows regardless of order — see note 6).
+--    alphabetically; both reject bad rows regardless of order - see note 6).
 -- ---------------------------------------------------------------------------
 create or replace function public.check_event_ticket_event_tenant()
   returns trigger
@@ -376,7 +376,7 @@ end;
 $$;
 
 -- Fires BEFORE UPDATE only; alphabetically after check_event_tenant which is
--- correct — structural checks run first, guard runs last.
+-- correct - structural checks run first, guard runs last.
 create trigger event_tickets_guard_visitor_update
   before update on public.event_tickets
   for each row execute function public.guard_visitor_ticket_update();
@@ -388,7 +388,7 @@ alter table public.events        enable row level security;
 alter table public.event_tickets enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 7. RLS policies — events
+-- 7. RLS policies - events
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | is_published=true AND tenant active
@@ -452,10 +452,10 @@ create policy "events: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 8. RLS policies — event_tickets
+-- 8. RLS policies - event_tickets
 --
 -- Policy matrix:
---   anon                           | (none) — PII; guest purchases go via
+--   anon                           | (none) - PII; guest purchases go via
 --                                  |          service-role API (TASK-023)
 --   authenticated visitor          | SELECT | own rows (user_id = auth.uid())
 --   authenticated visitor          | INSERT | own rows, status='reserved',
@@ -474,7 +474,7 @@ create policy "events: super_admin all"
 -- ---------------------------------------------------------------------------
 
 -- Visitor read: authenticated users may read their own ticket rows only.
--- No anon read — event_tickets contain PII (buyer_name, buyer_email, etc.).
+-- No anon read - event_tickets contain PII (buyer_name, buyer_email, etc.).
 create policy "event_tickets: visitor select own"
   on public.event_tickets
   for select

@@ -74,7 +74,7 @@
 --    - orders should also carry a fee_cents int and snapshot delivery fee at
 --      order creation time from either the zone's fee_override_cents or the
 --      tenant's base_fee_cents (application layer resolves this).
---    - No FK from delivery_zones back to delivery_settings is needed — both
+--    - No FK from delivery_zones back to delivery_settings is needed - both
 --      reference tenants(id) directly; application logic joins them by tenant_id.
 --
 -- 9. 'delivery' module was already seeded in 0002_modules_pricing.sql.
@@ -342,17 +342,17 @@ alter table public.delivery_settings enable row level security;
 alter table public.delivery_zones     enable row level security;
 
 -- ---------------------------------------------------------------------------
--- 7. RLS policies — delivery_settings
+-- 7. RLS policies - delivery_settings
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | tenant active
 --                                  |        | (readable even when is_enabled=false
 --                                  |        |  so the UI can show "delivery
---                                  |        |  unavailable" without auth — see note 5)
+--                                  |        |  unavailable" without auth - see note 5)
 --   restaurant_owner / staff       | SELECT | own tenant (regardless of status)
 --   restaurant_owner / staff       | UPDATE | own tenant (WITH CHECK)
 --   super_admin                    | ALL    | unrestricted
---   (no non-super INSERT/DELETE — rows managed by trigger/cascade)
+--   (no non-super INSERT/DELETE - rows managed by trigger/cascade)
 -- ---------------------------------------------------------------------------
 
 -- Public read: B2C ordering flow reads delivery settings for any active tenant.
@@ -396,7 +396,7 @@ create policy "delivery_settings: super_admin all"
   with check (public.is_super_admin());
 
 -- ---------------------------------------------------------------------------
--- 8. RLS policies — delivery_zones
+-- 8. RLS policies - delivery_zones
 --
 -- Policy matrix:
 --   anon + authenticated (public)  | SELECT | is_active=true AND tenant active
@@ -466,7 +466,7 @@ create policy "delivery_zones: super_admin all"
 --    visible in psql \d+ and Supabase Studio.
 -- ---------------------------------------------------------------------------
 comment on table  public.delivery_settings is
-  'Per-tenant delivery configuration (singleton — one row per tenant).  Auto-created by trigger on tenant INSERT.';
+  'Per-tenant delivery configuration (singleton - one row per tenant).  Auto-created by trigger on tenant INSERT.';
 comment on column public.delivery_settings.schedule is
   'Per-weekday delivery hours in UTC.  Shape: {"0":{"open":"HH:MM","close":"HH:MM","closed":bool},...,"6":{...}}.  Keys 0–6 = Sun–Sat.  Missing keys treated as closed by application.';
 

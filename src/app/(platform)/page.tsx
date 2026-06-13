@@ -171,7 +171,7 @@ export default async function LandingPage() {
           className="mx-auto flex max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8 h-16"
         >
           {/* Wordmark */}
-          <Link href="/" className="flex shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-md" aria-label="Tabler — на главную">
+          <Link href="/" className="flex shrink-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-md" aria-label="Tabler - на главную">
             <span aria-hidden="true" className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/30">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                 <rect x="1" y="1" width="5" height="5" rx="1" fill="white" />
@@ -183,7 +183,7 @@ export default async function LandingPage() {
             <span className="text-base font-semibold tracking-tight text-slate-100">Tabler</span>
           </Link>
 
-          {/* Centre anchor links — hidden on small screens */}
+          {/* Centre anchor links - hidden on small screens */}
           <div className="hidden md:flex items-center gap-1 flex-1 justify-center">
             {[
               { href: "#for-restaurants", label: "Для ресторанов" },
@@ -270,11 +270,11 @@ export default async function LandingPage() {
             {/* bottom vignette */}
             <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#0a0a0b] to-transparent" />
 
-            {/* blob 1 — amber */}
+            {/* blob 1 - amber */}
             <div className="animate-aurora-1 absolute -top-40 left-1/4 h-[600px] w-[600px] rounded-full bg-amber-500/20 blur-[120px]" />
-            {/* blob 2 — rose */}
+            {/* blob 2 - rose */}
             <div className="animate-aurora-2 absolute top-20 -right-20 h-[500px] w-[500px] rounded-full bg-rose-500/15 blur-[100px]" />
-            {/* blob 3 — violet */}
+            {/* blob 3 - violet */}
             <div className="animate-aurora-3 absolute bottom-0 left-10 h-[400px] w-[400px] rounded-full bg-violet-600/15 blur-[100px]" />
           </div>
 
@@ -325,7 +325,7 @@ export default async function LandingPage() {
                 </h1>
 
                 <p className="animate-fade-up-delay-2 max-w-xl mx-auto lg:mx-0 text-lg text-slate-300 leading-relaxed mb-8">
-                  Один дашборд управляет всей цифровой работой ресторана — меню, схемой зала, бронированием, событиями и доставкой — и всё это под{" "}
+                  Один дашборд управляет всей цифровой работой ресторана - меню, схемой зала, бронированием, событиями и доставкой - и всё это под{" "}
                   <span className="text-slate-100 font-medium">вашим брендом и вашим доменом</span>.
                   Гости никогда не видят Tabler.
                 </p>
@@ -377,7 +377,7 @@ export default async function LandingPage() {
 
                 {/* trust line */}
                 <p className="animate-fade-up-delay-2 mt-8 text-xs text-slate-500 tracking-wide">
-                  Меню · Бронирование · Схема зала · События · Доставка — одна платформа
+                  Меню · Бронирование · Схема зала · События · Доставка - одна платформа
                 </p>
               </div>
 
@@ -412,16 +412,16 @@ export default async function LandingPage() {
                     Управляйте всем из одного дашборда
                   </h3>
                   <p className="text-slate-400 mb-6 leading-relaxed">
-                    Ваш бренд, ваш домен — и невидимый движок Tabler внутри. Всё, что нужно команде, в едином и понятном рабочем пространстве.
+                    Ваш бренд, ваш домен - и невидимый движок Tabler внутри. Всё, что нужно команде, в едином и понятном рабочем пространстве.
                   </p>
 
                   <ul className="space-y-2.5 mb-8">
                     {[
-                      "Полный white-label брендинг — ваш логотип, палитра, шрифты, свой домен",
+                      "Полный white-label брендинг - ваш логотип, палитра, шрифты, свой домен",
                       "Управление меню в реальном времени: категории, блюда, аллергены",
                       "Интерактивный редактор схемы зала и управление столами",
                       "Бронирование с доступностью в реальном времени и историей гостей",
-                      "События и продажа билетов — от камерных ужинов до полного выкупа зала",
+                      "События и продажа билетов - от камерных ужинов до полного выкупа зала",
                       "Настройка зон доставки, расписания и отслеживание заказов",
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
@@ -469,16 +469,16 @@ export default async function LandingPage() {
                     Красивый брендированный сайт для каждого гостя
                   </h3>
                   <p className="text-slate-400 mb-6 leading-relaxed">
-                    Гости получают отточенный, mobile-first опыт на вашем собственном адресе — смотрят меню, бронируют стол, заказывают еду или покупают билеты на события.
+                    Гости получают отточенный, mobile-first опыт на вашем собственном адресе - смотрят меню, бронируют стол, заказывают еду или покупают билеты на события.
                   </p>
 
                   <ul className="space-y-2.5 mb-8">
                     {[
                       "Эффектное меню с фото, фильтрами по аллергенам и наличием в реальном времени",
-                      "Удобное бронирование — выбор стола прямо на схеме зала",
+                      "Удобное бронирование - выбор стола прямо на схеме зала",
                       "Заказ за столом и оформление доставки",
                       "Подбор событий и покупка билетов в одном сценарии",
-                      "Полностью брендировано — ваши цвета, логотип, ваш домен",
+                      "Полностью брендировано - ваши цвета, логотип, ваш домен",
                     ].map((item) => (
                       <li key={item} className="flex items-start gap-2.5 text-sm text-slate-300">
                         <svg aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-violet-400" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -512,7 +512,7 @@ export default async function LandingPage() {
                 Шесть модулей. Один дашборд.
               </h2>
               <p className="mt-4 text-slate-400 max-w-2xl mx-auto">
-                Всё необходимое для работы современного ресторана — встроено, а не прикручено сбоку.
+                Всё необходимое для работы современного ресторана - встроено, а не прикручено сбоку.
               </p>
             </div>
 
@@ -542,7 +542,7 @@ export default async function LandingPage() {
                 {
                   icon: <IconTicket />,
                   title: "События и билеты",
-                  desc: "Публикуйте события с билетами — от винных дегустаций до закрытых ужинов у шефа — и продавайте места онлайн.",
+                  desc: "Публикуйте события с билетами - от винных дегустаций до закрытых ужинов у шефа - и продавайте места онлайн.",
                   accent: "text-violet-400",
                   glow: "from-violet-500/8",
                 },
@@ -589,7 +589,7 @@ export default async function LandingPage() {
                   Ваш бренд, а не наш.
                 </h2>
                 <p className="mx-auto max-w-2xl text-slate-300 text-lg leading-relaxed">
-                  Каждый пиксель, который видит гость, несёт ваш логотип, ваши цвета, вашу типографику — и отдаётся с вашего домена.
+                  Каждый пиксель, который видит гость, несёт ваш логотип, ваши цвета, вашу типографику - и отдаётся с вашего домена.
                   Tabler работает невидимо в фоне, поэтому ваш ресторан выглядит как продукт на заказ, а не как типовой SaaS-шаблон.
                 </p>
                 <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-slate-400">
@@ -643,7 +643,7 @@ export default async function LandingPage() {
                 Ваш ресторан заслуживает платформу под стать его амбициям.
               </h2>
               <p className="mx-auto max-w-xl text-lg text-slate-300 mb-10">
-                Настройте всю цифровую работу за считаные минуты — без инженеров, без контрактов, без привязки к поставщику.
+                Настройте всю цифровую работу за считаные минуты - без инженеров, без контрактов, без привязки к поставщику.
               </p>
 
               <div className="flex flex-wrap justify-center gap-4">
@@ -690,7 +690,7 @@ export default async function LandingPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6 mb-12">
             {/* Brand */}
             <div>
-              <Link href="/" className="inline-flex items-center gap-2.5 mb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-md" aria-label="Tabler — на главную">
+              <Link href="/" className="inline-flex items-center gap-2.5 mb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded-md" aria-label="Tabler - на главную">
                 <span aria-hidden="true" className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-500">
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                     <rect x="1" y="1" width="5" height="5" rx="1" fill="white" />

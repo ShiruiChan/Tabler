@@ -35,7 +35,7 @@ interface ZoneFieldsProps {
 }
 
 function ZoneFields({ id, defaults }: ZoneFieldsProps) {
-  // Checkbox controlled state for is_active (hidden-field pattern — TASK-013/014)
+  // Checkbox controlled state for is_active (hidden-field pattern - TASK-013/014)
   const [isActive, setIsActive] = useState<boolean>(defaults?.is_active ?? true);
 
   return (
@@ -44,8 +44,8 @@ function ZoneFields({ id, defaults }: ZoneFieldsProps) {
 
       {/* Name */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Zone name
+        <label className="label-dark">
+          Название зоны
         </label>
         <input
           name="name"
@@ -53,17 +53,17 @@ function ZoneFields({ id, defaults }: ZoneFieldsProps) {
           required
           maxLength={80}
           defaultValue={defaults?.name ?? ""}
-          placeholder="e.g. City Centre"
-          className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+          placeholder="Например, Центр города"
+          className="input-dark"
         />
       </div>
 
       {/* Money overrides + sort_order row */}
       <div className="flex flex-wrap gap-3">
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Fee override{" "}
-            <span className="text-gray-400">(optional)</span>
+          <label className="label-dark">
+            Своя стоимость{" "}
+            <span className="text-slate-500">(необязательно)</span>
           </label>
           <input
             name="fee_override_cents"
@@ -71,16 +71,16 @@ function ZoneFields({ id, defaults }: ZoneFieldsProps) {
             min={0}
             step={0.01}
             defaultValue={centsToMajor(defaults?.fee_override_cents)}
-            placeholder="e.g. 2.50"
-            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="например, 2.50"
+            className="input-dark w-32"
           />
-          <p className="mt-0.5 text-xs text-gray-400">Blank = use base fee</p>
+          <p className="field-hint">Пусто = базовая стоимость</p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Min order override{" "}
-            <span className="text-gray-400">(optional)</span>
+          <label className="label-dark">
+            Свой мин. заказ{" "}
+            <span className="text-slate-500">(необязательно)</span>
           </label>
           <input
             name="min_order_override_cents"
@@ -88,27 +88,27 @@ function ZoneFields({ id, defaults }: ZoneFieldsProps) {
             min={0}
             step={0.01}
             defaultValue={centsToMajor(defaults?.min_order_override_cents)}
-            placeholder="e.g. 15.00"
-            className="w-32 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="например, 15.00"
+            className="input-dark w-32"
           />
-          <p className="mt-0.5 text-xs text-gray-400">Blank = use global minimum</p>
+          <p className="field-hint">Пусто = общий минимум</p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-600 mb-1">
-            Sort order
+          <label className="label-dark">
+            Порядок
           </label>
           <input
             name="sort_order"
             type="number"
             step={1}
             defaultValue={defaults?.sort_order ?? 0}
-            className="w-24 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark w-24"
           />
         </div>
       </div>
 
-      {/* is_active — checkbox hidden-field pattern (TASK-013/014) */}
+      {/* is_active - checkbox hidden-field pattern (TASK-013/014) */}
       <div className="flex items-center gap-2">
         <input
           id={`is-active-${id ?? "new"}`}
@@ -117,7 +117,7 @@ function ZoneFields({ id, defaults }: ZoneFieldsProps) {
           value="true"
           checked={isActive}
           onChange={(e) => setIsActive(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300"
+          className="h-4 w-4 rounded border-white/20 bg-white/5 accent-amber-500"
         />
         <input
           type="hidden"
@@ -127,29 +127,29 @@ function ZoneFields({ id, defaults }: ZoneFieldsProps) {
         />
         <label
           htmlFor={`is-active-${id ?? "new"}`}
-          className="text-xs font-medium text-gray-600"
+          className="text-xs font-medium text-slate-300"
         >
-          Active
+          Активна
         </label>
       </div>
 
       {/* Polygon */}
       <div>
-        <label className="block text-xs font-medium text-gray-600 mb-1">
-          Polygon{" "}
-          <span className="text-gray-400">
-            (optional JSON array of [lng,lat] pairs, ≥3 points)
+        <label className="label-dark">
+          Полигон{" "}
+          <span className="text-slate-500">
+            (необязательный JSON-массив пар [lng,lat], ≥3 точек)
           </span>
         </label>
         <textarea
           name="polygon_json"
           rows={3}
           defaultValue={polygonToJson(defaults?.polygon ?? null)}
-          placeholder={'e.g. [[-0.12,51.51],[-0.11,51.51],[-0.11,51.50],[-0.12,51.50]]'}
-          className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-xs font-mono focus:border-gray-900 focus:outline-none"
+          placeholder={'например, [[-0.12,51.51],[-0.11,51.51],[-0.11,51.50],[-0.12,51.50]]'}
+          className="input-dark font-mono text-xs"
         />
-        <p className="mt-0.5 text-xs text-gray-400">
-          Leave blank for a named zone without a map boundary.
+        <p className="field-hint">
+          Оставьте пустым для именованной зоны без границы на карте.
         </p>
       </div>
     </div>
@@ -186,14 +186,14 @@ export function CreateZoneForm() {
     <form
       ref={formRef}
       onSubmit={handleSubmit}
-      className="space-y-3 rounded-md border border-dashed border-gray-300 p-4"
+      className="space-y-3 rounded-md border border-dashed border-white/15 p-4"
     >
-      <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-        Add zone
+      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+        Добавить зону
       </p>
 
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {error}
         </p>
       )}
@@ -201,12 +201,8 @@ export function CreateZoneForm() {
       <ZoneFields />
 
       <div>
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-        >
-          {isPending ? "Creating…" : "Create zone"}
+        <button type="submit" disabled={isPending} className="btn-primary">
+          {isPending ? "Создание…" : "Создать зону"}
         </button>
       </div>
     </form>
@@ -246,7 +242,7 @@ export function EditZoneForm({ zone }: EditZoneFormProps) {
   function handleDelete() {
     if (
       !confirm(
-        `Delete zone "${zone.name}"? This cannot be undone. Existing orders linked to this zone will have their zone reference cleared.`
+        `Удалить зону «${zone.name}»? Это действие необратимо. У существующих заказов, привязанных к этой зоне, ссылка на зону будет очищена.`
       )
     ) {
       return;
@@ -265,12 +261,12 @@ export function EditZoneForm({ zone }: EditZoneFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       {error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {error}
         </p>
       )}
       {deleteError && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="alert-error">
           {deleteError}
         </p>
       )}
@@ -281,17 +277,17 @@ export function EditZoneForm({ zone }: EditZoneFormProps) {
         <button
           type="submit"
           disabled={isPending || isDeleting}
-          className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
+          className="btn-primary"
         >
-          {isPending ? "Saving…" : "Save zone"}
+          {isPending ? "Сохранение…" : "Сохранить зону"}
         </button>
         <button
           type="button"
           onClick={handleDelete}
           disabled={isPending || isDeleting}
-          className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+          className="btn-danger"
         >
-          {isDeleting ? "Deleting…" : "Delete"}
+          {isDeleting ? "Удаление…" : "Удалить"}
         </button>
       </div>
     </form>

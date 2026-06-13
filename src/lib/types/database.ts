@@ -4,7 +4,7 @@
  * Hand-written TypeScript types that mirror the SQL schema defined in
  * supabase/migrations/0001_core_tenancy.sql.
  *
- * These types are intentionally simple plain interfaces — no generated
+ * These types are intentionally simple plain interfaces - no generated
  * Database wrapper required at this stage.  Update them whenever the
  * underlying schema changes.
  */
@@ -68,13 +68,13 @@ export interface Profile {
 }
 
 // ---------------------------------------------------------------------------
-// Module (platform-wide catalog — 0002_modules_pricing.sql)
+// Module (platform-wide catalog - 0002_modules_pricing.sql)
 // ---------------------------------------------------------------------------
 
 export type BillingPeriod = 'monthly' | 'yearly' | 'one_time';
 
 export interface Module {
-  /** Machine key — lowercase snake_case, matches '^[a-z][a-z0-9_]*$'. */
+  /** Machine key - lowercase snake_case, matches '^[a-z][a-z0-9_]*$'. */
   id: string;
   /** Human-readable display name of the module. */
   name: string;
@@ -91,7 +91,7 @@ export interface Module {
 }
 
 // ---------------------------------------------------------------------------
-// TenantModule (per-tenant feature flag — 0002_modules_pricing.sql)
+// TenantModule (per-tenant feature flag - 0002_modules_pricing.sql)
 //
 // NOTE: price_override_cents is only visible to tenant owners/staff and
 // super_admin via public.get_tenant_module_pricing().  Anon and general
@@ -119,7 +119,7 @@ export interface TenantModule {
 }
 
 // ---------------------------------------------------------------------------
-// TenantModulePricing — return type of public.get_tenant_module_pricing()
+// TenantModulePricing - return type of public.get_tenant_module_pricing()
 // ---------------------------------------------------------------------------
 
 export interface TenantModulePricing {
@@ -136,7 +136,7 @@ export interface TenantModulePricing {
 }
 
 // ---------------------------------------------------------------------------
-// SiteSettings (per-tenant site design — 0003_site_settings.sql)
+// SiteSettings (per-tenant site design - 0003_site_settings.sql)
 // ---------------------------------------------------------------------------
 
 /**
@@ -158,7 +158,7 @@ export type SiteFont = (typeof SITE_FONTS)[number];
 
 export interface SiteSettings {
   /**
-   * UUID of the owning tenant.  This is also the primary key — one row per
+   * UUID of the owning tenant.  This is also the primary key - one row per
    * tenant.  Matches public.tenants(id).
    */
   tenant_id: string;
@@ -294,8 +294,8 @@ export interface Dish {
 /**
  * Discriminated union describing the clickable area of a table on the floor map.
  *
- * rect   — axis-aligned rectangle: top-left corner (x, y), width w, height h.
- * circle — circle: centre (cx, cy), radius r.
+ * rect   - axis-aligned rectangle: top-left corner (x, y), width w, height h.
+ * circle - circle: centre (cx, cy), radius r.
  *
  * All numeric values are in the logical coordinate space defined by the parent
  * floor_plan's (width, height) dimensions.
@@ -366,7 +366,7 @@ export interface FloorTable {
 
 /**
  * Weekly availability rule for a tenant.
- * One row per (tenant_id, weekday) — UNIQUE constraint enforces the simple
+ * One row per (tenant_id, weekday) - UNIQUE constraint enforces the simple
  * single-shift model (split shifts are out of scope).
  *
  * weekday follows JavaScript's Date.getDay() convention: 0 = Sunday, 6 = Saturday.
@@ -416,7 +416,7 @@ export interface AvailabilityRule {
  */
 export interface ReservationSettings {
   /**
-   * UUID of the owning tenant.  This is also the primary key — one row per
+   * UUID of the owning tenant.  This is also the primary key - one row per
    * tenant.  Matches public.tenants(id).
    */
   tenant_id: string;
@@ -556,7 +556,7 @@ export type DeliverySchedule = Partial<Record<'0' | '1' | '2' | '3' | '4' | '5' 
 
 /**
  * Per-tenant delivery configuration.
- * Singleton — one row per tenant (auto-created by trigger on tenant INSERT).
+ * Singleton - one row per tenant (auto-created by trigger on tenant INSERT).
  * Primary key is a standalone uuid (id), not PK=FK, with a UNIQUE NOT NULL FK
  * on tenant_id.
  */
@@ -565,7 +565,7 @@ export interface DeliverySettings {
   id: string;
   /**
    * UUID of the owning tenant.
-   * UNIQUE — enforces the one-row-per-tenant singleton.
+   * UNIQUE - enforces the one-row-per-tenant singleton.
    * Matches public.tenants(id).
    */
   tenant_id: string;
@@ -630,7 +630,7 @@ export interface DeliveryZone {
   tenant_id: string;
   /**
    * Human-readable zone name (1–80 characters).
-   * UNIQUE per tenant — constraint name: delivery_zones_tenant_id_name_key
+   * UNIQUE per tenant - constraint name: delivery_zones_tenant_id_name_key
    * (used for 23505 duplicate-name error mapping in TASK-028).
    */
   name: string;
@@ -673,9 +673,9 @@ export interface DeliveryZone {
  * Discriminant for the three PLAN order flows.
  * Must stay in sync with the orders_order_type_values CHECK in 0009_orders.sql.
  *
- * 'in_session' — dine-in order tied to a physical table (table_id).
- * 'delivery'   — off-premise order with a delivery address and zone.
- * 'banquet'    — pre-order tied to a reservation (deposit via TASK-031).
+ * 'in_session' - dine-in order tied to a physical table (table_id).
+ * 'delivery'   - off-premise order with a delivery address and zone.
+ * 'banquet'    - pre-order tied to a reservation (deposit via TASK-031).
  */
 export type OrderType = 'in_session' | 'delivery' | 'banquet';
 
@@ -732,7 +732,7 @@ export interface Order {
   customer_name: string;
   /**
    * Email address of the customer (max 254 characters).
-   * No format check at the DB layer — validated by zod/API.
+   * No format check at the DB layer - validated by zod/API.
    * Null if not provided.
    */
   customer_email: string | null;
@@ -848,7 +848,7 @@ export interface OrderItem {
   /** Number of units of this dish in the order (1–100). */
   quantity: number;
   created_at: string; // ISO-8601 timestamptz
-  // No updated_at — items are write-once from the visitor perspective.
+  // No updated_at - items are write-once from the visitor perspective.
 }
 
 // ---------------------------------------------------------------------------
@@ -859,12 +859,12 @@ export interface OrderItem {
  * Lifecycle status of an event ticket purchase.
  * Must stay in sync with the event_tickets_status_values CHECK in 0007_events.sql.
  *
- * 'reserved'  — seats held pending payment; capacity is consumed immediately
+ * 'reserved'  - seats held pending payment; capacity is consumed immediately
  *               by the DB check_event_capacity trigger.
- * 'paid'      — payment confirmed (Stripe webhook, TASK-030).
- * 'cancelled' — buyer self-cancelled (reserved only, via visitor RLS + guard
+ * 'paid'      - payment confirmed (Stripe webhook, TASK-030).
+ * 'cancelled' - buyer self-cancelled (reserved only, via visitor RLS + guard
  *               trigger) or staff/owner cancelled.
- * 'refunded'  — payment reversed via Stripe refund flow (TASK-030).
+ * 'refunded'  - payment reversed via Stripe refund flow (TASK-030).
  */
 export type EventTicketStatus =
   | 'reserved'
@@ -971,7 +971,7 @@ export interface EventTicket {
   quantity: number;
   /**
    * Snapshot of events.price_cents at the time of purchase (≥ 0).
-   * Immutable after creation — the event price may change later without
+   * Immutable after creation - the event price may change later without
    * retroactively altering this record.  Integrity of this snapshot for
    * visitor INSERTs is validated in the TASK-023 API layer; the DB trigger
    * enforces capacity but not price correctness.
@@ -979,7 +979,7 @@ export interface EventTicket {
   unit_price_cents: number;
   /**
    * Snapshot of events.currency at the time of purchase.
-   * Immutable after creation — matches the Stripe charge currency.
+   * Immutable after creation - matches the Stripe charge currency.
    */
   currency: Currency;
   /** Lifecycle status of this ticket purchase. */

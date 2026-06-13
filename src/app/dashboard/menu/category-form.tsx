@@ -11,18 +11,14 @@ import type { MenuActionState } from "@/lib/menu-actions";
 import type { MenuCategory } from "@/lib/types/database";
 
 // ---------------------------------------------------------------------------
-// Submit button (needs useFormStatus — must be its own component)
+// Submit button (needs useFormStatus - must be its own component)
 // ---------------------------------------------------------------------------
 
 function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50"
-    >
-      {pending ? "Saving…" : label}
+    <button type="submit" disabled={pending} className="btn-primary">
+      {pending ? "Сохранение…" : label}
     </button>
   );
 }
@@ -39,18 +35,15 @@ export function CreateCategoryForm() {
   return (
     <form action={formAction} className="space-y-3">
       {state?.error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="text-xs text-rose-300">
           {state.error}
         </p>
       )}
 
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex-1 min-w-[160px]">
-          <label
-            htmlFor="create-cat-name"
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Category name
+          <label htmlFor="create-cat-name" className="label-dark">
+            Название категории
           </label>
           <input
             id="create-cat-name"
@@ -58,34 +51,28 @@ export function CreateCategoryForm() {
             type="text"
             required
             maxLength={80}
-            placeholder="e.g. Starters"
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="напр. Закуски"
+            className="input-dark"
           />
         </div>
 
         <div className="flex-1 min-w-[160px]">
-          <label
-            htmlFor="create-cat-desc"
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Description <span className="text-gray-400">(optional)</span>
+          <label htmlFor="create-cat-desc" className="label-dark">
+            Описание <span className="text-slate-500">(необязательно)</span>
           </label>
           <input
             id="create-cat-desc"
             name="description"
             type="text"
             maxLength={500}
-            placeholder="Short description"
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            placeholder="Краткое описание"
+            className="input-dark"
           />
         </div>
 
         <div className="w-24">
-          <label
-            htmlFor="create-cat-sort"
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Order
+          <label htmlFor="create-cat-sort" className="label-dark">
+            Порядок
           </label>
           <input
             id="create-cat-sort"
@@ -93,11 +80,11 @@ export function CreateCategoryForm() {
             type="number"
             min={0}
             defaultValue={0}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
-        <SubmitButton label="Add category" />
+        <SubmitButton label="Добавить категорию" />
       </div>
     </form>
   );
@@ -120,7 +107,7 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
   function handleDelete() {
     if (
       !confirm(
-        `Delete category "${category.name}"? All dishes in it will also be deleted.`
+        `Удалить категорию «${category.name}»? Все блюда в ней также будут удалены.`
       )
     ) {
       return;
@@ -133,7 +120,7 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
   return (
     <form action={formAction} className="space-y-3">
       {state?.error && (
-        <p role="alert" className="text-xs text-red-600">
+        <p role="alert" className="text-xs text-rose-300">
           {state.error}
         </p>
       )}
@@ -143,11 +130,8 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
 
       <div className="flex flex-wrap items-end gap-3">
         <div className="flex-1 min-w-[160px]">
-          <label
-            htmlFor={`edit-cat-name-${category.id}`}
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Name
+          <label htmlFor={`edit-cat-name-${category.id}`} className="label-dark">
+            Название
           </label>
           <input
             id={`edit-cat-name-${category.id}`}
@@ -156,16 +140,13 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
             required
             maxLength={80}
             defaultValue={category.name}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
         <div className="flex-1 min-w-[160px]">
-          <label
-            htmlFor={`edit-cat-desc-${category.id}`}
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Description
+          <label htmlFor={`edit-cat-desc-${category.id}`} className="label-dark">
+            Описание
           </label>
           <input
             id={`edit-cat-desc-${category.id}`}
@@ -173,16 +154,13 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
             type="text"
             maxLength={500}
             defaultValue={category.description ?? ""}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
         <div className="w-24">
-          <label
-            htmlFor={`edit-cat-sort-${category.id}`}
-            className="block text-xs font-medium text-gray-600 mb-1"
-          >
-            Order
+          <label htmlFor={`edit-cat-sort-${category.id}`} className="label-dark">
+            Порядок
           </label>
           <input
             id={`edit-cat-sort-${category.id}`}
@@ -190,12 +168,12 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
             type="number"
             min={0}
             defaultValue={category.sort_order}
-            className="block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-gray-900 focus:outline-none"
+            className="input-dark"
           />
         </div>
 
         {/* is_active toggle */}
-        <div className="flex items-center gap-2 pb-0.5">
+        <div className="flex items-center gap-2 pb-1">
           <input
             id={`edit-cat-active-${category.id}`}
             name="is_active"
@@ -212,7 +190,7 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
                 hiddenInput.disabled = e.currentTarget.checked;
               }
             }}
-            className="h-4 w-4 rounded border-gray-300"
+            className="h-4 w-4 rounded border-white/20 bg-white/5 text-amber-500 accent-amber-500"
           />
           {/* When checkbox is unchecked it submits no value; the hidden field
               submits "false" as fallback so the server sees is_active=false */}
@@ -224,21 +202,21 @@ export function EditCategoryForm({ category }: EditCategoryFormProps) {
           />
           <label
             htmlFor={`edit-cat-active-${category.id}`}
-            className="text-xs font-medium text-gray-600"
+            className="text-xs font-medium text-slate-300"
           >
-            Active
+            Активна
           </label>
         </div>
 
-        <div className="flex items-end gap-2 pb-0.5">
-          <SubmitButton label="Save" />
+        <div className="flex items-end gap-2 pb-1">
+          <SubmitButton label="Сохранить" />
           <button
             type="button"
             onClick={handleDelete}
             disabled={isPending}
-            className="rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+            className="btn-danger"
           >
-            {isPending ? "Deleting…" : "Delete"}
+            {isPending ? "Удаление…" : "Удалить"}
           </button>
         </div>
       </div>

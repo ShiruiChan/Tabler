@@ -12,7 +12,7 @@ import { createServerClient } from "@supabase/ssr";
  * carries a port in production.
  *
  * We keep the port in ROOT_DOMAIN when present (dev), so comparison must be
- * done against the full host string — we only strip port from the incoming
+ * done against the full host string - we only strip port from the incoming
  * host when ROOT_DOMAIN itself has no port, to handle browsers that sometimes
  * omit the default ":80"/":443".
  */
@@ -60,7 +60,7 @@ function classifyHost(rawHost: string, rootDomain: string): RouteKind {
     }
 
     // Any other single-label subdomain is treated as a tenant slug.
-    // Deeper validation happens in the page layer — middleware stays fast.
+    // Deeper validation happens in the page layer - middleware stays fast.
     return { kind: "tenant-slug", slug: subdomain };
   }
 
@@ -235,7 +235,7 @@ export async function middleware(request: NextRequest) {
       if (isProtectedPath(rewrittenPath) && !authenticatedUser) {
         return redirectToLogin(rewrittenPath);
       }
-      // No rewrite — the request path is already under the (platform) group.
+      // No rewrite - the request path is already under the (platform) group.
       response = NextResponse.next({ request: { headers: requestHeaders } });
       break;
     }
@@ -261,7 +261,7 @@ export async function middleware(request: NextRequest) {
       // Inject the tenant slug into the forwarded request headers so that
       // server components can call headers().get("x-tenant-slug").
       requestHeaders.set("x-tenant-slug", slug);
-      // Rewrite /path → /t/[slug]/path (no DB lookup — fast path)
+      // Rewrite /path → /t/[slug]/path (no DB lookup - fast path)
       const rewriteUrl = request.nextUrl.clone();
       rewriteUrl.pathname = `/t/${slug}${pathname === "/" ? "" : pathname}`;
       response = NextResponse.rewrite(rewriteUrl, {
@@ -272,7 +272,7 @@ export async function middleware(request: NextRequest) {
 
     case "custom-domain": {
       if (!canRefreshSession) {
-        // Can't resolve without Supabase env vars — return 404.
+        // Can't resolve without Supabase env vars - return 404.
         // Route through applyPendingCookies so any refreshed tokens are sent.
         return applyPendingCookies(
           new NextResponse("Not Found", { status: 404 })
@@ -286,7 +286,7 @@ export async function middleware(request: NextRequest) {
       );
 
       if (!slug) {
-        // Unknown custom domain — 404, but still apply pending cookies.
+        // Unknown custom domain - 404, but still apply pending cookies.
         return applyPendingCookies(
           new NextResponse("Not Found", { status: 404 })
         );
@@ -312,7 +312,7 @@ export async function middleware(request: NextRequest) {
 }
 
 // ---------------------------------------------------------------------------
-// Matcher — skip static assets, _next internals, and API routes
+// Matcher - skip static assets, _next internals, and API routes
 // ---------------------------------------------------------------------------
 export const config = {
   matcher: [
@@ -322,7 +322,7 @@ export const config = {
      *  - _next/image   (image optimisation)
      *  - favicon.ico   (favicon)
      *  - Files with a common static extension
-     *  - api           (API routes — handled separately)
+     *  - api           (API routes - handled separately)
      */
     "/((?!_next/static|_next/image|favicon\\.ico|api/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|css|js|woff|woff2|ttf|eot)$).*)",
   ],

@@ -6,6 +6,8 @@ import { CreateEventForm } from "./event-forms";
 import { EditEventForm } from "./event-forms";
 import { EventImageUploader } from "./event-image-uploader";
 import type { EventWithStats } from "@/lib/event-queries";
+import { PageHeader, PanelCard, StatCard, Card, EmptyState, Badge } from "@/components/ui";
+import { IconTicket, IconArrowRight } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +20,7 @@ export const dynamic = "force-dynamic";
  */
 function fmtDatetime(isoUtc: string): string {
   const d = new Date(isoUtc);
-  return d.toLocaleString("en-US", {
+  return d.toLocaleString("ru-RU", {
     year:     "numeric",
     month:    "short",
     day:      "numeric",
@@ -31,11 +33,11 @@ function fmtDatetime(isoUtc: string): string {
 
 /**
  * Format price_cents as a human-readable string.
- * price_cents = 0 → "Free"
+ * price_cents = 0 → "Бесплатно"
  * otherwise → "$X.XX USD" (using currency symbol where known)
  */
 function fmtPrice(cents: number, currency: string): string {
-  if (cents === 0) return "Free";
+  if (cents === 0) return "Бесплатно";
   const symbols: Record<string, string> = { usd: "$", eur: "€", gbp: "£", rub: "₽" };
   const sym = symbols[currency] ?? currency.toUpperCase() + " ";
   return `${sym}${(cents / 100).toFixed(2)}`;
@@ -56,19 +58,16 @@ function SummaryCards({ events }: SummaryCardsProps) {
   const totalRevenue    = events.reduce((acc, e) => acc + e.revenue_cents, 0);
 
   const cards = [
-    { label: "Total events",      value: String(totalEvents),      cls: "bg-gray-50 border-gray-200 text-gray-800" },
-    { label: "Published",         value: String(publishedEvents),  cls: "bg-green-50 border-green-200 text-green-800" },
-    { label: "Tickets sold",      value: String(totalSold),        cls: "bg-blue-50 border-blue-200 text-blue-800" },
-    { label: "Revenue (paid)",    value: `$${(totalRevenue / 100).toFixed(2)}`, cls: "bg-amber-50 border-amber-200 text-amber-800" },
+    { label: "Всего событий",   value: String(totalEvents) },
+    { label: "Опубликовано",    value: String(publishedEvents) },
+    { label: "Продано билетов", value: String(totalSold) },
+    { label: "Выручка (оплачено)", value: `$${(totalRevenue / 100).toFixed(2)}` },
   ] as const;
 
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {cards.map(({ label, value, cls }) => (
-        <div key={label} className={`rounded-lg border px-4 py-3 text-center ${cls}`}>
-          <div className="text-xl font-bold tabular-nums">{value}</div>
-          <div className="text-xs font-medium mt-0.5">{label}</div>
-        </div>
+      {cards.map(({ label, value }) => (
+        <StatCard key={label} stat={value} label={label} />
       ))}
     </div>
   );
@@ -87,50 +86,46 @@ function EventCard({ event, tenantId }: EventCardProps) {
   const remaining = Math.max(0, event.capacity - event.sold);
 
   return (
-    <section className="rounded-lg border border-gray-200 bg-white">
+    <Card padded={false} className="overflow-hidden">
       {/* Card header */}
-      <div className="border-b border-gray-100 px-6 py-4">
+      <div className="border-b border-white/10 px-6 py-4">
         <div className="flex flex-wrap items-start gap-x-3 gap-y-1">
-          <h2 className="flex-1 min-w-0 text-base font-semibold text-gray-900 truncate">
+          <h2 className="flex-1 min-w-0 text-base font-semibold text-slate-100 truncate">
             {event.title}
           </h2>
           {event.is_published ? (
-            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
-              Published
-            </span>
+            <Badge tone="emerald">Опубликовано</Badge>
           ) : (
-            <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-              Draft
-            </span>
+            <Badge tone="slate">Черновик</Badge>
           )}
         </div>
 
         {/* Stats row */}
-        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-gray-500">
+        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
           <span>
-            <span className="font-medium text-gray-700">{fmtDatetime(event.starts_at)}</span>
+            <span className="font-medium text-slate-300">{fmtDatetime(event.starts_at)}</span>
           </span>
           <span>
-            Capacity:{" "}
-            <span className="font-medium text-gray-700">{event.capacity}</span>
+            Вместимость:{" "}
+            <span className="font-medium text-slate-300">{event.capacity}</span>
           </span>
           <span>
-            Sold:{" "}
-            <span className="font-medium text-gray-700">{event.sold}</span>
+            Продано:{" "}
+            <span className="font-medium text-slate-300">{event.sold}</span>
           </span>
           <span>
-            Remaining:{" "}
-            <span className="font-medium text-gray-700">{remaining}</span>
+            Осталось:{" "}
+            <span className="font-medium text-slate-300">{remaining}</span>
           </span>
           <span>
-            Price:{" "}
-            <span className="font-medium text-gray-700">
+            Цена:{" "}
+            <span className="font-medium text-slate-300">
               {fmtPrice(event.price_cents, event.currency)}
             </span>
           </span>
           <span>
-            Revenue (paid):{" "}
-            <span className="font-medium text-gray-700">
+            Выручка (оплачено):{" "}
+            <span className="font-medium text-slate-300">
               {fmtPrice(event.revenue_cents, event.currency)}
             </span>
           </span>
@@ -138,9 +133,9 @@ function EventCard({ event, tenantId }: EventCardProps) {
       </div>
 
       {/* Event image uploader */}
-      <div className="border-b border-gray-100 px-6 py-4">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">
-          Event image
+      <div className="border-b border-white/10 px-6 py-4">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Изображение события
         </p>
         <EventImageUploader
           tenantId={tenantId}
@@ -150,9 +145,9 @@ function EventCard({ event, tenantId }: EventCardProps) {
       </div>
 
       {/* Edit form */}
-      <div className="border-b border-gray-100 bg-gray-50 px-6 py-4">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
-          Edit event
+      <div className="border-b border-white/10 bg-white/[0.02] px-6 py-4">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Редактировать событие
         </p>
         <EditEventForm event={event} />
       </div>
@@ -161,12 +156,13 @@ function EventCard({ event, tenantId }: EventCardProps) {
       <div className="px-6 py-4">
         <Link
           href={`/dashboard/events/${event.id}`}
-          className="inline-flex items-center rounded-md border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
+          className="btn-secondary"
         >
-          View attendees &rarr;
+          Посмотреть участников
+          <IconArrowRight className="h-4 w-4" />
         </Link>
       </div>
-    </section>
+    </Card>
   );
 }
 
@@ -183,9 +179,9 @@ export default async function EventsPage() {
 
   if (!profile.tenant_id) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 px-6 py-5">
-        <p className="text-sm text-red-700">
-          Your account is not associated with a restaurant. Contact support.
+      <div className="alert-error">
+        <p>
+          Ваш аккаунт не привязан к ресторану. Обратитесь в поддержку.
         </p>
       </div>
     );
@@ -196,30 +192,27 @@ export default async function EventsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Events</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Manage your ticketed events and sales. All times are UTC.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="События"
+        title="События"
+        description="Управляйте билетными событиями и продажами. Всё время указано в UTC."
+      />
 
       {/* Summary cards */}
       <SummaryCards events={events} />
 
       {/* Create event */}
-      <section className="rounded-lg border border-gray-200 bg-white px-6 py-5">
-        <h2 className="mb-4 text-base font-semibold text-gray-900">
-          Add event
-        </h2>
+      <PanelCard title="Добавить событие">
         <CreateEventForm />
-      </section>
+      </PanelCard>
 
       {/* Events list */}
       {events.length === 0 ? (
-        <p className="text-sm text-gray-500">
-          No events yet. Create one above to get started.
-        </p>
+        <EmptyState
+          icon={<IconTicket className="h-6 w-6" />}
+          title="Пока нет ни одного события"
+          description="Создайте событие выше, чтобы начать."
+        />
       ) : (
         <div className="space-y-6">
           {events.map((event) => (

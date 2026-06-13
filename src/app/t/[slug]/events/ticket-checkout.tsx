@@ -16,7 +16,7 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 };
 
 function formatTotal(cents: number, currency: string, quantity: number): string {
-  if (cents === 0) return "Free";
+  if (cents === 0) return "Бесплатно";
   const sym = CURRENCY_SYMBOLS[currency] ?? currency.toUpperCase() + " ";
   return `${sym}${((cents * quantity) / 100).toFixed(2)}`;
 }
@@ -31,7 +31,7 @@ export interface TicketCheckoutProps {
 }
 
 // ---------------------------------------------------------------------------
-// TicketCheckout — client island per event
+// TicketCheckout - client island per event
 // ---------------------------------------------------------------------------
 
 export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
@@ -79,14 +79,14 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
   if (isSoldOut) {
     return (
       <span
-        className="inline-block rounded-lg px-4 py-2 text-sm font-semibold cursor-not-allowed opacity-50"
+        className="inline-block rounded-full px-5 py-2 text-sm font-semibold cursor-not-allowed opacity-50"
         style={{
           border: "1px solid var(--color-accent)",
           color: "var(--color-accent)",
         }}
         aria-disabled="true"
       >
-        Sold out
+        Билеты распроданы
       </span>
     );
   }
@@ -96,10 +96,10 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
     const totalStr = formatTotal(event.price_cents, event.currency, confirmedQty);
     return (
       <div
-        className="rounded-xl border p-6 mt-4"
+        className="animate-fade-up rounded-2xl border p-6 mt-4 shadow-sm"
         style={{
-          borderColor: "var(--color-accent)",
-          backgroundColor: "rgba(0,0,0,0.03)",
+          borderColor: "color-mix(in srgb, var(--color-accent) 40%, transparent)",
+          backgroundColor: "color-mix(in srgb, var(--color-accent) 6%, transparent)",
         }}
         role="status"
         aria-live="polite"
@@ -108,37 +108,37 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           className="font-heading text-lg font-bold mb-1"
           style={{ color: "var(--color-primary)" }}
         >
-          {isFree ? "Tickets confirmed!" : "Tickets reserved!"}
+          {isFree ? "Билеты подтверждены!" : "Билеты забронированы!"}
         </p>
         <p
           className="text-sm mb-1"
           style={{ color: "var(--color-primary)", opacity: 0.8 }}
         >
-          {event.title} — {confirmedQty} ticket{confirmedQty !== 1 ? "s" : ""},{" "}
-          total: {totalStr}
+          {event.title} - билетов: {confirmedQty},{" "}
+          итого: {totalStr}
         </p>
         {isFree ? (
           <p
             className="text-sm"
             style={{ color: "var(--color-primary)", opacity: 0.6 }}
           >
-            Free event — your spot is confirmed.
+            Бесплатное событие - ваше место подтверждено.
           </p>
         ) : (
           <p
             className="text-sm"
             style={{ color: "var(--color-primary)", opacity: 0.6 }}
           >
-            Reserved — payment due. Your hold expires in 30 minutes.
+            Забронировано - ожидается оплата. Бронь действует 30 минут.
           </p>
         )}
         <button
           type="button"
           onClick={handleClose}
-          className="mt-4 inline-block rounded-lg px-5 py-2 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2"
+          className="mt-4 inline-block rounded-full px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2"
           style={{ backgroundColor: "var(--color-accent)" }}
         >
-          Done
+          Готово
         </button>
       </div>
     );
@@ -150,10 +150,10 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
       <button
         type="button"
         onClick={handleOpen}
-        className="inline-block rounded-lg px-4 py-2 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2"
+        className="inline-block rounded-full px-6 py-2.5 text-sm font-semibold text-white shadow transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2"
         style={{ backgroundColor: "var(--color-accent)" }}
       >
-        Get tickets
+        Купить билеты
       </button>
     );
   }
@@ -162,10 +162,10 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
   return (
     <form
       action={handleSubmit}
-      className="mt-4 rounded-xl border p-6 space-y-5"
+      className="animate-fade-up mt-4 rounded-2xl border p-6 space-y-5 shadow-sm"
       style={{
         borderColor: "rgba(0,0,0,0.10)",
-        backgroundColor: "rgba(0,0,0,0.03)",
+        backgroundColor: "color-mix(in srgb, var(--color-secondary) 60%, #fff)",
       }}
       noValidate
     >
@@ -196,7 +196,7 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           className="block text-sm font-medium mb-1"
           style={{ color: "var(--color-primary)" }}
         >
-          Quantity
+          Количество
         </label>
         <select
           id={`qty-${event.id}`}
@@ -222,7 +222,7 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           className="mt-1.5 text-sm font-medium"
           style={{ color: "var(--color-accent)" }}
         >
-          Total:{" "}
+          Итого:{" "}
           {formatTotal(event.price_cents, event.currency, quantity)}
         </p>
       </div>
@@ -234,7 +234,7 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           className="block text-sm font-medium mb-1"
           style={{ color: "var(--color-primary)" }}
         >
-          Full name <span aria-hidden="true">*</span>
+          Имя и фамилия <span aria-hidden="true">*</span>
         </label>
         <input
           id={`name-${event.id}`}
@@ -243,7 +243,7 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           required
           autoComplete="name"
           maxLength={120}
-          placeholder="Jane Smith"
+          placeholder="Иван Иванов"
           className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
           style={{
             borderColor: "rgba(0,0,0,0.18)",
@@ -265,7 +265,7 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
             className="font-normal"
             style={{ color: "var(--color-primary)", opacity: 0.5 }}
           >
-            (optional)
+            (необязательно)
           </span>
         </label>
         <input
@@ -274,7 +274,7 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           type="email"
           autoComplete="email"
           maxLength={254}
-          placeholder="jane@example.com"
+          placeholder="ivan@example.com"
           className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
           style={{
             borderColor: "rgba(0,0,0,0.18)",
@@ -291,12 +291,12 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           className="block text-sm font-medium mb-1"
           style={{ color: "var(--color-primary)" }}
         >
-          Phone{" "}
+          Телефон{" "}
           <span
             className="font-normal"
             style={{ color: "var(--color-primary)", opacity: 0.5 }}
           >
-            (optional)
+            (необязательно)
           </span>
         </label>
         <input
@@ -305,7 +305,7 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
           type="tel"
           autoComplete="tel"
           maxLength={40}
-          placeholder="+1 555 000 0000"
+          placeholder="+7 900 000 00 00"
           className="block w-full rounded-lg border px-3 py-2.5 text-sm focus:outline-none focus:ring-2"
           style={{
             borderColor: "rgba(0,0,0,0.18)",
@@ -320,26 +320,26 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="flex-1 rounded-lg px-5 py-2.5 text-sm font-semibold text-white shadow transition hover:opacity-90 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex-1 rounded-full px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:opacity-90 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ backgroundColor: "var(--color-accent)" }}
         >
           {isPending
-            ? "Processing…"
+            ? "Обработка…"
             : isFree
-            ? "Confirm free tickets"
-            : "Reserve tickets"}
+            ? "Подтвердить бесплатные билеты"
+            : "Забронировать билеты"}
         </button>
         <button
           type="button"
           onClick={handleClose}
           disabled={isPending}
-          className="rounded-lg border px-5 py-2.5 text-sm font-medium transition hover:opacity-75 focus:outline-none focus:ring-2 disabled:opacity-50"
+          className="rounded-full border px-5 py-3 text-sm font-medium transition hover:opacity-75 focus:outline-none focus:ring-2 disabled:opacity-50"
           style={{
             borderColor: "rgba(0,0,0,0.18)",
             color: "var(--color-primary)",
           }}
         >
-          Cancel
+          Отмена
         </button>
       </div>
 
@@ -347,9 +347,9 @@ export function TicketCheckout({ event, tenantId }: TicketCheckoutProps) {
         className="text-xs"
         style={{ color: "var(--color-primary)", opacity: 0.4 }}
       >
-        All times shown in UTC.
+        Время указано по UTC.
         {!isFree &&
-          " Reserved tickets are held for 30 minutes pending payment."}
+          " Забронированные билеты удерживаются 30 минут до оплаты."}
       </p>
     </form>
   );

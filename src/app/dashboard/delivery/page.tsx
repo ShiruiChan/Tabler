@@ -5,6 +5,8 @@ import { getDeliveryZones } from "@/lib/delivery-queries";
 import { DeliverySettingsForm } from "./settings-form";
 import { CreateZoneForm, EditZoneForm } from "./zone-forms";
 import type { DeliveryZone } from "@/lib/types/database";
+import { PageHeader, PanelCard, Card, EmptyState, Badge } from "@/components/ui";
+import { IconDelivery } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -14,20 +16,20 @@ export const dynamic = "force-dynamic";
 
 /**
  * Format a cents value as a human-readable string.
- * null → "—"
- * 0    → "Free"
+ * null → "-"
+ * 0    → "Бесплатно"
  * otherwise → "$X.XX" (using currency symbol where known)
  */
 function fmtCents(cents: number | null, currency?: string): string {
-  if (cents === null) return "—";
-  if (cents === 0) return "Free";
+  if (cents === null) return "-";
+  if (cents === 0) return "Бесплатно";
   const symbols: Record<string, string> = { usd: "$", eur: "€", gbp: "£", rub: "₽" };
   const sym = currency ? (symbols[currency] ?? currency.toUpperCase() + " ") : "$";
   return `${sym}${(cents / 100).toFixed(2)}`;
 }
 
 // ---------------------------------------------------------------------------
-// Zone card (server component — edit form is client)
+// Zone card (server component - edit form is client)
 // ---------------------------------------------------------------------------
 
 interface ZoneCardProps {
@@ -37,48 +39,44 @@ interface ZoneCardProps {
 
 function ZoneCard({ zone, currency }: ZoneCardProps) {
   return (
-    <section className="rounded-lg border border-gray-200 bg-white">
+    <Card padded={false} className="overflow-hidden">
       {/* Card header */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-gray-100 px-6 py-4">
-        <h3 className="flex-1 min-w-0 text-base font-semibold text-gray-900 truncate">
+      <div className="flex flex-wrap items-center gap-3 border-b border-white/10 px-6 py-4">
+        <h3 className="flex-1 min-w-0 text-base font-semibold text-slate-100 truncate">
           {zone.name}
         </h3>
         {zone.is_active ? (
-          <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
-            Active
-          </span>
+          <Badge tone="emerald">Активна</Badge>
         ) : (
-          <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500">
-            Inactive
-          </span>
+          <Badge tone="slate">Неактивна</Badge>
         )}
-        <span className="text-xs text-gray-400">Sort: {zone.sort_order}</span>
+        <span className="text-xs text-slate-500">Порядок: {zone.sort_order}</span>
       </div>
 
       {/* Stats */}
-      <div className="border-b border-gray-100 px-6 py-3">
-        <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-gray-500">
+      <div className="border-b border-white/10 px-6 py-3">
+        <div className="flex flex-wrap gap-x-5 gap-y-1 text-xs text-slate-500">
           <span>
-            Fee:{" "}
-            <span className="font-medium text-gray-700">
+            Стоимость:{" "}
+            <span className="font-medium text-slate-300">
               {zone.fee_override_cents != null
                 ? fmtCents(zone.fee_override_cents, currency)
-                : "Use base fee"}
+                : "Базовая стоимость"}
             </span>
           </span>
           <span>
-            Min order:{" "}
-            <span className="font-medium text-gray-700">
+            Мин. заказ:{" "}
+            <span className="font-medium text-slate-300">
               {zone.min_order_override_cents != null
                 ? fmtCents(zone.min_order_override_cents, currency)
-                : "Use global minimum"}
+                : "Общий минимум"}
             </span>
           </span>
           {zone.polygon && (
             <span>
-              Polygon:{" "}
-              <span className="font-medium text-gray-700">
-                {zone.polygon.length} points
+              Полигон:{" "}
+              <span className="font-medium text-slate-300">
+                {zone.polygon.length} точек
               </span>
             </span>
           )}
@@ -86,13 +84,13 @@ function ZoneCard({ zone, currency }: ZoneCardProps) {
       </div>
 
       {/* Edit form */}
-      <div className="bg-gray-50 px-6 py-4">
-        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-400">
-          Edit zone
+      <div className="bg-white/[0.02] px-6 py-4">
+        <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+          Редактировать зону
         </p>
         <EditZoneForm zone={zone} />
       </div>
-    </section>
+    </Card>
   );
 }
 
@@ -109,9 +107,9 @@ export default async function DeliveryPage() {
 
   if (!profile.tenant_id) {
     return (
-      <div className="rounded-lg border border-red-200 bg-red-50 px-6 py-5">
-        <p className="text-sm text-red-700">
-          Your account is not associated with a restaurant. Contact support.
+      <div className="alert-error">
+        <p>
+          Ваш аккаунт не привязан к ресторану. Обратитесь в поддержку.
         </p>
       </div>
     );
@@ -128,10 +126,11 @@ export default async function DeliveryPage() {
   // but handle the edge case gracefully.
   if (!settings) {
     return (
-      <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-6 py-5">
-        <p className="text-sm text-yellow-700">
-          Delivery settings have not been initialised for this tenant. Contact
-          support or re-save your restaurant profile to trigger setup.
+      <div className="glass border-amber-400/20 bg-amber-400/[0.06] px-6 py-5">
+        <p className="text-sm text-amber-200">
+          Настройки доставки не были инициализированы для этого ресторана.
+          Обратитесь в поддержку или пересохраните профиль ресторана, чтобы
+          запустить настройку.
         </p>
       </div>
     );
@@ -139,30 +138,26 @@ export default async function DeliveryPage() {
 
   return (
     <div className="space-y-8">
-      {/* Page header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Delivery</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Configure delivery settings, pricing, and zones. All times are UTC.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Доставка"
+        title="Доставка"
+        description="Настройте параметры доставки, цены и зоны. Всё время указано в UTC."
+      />
 
       {/* Settings card */}
-      <section className="rounded-lg border border-gray-200 bg-white px-6 py-5">
-        <h2 className="mb-4 text-base font-semibold text-gray-900">
-          Delivery settings
-        </h2>
+      <PanelCard title="Настройки доставки">
         <DeliverySettingsForm settings={settings} />
-      </section>
+      </PanelCard>
 
       {/* Zones section */}
       <div>
-        <h2 className="mb-4 text-lg font-semibold text-gray-900">
-          Delivery zones
+        <h2 className="mb-2 text-lg font-semibold text-slate-100">
+          Зоны доставки
         </h2>
-        <p className="mb-4 text-sm text-gray-500">
-          Define named zones with optional fee and minimum-order overrides. Zones
-          without a polygon are named areas without a map boundary.
+        <p className="mb-4 text-sm text-slate-400">
+          Определите именованные зоны с необязательными переопределениями
+          стоимости и минимального заказа. Зоны без полигона - это именованные
+          области без границы на карте.
         </p>
 
         {/* Create zone */}
@@ -172,9 +167,11 @@ export default async function DeliveryPage() {
 
         {/* Zone list */}
         {zones.length === 0 ? (
-          <p className="text-sm text-gray-500">
-            No zones yet. Create one above to get started.
-          </p>
+          <EmptyState
+            icon={<IconDelivery className="h-6 w-6" />}
+            title="Пока нет ни одной зоны"
+            description="Создайте зону выше, чтобы начать."
+          />
         ) : (
           <div className="space-y-4">
             {(zones as DeliveryZone[]).map((zone) => (

@@ -140,7 +140,7 @@ export async function signUp(
     return { error: authError.message };
   }
 
-  // New accounts are 'visitor' by default — send to home.
+  // New accounts are 'visitor' by default - send to home.
   redirect("/");
 }
 

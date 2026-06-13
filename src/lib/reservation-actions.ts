@@ -71,12 +71,12 @@ async function revalidateReservationPaths(tenantId: string): Promise<void> {
 /**
  * Maps Postgres error codes to user-friendly messages.
  *
- * 23P01 — exclusion constraint violation (double-booking guard).
- * 23505 — unique constraint violation (generic duplicate).
+ * 23P01 - exclusion constraint violation (double-booking guard).
+ * 23505 - unique constraint violation (generic duplicate).
  */
 function mapDbError(code: string | undefined, defaultMsg: string): string {
   if (code === "23P01") {
-    return "That table was just booked for this time — pick another slot or table.";
+    return "That table was just booked for this time - pick another slot or table.";
   }
   if (code === "23505") {
     return "A duplicate reservation already exists for these details.";
@@ -243,7 +243,7 @@ const updateReservationSettingsSchema = z.object({
  *     tenant is active at the application layer (since RLS is bypassed).
  *
  * In both paths the following server-side validations run first (defense in
- * depth — the DB exclusion constraint is the final concurrency lock):
+ * depth - the DB exclusion constraint is the final concurrency lock):
  *   1. party_size ≤ reservation_settings.max_party_size.
  *   2. starts_at falls within an open slot for the date/party_size combination
  *      (re-runs getAvailabilitySlots to confirm the slot is still valid).
@@ -345,11 +345,11 @@ export async function createReservation(
     if (!matchingSlot.availableTableIds.includes(floor_table_id)) {
       return {
         error:
-          "That table was just booked for this time — pick another slot or table.",
+          "That table was just booked for this time - pick another slot or table.",
       };
     }
 
-    // Also verify table capacity (belt-and-suspenders — the slot query already
+    // Also verify table capacity (belt-and-suspenders - the slot query already
     // filters capacity >= partySize, but a specific table might be requested
     // that wasn't in the candidate list).
     const { data: tableData, error: tableError } = await supabase

@@ -1,5 +1,7 @@
 import { listTenants } from "@/lib/admin-queries";
 import { listModules } from "@/lib/admin-queries";
+import { PageHeader, StatCard } from "@/components/ui";
+import { IconTenants, IconModules, IconOverview } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
@@ -12,27 +14,29 @@ export default async function SuperAdminDashboard() {
   const pending = tenants.filter((t) => t.status === "pending").length;
 
   const cards = [
-    { label: "Total tenants", value: total },
-    { label: "Active", value: active },
-    { label: "Suspended", value: suspended },
-    { label: "Pending", value: pending },
-    { label: "Modules", value: modules.length },
+    { label: "Всего ресторанов", value: total, icon: <IconTenants /> },
+    { label: "Активные", value: active, icon: <IconOverview /> },
+    { label: "Приостановлены", value: suspended, icon: <IconOverview /> },
+    { label: "Ожидают", value: pending, icon: <IconOverview /> },
+    { label: "Модули", value: modules.length, icon: <IconModules /> },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-      <p className="mt-1 text-sm text-gray-500">Platform overview</p>
+      <PageHeader
+        eyebrow="Консоль платформы"
+        title="Обзор"
+        description="Сводка по ресторанам и модулям платформы Tabler."
+      />
 
-      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {cards.map((card) => (
-          <div
+          <StatCard
             key={card.label}
-            className="rounded-lg border border-gray-200 bg-white px-5 py-4"
-          >
-            <p className="text-xs font-medium text-gray-500">{card.label}</p>
-            <p className="mt-1 text-3xl font-bold text-gray-900">{card.value}</p>
-          </div>
+            stat={card.value}
+            label={card.label}
+            icon={card.icon}
+          />
         ))}
       </div>
     </div>

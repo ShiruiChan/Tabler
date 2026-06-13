@@ -3,7 +3,7 @@
  *
  * Runtime environment variable assertion helpers.
  *
- * `requireEnv` is intentionally NOT called at module evaluation time — it must
+ * `requireEnv` is intentionally NOT called at module evaluation time - it must
  * only be called inside functions that run during an actual HTTP request (or
  * equivalent runtime context).  That way `next build` can complete without real
  * env vars, because static pre-render paths that never instantiate a Supabase

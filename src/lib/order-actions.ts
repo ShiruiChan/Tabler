@@ -20,19 +20,19 @@
  *   client. This is best-effort: if the compensating DELETE also fails the
  *   order row is left orphaned (no items) but in 'pending' status; staff can
  *   cancel/delete it from the dashboard. The limit of this approach is the
- *   TOCTOU window between steps 2 and 3 — a production system would use an RPC
+ *   TOCTOU window between steps 2 and 3 - a production system would use an RPC
  *   or DB function for true atomicity. No existing rpc/transaction pattern was
  *   found in the repo.
  *
  * Module gating decision:
  *   - MODULES.ordering gates the order page (in_session + delivery) at the
- *     page layer only. placeOrder itself performs NO module check — mirroring
+ *     page layer only. placeOrder itself performs NO module check - mirroring
  *     the approved purchaseTickets precedent (module gating is a billing
  *     toggle, not a security boundary). Server-side guards here are
  *     resource-state checks instead: tenant active, table bookable,
  *     zone active, delivery_settings.is_enabled + schedule window.
  *   Rationale: MODULES.ordering = 'ordering' exists in modules.ts. Using it as
- *   the page gate means the menu module is not required for ordering (correct —
+ *   the page gate means the menu module is not required for ordering (correct -
  *   a restaurant could have ordering without a public menu page, or vice versa).
  *
  * Banquet rejection:
@@ -174,14 +174,14 @@ const cancelMyOrderSchema = z.object({
  *   - orders_delivery_address_required      (delivery without address)
  *   - Any other column-range check.
  *
- * 23505 (unique_violation) — generic duplicate row.
+ * 23505 (unique_violation) - generic duplicate row.
  */
 function mapDbError(
   code: string | undefined,
   message: string | undefined,
   defaultMsg: string
 ): string {
-  // P0001 — trigger RAISE EXCEPTION
+  // P0001 - trigger RAISE EXCEPTION
   if (code === "P0001") {
     // Cross-tenant trigger strings from 0009
     if (
@@ -194,10 +194,10 @@ function mapDbError(
     return defaultMsg;
   }
 
-  // 23514 — check constraint violation
+  // 23514 - check constraint violation
   if (code === "23514") {
     if (message?.includes("orders_total_equals_subtotal_plus_fee")) {
-      return "Order total arithmetic mismatch — please try again.";
+      return "Order total arithmetic mismatch - please try again.";
     }
     if (message?.includes("orders_delivery_address_required")) {
       return "A delivery address is required for delivery orders.";
@@ -205,7 +205,7 @@ function mapDbError(
     return "One or more values violated a database constraint. Please check your input.";
   }
 
-  // 23505 — unique violation
+  // 23505 - unique violation
   if (code === "23505") {
     return "A duplicate record already exists.";
   }
@@ -323,7 +323,7 @@ export async function placeOrder(
   try {
     rawItems = JSON.parse(itemsJson);
   } catch {
-    return { error: "Invalid items format — expected a JSON array." };
+    return { error: "Invalid items format - expected a JSON array." };
   }
 
   if (!Array.isArray(rawItems) || rawItems.length === 0) {
@@ -462,7 +462,7 @@ export async function placeOrder(
         };
       }
     } else if (delivery_zone_id) {
-      // Zones exist check already done — if no zones but zone_id supplied, ignore it.
+      // Zones exist check already done - if no zones but zone_id supplied, ignore it.
       // (No zones configured = no zone required.)
     }
   }
@@ -646,7 +646,7 @@ export async function placeOrder(
   if (itemsInsertError) {
     // ── Compensating delete ─────────────────────────────────────────────────
     // Best-effort: if this also fails the order row is left orphaned in
-    // 'pending' status with no items — staff can cancel it from the dashboard.
+    // 'pending' status with no items - staff can cancel it from the dashboard.
     await adminClient.from("orders").delete().eq("id", orderId);
 
     return {
