@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireTenant } from "@/lib/tenant";
 import { getSiteSettings } from "@/lib/site-settings";
 import { tenantHasModule, MODULES } from "@/lib/modules";
@@ -72,19 +73,24 @@ export default async function TenantHome({ params }: TenantHomeProps) {
     }
   }
 
+  // Base path for in-tenant links. Use an absolute path (not a relative "./x")
+  // so navigation resolves correctly regardless of the current URL's trailing
+  // slash, and render with next/link <Link> for prefetched client-side nav.
+  const base = `/t/${params.slug}`;
+
   // Navigation tiles for the enabled modules - rendered as a refined grid below
   // the hero so guests can discover every section at a glance.
   const navTiles: { href: string; label: string; description: string }[] = [];
   if (menuEnabled)
-    navTiles.push({ href: "./menu", label: "Меню", description: "Наши блюда и напитки" });
+    navTiles.push({ href: `${base}/menu`, label: "Меню", description: "Наши блюда и напитки" });
   if (reservationsEnabled)
-    navTiles.push({ href: "./reserve", label: "Бронирование", description: "Забронируйте столик" });
+    navTiles.push({ href: `${base}/reserve`, label: "Бронирование", description: "Забронируйте столик" });
   if (floorEnabled)
-    navTiles.push({ href: "./floor", label: "Зал", description: "Выберите место в зале" });
+    navTiles.push({ href: `${base}/floor`, label: "Зал", description: "Выберите место в зале" });
   if (orderingEnabled)
-    navTiles.push({ href: "./order", label: "Заказ", description: "Закажите онлайн" });
+    navTiles.push({ href: `${base}/order`, label: "Заказ", description: "Закажите онлайн" });
   if (eventsEnabled)
-    navTiles.push({ href: "./events", label: "События", description: "Афиша и билеты" });
+    navTiles.push({ href: `${base}/events`, label: "События", description: "Афиша и билеты" });
 
   const hasHeroImage = !!settings?.hero_image_url;
 
@@ -137,17 +143,17 @@ export default async function TenantHome({ params }: TenantHomeProps) {
           {/* Primary CTAs: first action solid accent, learn-more outlined */}
           <div className="mt-10 flex flex-wrap justify-center gap-3">
             {reservationsEnabled && (
-              <a
-                href="./reserve"
+              <Link
+                href={`${base}/reserve`}
                 className="inline-flex items-center rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2"
                 style={{ backgroundColor: "var(--color-accent)" }}
               >
                 Забронировать столик
-              </a>
+              </Link>
             )}
             {menuEnabled && (
-              <a
-                href="./menu"
+              <Link
+                href={`${base}/menu`}
                 className="inline-flex items-center rounded-full px-7 py-3.5 text-sm font-semibold transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2"
                 style={
                   hasHeroImage
@@ -165,7 +171,7 @@ export default async function TenantHome({ params }: TenantHomeProps) {
                 }
               >
                 Смотреть меню
-              </a>
+              </Link>
             )}
             {settings?.about && (
               <a
@@ -188,7 +194,7 @@ export default async function TenantHome({ params }: TenantHomeProps) {
         <section className="mx-auto max-w-5xl px-6 py-16">
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {navTiles.map((tile) => (
-              <a
+              <Link
                 key={tile.href}
                 href={tile.href}
                 className="group flex flex-col rounded-2xl border bg-white/60 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -213,7 +219,7 @@ export default async function TenantHome({ params }: TenantHomeProps) {
                 >
                   Перейти →
                 </span>
-              </a>
+              </Link>
             ))}
           </div>
         </section>

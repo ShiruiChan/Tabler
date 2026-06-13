@@ -25,7 +25,7 @@ export default async function PublicFloorPage({ params }: PublicFloorPageProps) 
   const plans = await getPublicFloorPlans(tenant.id);
   // When reservations module is active, the picker's "Book this table" CTA
   // links to the reserve page with the selected table pre-populated.
-  const reserveHref = reservationsEnabled ? "./reserve" : undefined;
+  const reserveHref = reservationsEnabled ? `/t/${params.slug}/reserve` : undefined;
 
   return (
     <div
